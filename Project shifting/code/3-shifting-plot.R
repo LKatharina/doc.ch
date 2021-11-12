@@ -15,7 +15,6 @@ source("2-shifting-select.R")
 # Plot -----------------------------------------------------------------------------------------
 jitter <- position_jitter(width = 0.1)
 
-
 plotfunc <- function(i){
   plot <- ggplot(stimuli[nr == unique(nr)[i] & model != "shift"] , 
                  aes(x = trial, y=prhv, fill = model))+
@@ -31,13 +30,21 @@ plotfunc <- function(i){
           axis.text.y.left = element_text(family = "Arial", size = 11),
           axis.text.x.bottom = element_text(family = "Arial", size = 11),
           strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"))+
-    ggtitle(paste("Stimuli", unique(stimuli$nr)[i]))
+    ggtitle(
+      paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
+             " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
+             " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
+             " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
+             stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
   return(plot)
 }
 
 s1_opt_ph <- plotfunc(1)
+ggsave("../figures/temp_shifting_a.png",width = 8, height = 6)
 s2_opt_ph <- plotfunc(2)
+ggsave("../figures/temp_shifting_b.png",width = 8, height = 6)
 s3_opt_ph <- plotfunc(3)
+ggsave("../figures/temp_shifting_c.png",width = 8, height = 6)
 
 
 
@@ -56,16 +63,22 @@ plotfunc1 <- function(i){
           axis.title.x = element_text(family = "Arial", size = 13), 
           axis.text.y.left = element_text(family = "Arial", size = 11),
           axis.text.x.bottom = element_text(family = "Arial", size = 11),
-          strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"),
-          legend.position = c(0.2 , 0.83))+
-    ggtitle(paste("Stimuli", unique(stimuli$nr)[i]))
+          strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"))+
+    ggtitle( paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
+                    " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
+                    " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
+                    " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
+                    stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
   return(plot)
 }
 
 
 s1 <- plotfunc1(1)
+ggsave("../figures/temp_shifting_a1.png",width = 8, height = 6)
 s2 <- plotfunc1(2)
+ggsave("../figures/temp_shifting_b1.png",width = 8, height = 6)
 s3 <- plotfunc1(3)
+ggsave("../figures/temp_shifting_c1.png",width = 8, height = 6)
 
 
 # Nur Shifting ------------------------------------------------------------------------
@@ -75,7 +88,7 @@ plotfunc2 <- function(i){
     theme_classic() +
     geom_hline(yintercept = 0.5, linetype = 2, size = 0.3)+
     geom_point(size = 1.4, position = jitter, shape = 21) +
-    scale_fill_manual(values=c("blue"), name = "Model",labels = c("Shifting"))+
+    scale_fill_manual(values=c("green"), name = "Model",labels = c("Shifting"))+
     ylim(0,1) +
     labs(x = 'Trial', y = 'Proportion of Risky Choices', fill = "Model")+
     theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),legend.text = element_text(size = 10),
@@ -84,11 +97,18 @@ plotfunc2 <- function(i){
           axis.text.y.left = element_text(family = "Arial", size = 11),
           axis.text.x.bottom = element_text(family = "Arial", size = 11),
           strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"))+
-    ggtitle(paste("Stimuli", unique(stimuli$nr)[i]))
+    ggtitle(paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
+                   " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
+                   " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
+                   " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
+                   stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
   return(plot)
 }
 
 
 shift1 <- plotfunc2(1)
+ggsave("../figures/temp_shifting_a2.png",width = 8, height = 6)
 shift2 <- plotfunc2(2)
+ggsave("../figures/temp_shifting_b2.png",width = 8, height = 6)
 shift3 <- plotfunc2(3)
+ggsave("../figures/temp_shifting_c2.png",width = 8, height = 6)
