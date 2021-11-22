@@ -1,6 +1,18 @@
 # ==========================================================================
-# Data Table DFE
+# Creates rsft predictions based on probability beliefs
 # ==========================================================================
+
+
+# Erstellt Datensatz mit RSFT Vorhersagen basierend auf den Beliefs
+# über die Wahrscheinlichkeiten.
+# Die Probanden kennen nicht nur die Outcomes, die Wahrscheilichkeiten werden
+# durch Erfahrung gelernt (Wiederholtes Samples aus der Binominalverteilung).
+# Das Lernen wird durch ein Bayesianisches Lernmodell simuliert, mit jedem Zug aus der
+# Binominalverteilung werden die Beliefs über die Wahrscheinlichkeiten angepasst.
+# Es gibt wenig Sampler (sample size = 3) und viel Sampler (Sample size = 10)
+# Aus der gelernten Wahrscheinlichkeitsverteilung (Beta-Verteilung) wird 100 mal
+# gezogen und für jede Ziehung macht RSFT Vorhersagen.
+
 
 # Load Packages-------------------------------------------------------------
 pacman::p_load(data.table)
@@ -29,12 +41,13 @@ b = c(17,19) # budget
 # Sampling
 small = 3 # samplesize: large vs. small
 large = 10 # samplesize: large vs. small
-sampleNR = 3 # number of different samples (binominal distribution)
+sampleNR = 3 # number of different samples (binominal distribution) / number of participants per sample size
 
 # Beta distribution
 ndrawsbeta = 100 # draws from beta distribution
 
 
+# Function for simulation of learning and choices
 createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
   count_xh = NULL
   count_xl = NULL
@@ -42,6 +55,7 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
   tau = 0.2
   choicerule = "softmax"
   
+  # Sampling from binominal distribution
   for (player in count_player) {
     for(sample in 1:sampleNR){
       outh = rbinom(n=player, size=1, prob=pxh)
@@ -87,6 +101,7 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
   data[, nr := 1:nrow(data)]
   data[, id := paste(b,numberOfdraws,sampleNR, sep="_")]
   
+  # Sampling from beta distribution
   i <- 1
   data_bayes <- lapply(1:nrow(data), function(i) {
     j = 1
@@ -110,7 +125,7 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
   data_bayes[, betadraw := 1:nrow(data_bayes)]
   
   
-  # 1. RSFT model -----------------------------------------
+  # RSFT model
   rsft_model <- hm1988(
     ~ xh + bxh + yh + byh | xl + bxl  + yl + byl,  # our formula (as before)
     trials = ".ALL",        # NEW: ".ALL" will predict for *all possible* trials

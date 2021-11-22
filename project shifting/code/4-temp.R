@@ -1,6 +1,6 @@
 # ==========================================================================
-# Erstellt einen Datensatz mit allen möglichen Stimuli
-#
+# Create Stimuli
+# Model Predictions
 # ==========================================================================
 
 # Load Packages-------------------------------------------------------------
@@ -14,7 +14,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
 # Rsft Variables ------------------------------------------------------------
-t = 3 # Trails
+t = 5 # Trails
 f <- function(state, budget) as.numeric(state >= budget) #Reward function
 
 
@@ -135,6 +135,45 @@ for(i in 1:nrow(budget_diff)){
 
 budget_diff[,nr := 1:nrow(budget_diff)]
 
+orderOutcomes <- function(budget_diff){
+  for(i in 1:nrow(budget_diff)){
+    if(budget_diff$xh[i] < budget_diff$yh[i]){
+      v <- budget_diff$xh[i]
+      budget_diff$xh[i] = budget_diff$yh[i]
+      budget_diff$yh[i] = v
+      p <- budget_diff$pxh[i]
+      budget_diff$pxh[i] = budget_diff$pyh[i]
+      budget_diff$pyh[i] = p
+    } else { 
+      budget_diff$xh[i] = budget_diff$xh[i]
+      budget_diff$yh[i] =  budget_diff$yh[i] 
+      budget_diff$pxh[i] = budget_diff$pxh[i] 
+      budget_diff$pyh[i] = budget_diff$pyh[i]
+    }
+    if(budget_diff$xl[i] < budget_diff$yl[i]){
+      v <- budget_diff$xl[i]
+      budget_diff$xl[i] = budget_diff$yl[i]
+      budget_diff$yl[i] = v
+      p <- budget_diff$pxl[i]
+      budget_diff$pxl[i] = budget_diff$pyl[i]
+      budget_diff$pyl[i] = p
+    } else { 
+      budget_diff$xl[i] = budget_diff$xl[i]
+      budget_diff$yl[i] =  budget_diff$yl[i] 
+      budget_diff$pxl[i] = budget_diff$pxl[i] 
+      budget_diff$pyl[i] = budget_diff$pyl[i]
+    }
+  }
+  
+  cols = c("xh", "yh", "xl", "yl")
+  budget_diff[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
+  return(budget_diff)
+}
+
+sim = orderOutcomes(sim)
+
+
+
 ## Simulations =======================================================
 choicerule = "softmax"
 tau = 0.2
@@ -151,7 +190,7 @@ rsft_model <- hm1988(
   data = budget_diff,         # our data (as before)
   budget = ~b,      # name of our budget column in our data
   initstate = ~start,    # name of our starting-state column in our data
-  ntrials = 3,            # we always 5 trials therefore I hard-code this
+  ntrials = 5,            # we always 5 trials therefore I hard-code this
   states = ".ALL",        # NEW: ".ALL" will predict for *all possible* states
   choicerule = choicerule,
   fix = list(tau = tau))
@@ -163,7 +202,7 @@ predict(rsft_model)
 #  I also predict the probability of ending up in one state (prstate)
 
 rsft_sim <- data.table(
-  trial = 4 - rsft_model$get_timehorizons(), # get trials that are *remaining*
+  trial = 6 - rsft_model$get_timehorizons(), # get trials that are *remaining*
   state =   rsft_model$get_states(),         # get possible states
   prhv_rsft =    rsft_model$predict("response"),  # get pr(hv) prediction
   prstate = rsft_model$predict("pstate"), # get pr(state)
@@ -177,22 +216,100 @@ rsft_sim[, nr := cumsum(trial == 1)]
 
 sim <- merge(rsft_sim,budget_diff, by="nr")
 
+
+## 2 Ph Heuristic ------------------------------------------------------------------
+
+refpoint <- function(data){
+  data[, r := (b - s)/ (..t - trial)]
+  data[,':=' (rxh = (xh - r), ryh = (yh - r), rxl = (xl - r),
+              ryl = (yl - r))]
+  data[, ':=' (sxh = sign(rxh), syh = sign(ryh), sxl = sign(rxl),
+               syl = sign(ryl))]
+  return(data)
+}
+
+RefandProp <- function(sxh, syh, sxl, syl){
+  if(sxh >= r & syh >= r & sxl >= r & syl >= r){
+    valh = 0.5
+    vall = 0.5
+  } else if(sxh < r & sxl < r){
+    valh = 0.5
+    vall = 0.5
+  } else if( sxl >= r & syl >= r & sxh >= r & syh < r){
+    vall = 1
+    valh = 0.5
+  } else if( sxl >= r & syl < r & sxh >= r & syh < r){
+    vall = pxl
+    valh = pxh
+  } else ( sxl < r & sxh >= r & syh < r){
+    vall = 0
+    valh = 0.5
+  } else ( sxl >= r & syl < r & sxh < r){
+    vall = 0.5
+    valh = 0
+  } else if( sxl >= r & syl < r & sxh >= r & syh >= r){
+    vall = 0.5
+    valh = 1
+  }
+  cbind( valh = valh, vall = vall)
+}
+
+sim[, lapply(SD,)]
+
+Probheuristic <- function(data){
+  high = max(data$xh, data$yh)
+  low = max(data$xl, data$yl)
+  data$probh <- ifelse(data$xh == high, data$pxh, data$pyh)
+  data$probl <- ifelse(data$xl == low, data$pxl, data$pyl)
+  
+  sim_heurisik <- softmax(~ probh | probl,
+                          d = data,
+                          c(tau = 0.2))
+  
+  ph_sim <- data.table(
+    probh_ph = data$probh,
+    probl_ph = data$probl,
+    prhv_ph = predict(sim_heurisik))
+  
+  return(ph_sim)
+}
+
+ph_sim <- Probheuristic(sim)
+
+# Combine data
+sim <- cbind(sim, ph_sim)
+
+
+# 3. Shifting -----------------------------------------------------------------------------------
+shifting <- shift_d( ~ prhv_ph + prhv_rsft,
+                     time = ~trial,
+                     data = sim,
+                     fix = list(c = 3.5))
+
+prhv_shift <- predict(shifting)
+sim <- cbind(sim, prhv_shift)
+
+
+
 # Difficulty -------------------------------------------------------------------------------
 d <- sim[trial == 1, .(dh = hvalue, dl=lvalue), by = c("nr","b")]
 sim <- merge(sim,d, by=c("nr","b"))
 
 
 # bad rows ----------------------------------------------------------------------------------
-sim[,badrows := ifelse(round(hvalue,2) == round(lvalue,2),1,0)]
+sim[,badrows := ifelse(hvalue == lvalue,1,0)]
+
+
 
 
 # delete colums -----------------------------------------------------------------------------
 drops <- c("ev2","x1", "x2", "y1", "y2", "px1", "px2", "py1", "py2", "bmin", "bmax", "var1", "var2",
-           "id1", "id2")
+           "id1", "id2", "cdiff", "cdir", "c1", "prdir","prc1", "mdiff", "sumbr", "diff", "sumc1", "sumdir", "dir")
 sim[, c(drops) := NULL]
 
-sim <- sim[,list(nr,id,idh,idl,ev1,varh,varl,xh,yh,pxh,pyh,xl,yl,pxl,pyl,dh,dl,b,start,trial,state,hvalue,lvalue,prhv_rsft,prstate)]
+sim <- sim[,list(nr,id,idh,idl,ev1,varh,varl,xh,yh,pxh,pyh,xl,yl,pxl,pyl,dh,dl,b,start,trial,state,hvalue,lvalue,prhv_rsft,prstate,
+                 probh_ph, probl_ph,prhv_ph,prhv_shift, badrows)]
 
 # Save --------------------------------------------------------------------------------------
-fwrite(sim, "../stimuli/dfe_stimuli.csv")
+fwrite(sim, "../stimuli/shifting_stimuli.csv")
 
