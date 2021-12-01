@@ -135,44 +135,6 @@ for(i in 1:nrow(budget_diff)){
 
 budget_diff[,nr := 1:nrow(budget_diff)]
 
-orderOutcomes <- function(budget_diff){
-  for(i in 1:nrow(budget_diff)){
-    if(budget_diff$xh[i] < budget_diff$yh[i]){
-      v <- budget_diff$xh[i]
-      budget_diff$xh[i] = budget_diff$yh[i]
-      budget_diff$yh[i] = v
-      p <- budget_diff$pxh[i]
-      budget_diff$pxh[i] = budget_diff$pyh[i]
-      budget_diff$pyh[i] = p
-    } else { 
-      budget_diff$xh[i] = budget_diff$xh[i]
-      budget_diff$yh[i] =  budget_diff$yh[i] 
-      budget_diff$pxh[i] = budget_diff$pxh[i] 
-      budget_diff$pyh[i] = budget_diff$pyh[i]
-    }
-    if(budget_diff$xl[i] < budget_diff$yl[i]){
-      v <- budget_diff$xl[i]
-      budget_diff$xl[i] = budget_diff$yl[i]
-      budget_diff$yl[i] = v
-      p <- budget_diff$pxl[i]
-      budget_diff$pxl[i] = budget_diff$pyl[i]
-      budget_diff$pyl[i] = p
-    } else { 
-      budget_diff$xl[i] = budget_diff$xl[i]
-      budget_diff$yl[i] =  budget_diff$yl[i] 
-      budget_diff$pxl[i] = budget_diff$pxl[i] 
-      budget_diff$pyl[i] = budget_diff$pyl[i]
-    }
-  }
-  
-  cols = c("xh", "yh", "xl", "yl")
-  budget_diff[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
-  return(budget_diff)
-}
-
-sim = orderOutcomes(sim)
-
-
 
 ## Simulations =======================================================
 choicerule = "softmax"
@@ -217,10 +179,11 @@ rsft_sim[, nr := cumsum(trial == 1)]
 sim <- merge(rsft_sim,budget_diff, by="nr")
 
 
+
 ## 2 Ph Heuristic ------------------------------------------------------------------
 
 refpoint <- function(data){
-  data[, r := (b - s)/ (..t - trial)]
+  data[, r := (b - state)/ (1 + ..t - trial)]
   data[,':=' (rxh = (xh - r), ryh = (yh - r), rxl = (xl - r),
               ryl = (yl - r))]
   data[, ':=' (sxh = sign(rxh), syh = sign(ryh), sxl = sign(rxl),
@@ -228,48 +191,25 @@ refpoint <- function(data){
   return(data)
 }
 
-RefandProp <- function(sxh, syh, sxl, syl){
-  if(sxh >= r & syh >= r & sxl >= r & syl >= r){
-    valh = 0.5
-    vall = 0.5
-  } else if(sxh < r & sxl < r){
-    valh = 0.5
-    vall = 0.5
-  } else if( sxl >= r & syl >= r & sxh >= r & syh < r){
-    vall = 1
-    valh = 0.5
-  } else if( sxl >= r & syl < r & sxh >= r & syh < r){
-    vall = pxl
-    valh = pxh
-  } else ( sxl < r & sxh >= r & syh < r){
-    vall = 0
-    valh = 0.5
-  } else ( sxl >= r & syl < r & sxh < r){
-    vall = 0.5
-    valh = 0
-  } else if( sxl >= r & syl < r & sxh >= r & syh >= r){
-    vall = 0.5
-    valh = 1
-  }
-  cbind( valh = valh, vall = vall)
-}
-
-sim[, lapply(SD,)]
+sim <- refpoint(sim)
 
 Probheuristic <- function(data){
-  high = max(data$xh, data$yh)
-  low = max(data$xl, data$yl)
-  data$probh <- ifelse(data$xh == high, data$pxh, data$pyh)
-  data$probl <- ifelse(data$xl == low, data$pxl, data$pyl)
+  sd <- data[,lapply(.SD, function(x){
+    ifelse(x == -1, 0, 1)}), .SDcols=c("sxh", "syh","sxl","syl")]
+  data[,':='(sxh = sd$sxh, syh = sd$syh, sxl = sd$sxl, syl = sd$syl)]
+  data[,PHvaluesH := sxh * pxh + syh * pyh]
+  data[,PHvaluesL := sxl * pxl + syl * pyl]
   
-  sim_heurisik <- softmax(~ probh | probl,
+  sim_heurisik <- softmax(~ PHvaluesH | PHvaluesL,
                           d = data,
                           c(tau = 0.2))
   
   ph_sim <- data.table(
-    probh_ph = data$probh,
-    probl_ph = data$probl,
+    PHvaluesH = data$PHvaluesH,
+    PHvaluesL = data$PHvaluesL,
     prhv_ph = predict(sim_heurisik))
+  data[,PHvaluesH := NULL]
+  data[,PHvaluesL := NULL]
   
   return(ph_sim)
 }
@@ -284,7 +224,7 @@ sim <- cbind(sim, ph_sim)
 shifting <- shift_d( ~ prhv_ph + prhv_rsft,
                      time = ~trial,
                      data = sim,
-                     fix = list(c = 3.5))
+                     fix = list(c = 4.5))
 
 prhv_shift <- predict(shifting)
 sim <- cbind(sim, prhv_shift)
@@ -301,15 +241,80 @@ sim[,badrows := ifelse(hvalue == lvalue,1,0)]
 
 
 
-
+names(sim)
 # delete colums -----------------------------------------------------------------------------
 drops <- c("ev2","x1", "x2", "y1", "y2", "px1", "px2", "py1", "py2", "bmin", "bmax", "var1", "var2",
            "id1", "id2", "cdiff", "cdir", "c1", "prdir","prc1", "mdiff", "sumbr", "diff", "sumc1", "sumdir", "dir")
 sim[, c(drops) := NULL]
 
 sim <- sim[,list(nr,id,idh,idl,ev1,varh,varl,xh,yh,pxh,pyh,xl,yl,pxl,pyl,dh,dl,b,start,trial,state,hvalue,lvalue,prhv_rsft,prstate,
-                 probh_ph, probl_ph,prhv_ph,prhv_shift, badrows)]
+                 PHvaluesH, PHvaluesL,r,prhv_ph,prhv_shift, badrows)]
 
 # Save --------------------------------------------------------------------------------------
-fwrite(sim, "../stimuli/shifting_stimuli.csv")
+fwrite(sim, "../stimuli/shift_ref_stimuli2.csv")
 
+
+# 
+# 
+# orderOutcomes <- function(budget_diff){
+#   for(i in 1:nrow(budget_diff)){
+#     if(budget_diff$xh[i] < budget_diff$yh[i]){
+#       v <- budget_diff$xh[i]
+#       budget_diff$xh[i] = budget_diff$yh[i]
+#       budget_diff$yh[i] = v
+#       p <- budget_diff$pxh[i]
+#       budget_diff$pxh[i] = budget_diff$pyh[i]
+#       budget_diff$pyh[i] = p
+#     } else { 
+#       budget_diff$xh[i] = budget_diff$xh[i]
+#       budget_diff$yh[i] =  budget_diff$yh[i] 
+#       budget_diff$pxh[i] = budget_diff$pxh[i] 
+#       budget_diff$pyh[i] = budget_diff$pyh[i]
+#     }
+#     if(budget_diff$xl[i] < budget_diff$yl[i]){
+#       v <- budget_diff$xl[i]
+#       budget_diff$xl[i] = budget_diff$yl[i]
+#       budget_diff$yl[i] = v
+#       p <- budget_diff$pxl[i]
+#       budget_diff$pxl[i] = budget_diff$pyl[i]
+#       budget_diff$pyl[i] = p
+#     } else { 
+#       budget_diff$xl[i] = budget_diff$xl[i]
+#       budget_diff$yl[i] =  budget_diff$yl[i] 
+#       budget_diff$pxl[i] = budget_diff$pxl[i] 
+#       budget_diff$pyl[i] = budget_diff$pyl[i]
+#     }
+#   }
+#   
+#   cols = c("xh", "yh", "xl", "yl")
+#   budget_diff[, (cols) := lapply(.SD, as.numeric), .SDcols = cols]
+#   return(budget_diff)
+# }
+# 
+# sim = orderOutcomes(sim)
+# 
+# RefandProp <- function(sxh, syh, sxl, syl){
+#   if(sxh >= r & syh >= r & sxl >= r & syl >= r){
+#     valh = 0.5
+#     vall = 0.5
+#   } else if(sxh < r & sxl < r){
+#     valh = 0.5
+#     vall = 0.5
+#   } else if( sxl >= r & syl >= r & sxh >= r & syh < r){
+#     vall = 1
+#     valh = 0.5
+#   } else if( sxl >= r & syl < r & sxh >= r & syh < r){
+#     vall = pxl
+#     valh = pxh
+#   } else ( sxl < r & sxh >= r & syh < r){
+#     vall = 0
+#     valh = 0.5
+#   } else ( sxl >= r & syl < r & sxh < r){
+#     vall = 0.5
+#     valh = 0
+#   } else if( sxl >= r & syl < r & sxh >= r & syh >= r){
+#     vall = 0.5
+#     valh = 1
+#   }
+#   cbind( valh = valh, vall = vall)
+# }

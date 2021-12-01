@@ -41,7 +41,7 @@ b = c(17,19) # budget
 # Sampling
 small = 3 # samplesize: large vs. small
 large = 10 # samplesize: large vs. small
-sampleNR = 3 # number of different samples (binominal distribution) / number of participants per sample size
+sampleNR = 10 # number of different samples (binominal distribution) / number of participants per sample size
 
 # Beta distribution
 ndrawsbeta = 100 # draws from beta distribution
@@ -97,7 +97,7 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
                      fix = list(delta = 1,
                                 priorpar = c(1,1),
                                 sigma = 0.01))
-  data[, pmax := predict(M)]
+  data[, pmax := predict(M)] 
   data[, nr := 1:nrow(data)]
   data[, id := paste(b,numberOfdraws,sampleNR, sep="_")]
   
@@ -124,8 +124,8 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
   data_bayes[, start := 0]
   data_bayes[, betadraw := 1:nrow(data_bayes)]
   
-  
-  # RSFT model
+
+  #  RSFT model
   rsft_model <- hm1988(
     ~ xh + bxh + yh + byh | xl + bxl  + yl + byl,  # our formula (as before)
     trials = ".ALL",        # NEW: ".ALL" will predict for *all possible* trials
@@ -160,5 +160,5 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta){
 db <- createData(pxh = pxh, pxl = pxl, xh = xh, yh = yh, yl = yl, b = b, small = small, large = large
            ,sampleNR = sampleNR, ndrawsbeta = ndrawsbeta)
 
-fwrite(db, "../stimuli/example_bayes_data.csv")
+fwrite(db, "../stimuli/example_bayes_data1.csv")
 

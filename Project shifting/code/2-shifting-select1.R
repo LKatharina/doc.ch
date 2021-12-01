@@ -13,7 +13,9 @@ library(cognitiveutils)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
-sim <- read.table("../stimuli/shifting_stimuli.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+#sim <- read.table("../stimuli/shifting_stimuli.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+
+sim <- read.table("../stimuli/shift_ref_stimuli.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
 
 sim <- as.data.table(sim)
 

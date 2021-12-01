@@ -5,7 +5,7 @@
 # Erstellt Density Plots
 
 # Load Packages-------------------------------------------------------------
-pacman::p_load(data.table)
+pacman::p_load(data.table, patchwork)
 library(cognitivemodels)
 library(cognitiveutils)
 library(ggplot2)
@@ -13,33 +13,76 @@ library(ggplot2)
 # Load data ----------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-db <- read.table("../stimuli/example_bayes_data.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+db <- read.table("../stimuli/example_bayes_data1.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
 db <- as.data.table(db)
 
+# Parameter ----------------------------------------------------------------
+ntrials <- 3
+nconditions <- 2
+conditions <- c("small sample", "large sample")
 
 # Plots ---------------------------------------------------------------------
-
 db[, sampling := ifelse(numberOfdraws == min(numberOfdraws), "small sample", "large sample")]
 db[, trial := as.factor(trial)]
 
+maxdensity <- function(budget){
+  sd <- db[grepl(as.character(budget), db$id, fixed = TRUE),]
+  sd <- as.data.frame(sd)
+  vmax <- NULL
+  s <- rep(conditions, each = ntrials) 
+  t <- rep(c(1:ntrials), nconditions) 
+  for(i in 1:6){
+    j <- s[i]
+    k <- t[i]
+    sdb <- sd[sd$sampling == j & sd$trial == k ,]
+    v = which.max(density(sdb$prhv_rsft)$y)
+    max <- density(sdb$prhv_rsft)$x[v]
+    vmax <- c(vmax, max)
+    sdb <- NULL
+  }
+  
+  densitypeak <- data.table(sampling = s,trial = t,peak = vmax)
+  return(densitypeak)
+}
 
-ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "17_10_3")], 
+
+
+peakeasy <- maxdensity(17)
+peakhard <- maxdensity(19)
+
+p1 <- ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "17_10_3")], 
        aes(x=prhv_rsft, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
-  scale_fill_manual(values=c("blue","green")) +
-  scale_colour_manual(values=c("blue","green")) +
-  facet_wrap(~trial) +
-  xlim(0,1)
+  scale_x_continuous(limits = c(0,1), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,11), expand = c(0,0))+
+  geom_vline(peakeasy, mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
+  coord_flip() +
+  scale_fill_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (20)", "small sample (6)")) +
+  scale_colour_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (20)", "small sample (6)")) +
+  facet_wrap(~trial, labeller = label_both) +
+  xlab("Predicted Proportion of Risky Choices") +
+  labs(title = "A", subtitle = "Reach 17 in 3 trials")
 ggsave("../figures/temp_dfe_easy.png",width = 8, height = 6)
 
-ggplot(db[id %in% c("19_3_1", "19_3_2", "19_3_3", "19_10_1", "19_10_2", "19_10_3")], 
+
+
+p2 <- ggplot(db[id %in% c("19_3_1", "19_3_2", "19_3_3", "19_10_1", "19_10_2", "19_10_3")], 
        aes(x=prhv_rsft, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
+  scale_x_continuous(limits = c(0,1), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,40), expand = c(0,0))+
+  geom_vline(peakhard, mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
+  coord_flip() +
   scale_fill_manual(values=c("blue","green")) +
   scale_colour_manual(values=c("blue","green")) +
-  facet_wrap(~trial) +
-  xlim(0,1)
+  facet_wrap(~trial)
 ggsave("../figures/temp_dfe_hard.png",width = 8, height = 6)
 
+p1 + plot_spacer() + p2 + plot_layout(guides = "collect", widths = c(0.4,0.1,0.4))
+?plot_spacer
+
+
+(p1 + theme(plot.margin = unit(c(0,30,0,0), "pt"))) +
+  (p2 + theme(plot.margin = unit(c(0,0,0,30), "pt"))) + plot_layout(guides = "collect")
