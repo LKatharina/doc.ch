@@ -7,6 +7,7 @@ library(ggplot2)
 library(stringr)
 library(data.table)
 library(cognitivemodels)
+library(tidybayes)
 
 rm(list = ls(all = TRUE))
 gc()
@@ -556,7 +557,7 @@ autoplot(mbm)
 #        Version 2.0           ----
 #---------------------------------#
 
-sampling <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42) {
+get_sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42) {
   set.seed(seed)
   
   ps2 <- 1-ps1
@@ -586,7 +587,7 @@ sampling <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n 
   
   data_freq[, `:=` (count_s2 = dfe_id - count_s1, 
                     count_r2 = dfe_id - count_r1,
-                    env_id = paste(ps1, s1, s2, pr1, r1, r2, budget, sep="_"))]
+                    env_id = paste(ps1, s1, s2, pr1, r1, r2, budget, sep = "_"))]
   
   data_beta <- data_freq[rep(1:freq_rown, each = beta_n)]
   
@@ -603,8 +604,8 @@ sampling <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n 
 }
 
 
-modeling <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
-  rsft_model <- hm1988(~ s1 + b_ps1 + s2 + b_ps2 | r1 + b_pr1  + r2 + b_pr2,
+get_model <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
+  rsft_model <- hm1988(~ r1 + b_pr1  + r2 + b_pr2 | s1 + b_ps1 + s2 + b_ps2,
                        trials = ".ALL",
                        data = df,
                        budget = ~budget,
@@ -626,23 +627,123 @@ modeling <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
   rsft_sim[, beta_id := cumsum(trial == 1)]
   db <- merge(rsft_sim, df)
   
-  setcolorder(db, neworder = c("env_id", "dfe_id", "subject_id", "beta_id"))
+  setcolorder(db, neworder = c("env_id", "dfe_id", "subject_id", "beta_id", 
+                               "budget", "trial", "state", "prhv_rsft", 
+                               "prstate", "rvalue", "svalue", "count_s1", 
+                               "count_s2", "count_r1", "count_r2"))
+  
+  db[, plot_id := paste(budget, dfe_id, trial, sep = "_")]
   
   return(db)
 }
 
 
-data <- sampling(s1 = 0, s2 = 1,
-                 r1 = 0, r2 = 4,
-                 ps1 = 0.5, pr1 = 0.8,
-                 dfe_n = c(3, 10),
-                 subject_n = 5,
-                 budget = c(10, 12),
-                 beta_n = 100)
+data <- get_sample(s1 = 0, s2 = 1,
+                   r1 = 0, r2 = 4,
+                   ps1 = 0.5, pr1 = 0.8,
+                   dfe_n = c(3, 10),
+                   subject_n = 5,
+                   budget = c(10, 12),
+                   beta_n = 100)
 
-model <- modeling(df = data, ntrials = 3) 
-
-
-sum()
+db <- get_model(df = data, ntrials = 3) 
 
 
+data2 <- data.table(s1 = 1, s2 = 2,
+                    r1 = 0, r2 = 5,
+                    ps1 = 0.5, ps2 = 0.5,
+                    pr1 = 0.8, pr2 = 0.2,
+                    budget = c(9, 11),
+                    start = 0)
+
+simple_model <- hm1988(~ r1 + pr1  + r2 + pr2 | s1 + ps1 + s2 + ps2,
+       trials = ".ALL",
+       data = data2,
+       budget = ~budget,
+       initstate = ~start,
+       nt = 3,
+       states = ".ALL",
+       choicerule = choicerule,
+       fix = list(tau = 0.2))
+
+simple_sim <- data.table(trial = (3 + 1) - simple_model$get_timehorizons(),
+                       state = simple_model$get_states(),
+                       prhv_rsft = simple_model$predict("response"),
+                       prstate = simple_model$predict("pstate"),
+                       rvalue = predict(simple_model, type="values")[,1],
+                       svalue = predict(simple_model, type="values")[,2])
+
+#---------------------------------#
+#        Evaluate Results      ----
+#---------------------------------#
+
+mean_prhv <- db[, .(prhv_rsft = mean(prhv_rsft)), 
+                by = .(dfe_id, trial)]
+
+dfe <- unique(mean_prhv$dfe_id)
+dfe_comp <- mean_prhv[, .(trial = c("1", "2", "3"),
+                          perc_dif = c((1 / prhv_rsft[trial == 1 & dfe_id == dfe[1]] 
+                                            * prhv_rsft[trial == 1 & dfe_id == dfe[2]] - 1) * 100,
+                                       (1 / prhv_rsft[trial == 2 & dfe_id == dfe[1]] 
+                                            * prhv_rsft[trial == 2 & dfe_id == dfe[2]] - 1) * 100,
+                                       (1 / prhv_rsft[trial == 3 & dfe_id == dfe[1]] 
+                                            * prhv_rsft[trial == 3 & dfe_id == dfe[2]] - 1) * 100),
+                          rel_dif = c(ifelse(test = sign(prhv_rsft[trial == 1 & dfe_id == dfe[1]] - 0.5) != 
+                                               sign(prhv_rsft[trial == 1 & dfe_id == dfe[2]] - 0.5),
+                                             yes = "YES",
+                                             no = "NO"),
+                                      ifelse(test = sign(prhv_rsft[trial == 2 & dfe_id == dfe[1]] - 0.5) != 
+                                               sign(prhv_rsft[trial == 2 & dfe_id == dfe[2]] - 0.5),
+                                             yes = "YES",
+                                             no = "NO"),
+                                      ifelse(test = sign(prhv_rsft[trial == 3 & dfe_id == dfe[1]] - 0.5) != 
+                                               sign(prhv_rsft[trial == 3 & dfe_id == dfe[2]] - 0.5),
+                                             yes = "YES",
+                                             no = "NO")))]
+
+
+db[, dfe_id := factor(dfe_id)]
+
+make_plot <- function(i) {
+  the_name <- "Sample Size"
+  the_labels <- c("Large (10 per option)", "Small (3 per option)")
+  the_colors <- c("red", "grey25")
+  ggplot(
+    data = db[plot_id %in% i],
+    mapping = aes(x = trial, y = prhv_rsft, color = dfe_id, fill = dfe_id)) +
+    stat_halfeye( # uses median and QI = quantile interval (also known as the percentile interval or equi-tailed interval)
+      .width = c(.66, 0.95), #use .66, .95 to show 66 and 96% HDI
+      slab_alpha = 0.15,
+      position = position_dodge(width = .09),
+      aes(shape = dfe_id), point_fill = "white") +
+    theme_classic() +
+    scale_fill_manual(
+      values = the_colors,
+      name = the_name, labels = the_labels) +
+    scale_colour_manual(
+      values = the_colors,
+      name = the_name, labels = the_labels) +
+    scale_shape_manual(
+      values = c(16, 21),
+      name = the_name, labels = the_labels) +
+    facet_wrap(~ trial, labeller = label_both, scale = "free_x") +
+    ylab("Predicted Proportion of Risky Choices") +
+    ylim(c(0,1)) +
+    labs(title = "Environment",
+         subtitle = paste("Reach", db[plot_id %in% i]$budget[1], "in 3 trials"),
+         caption = "Beta") +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank())
+}
+
+
+# plot and combine
+p1 <- make_plot(c("10_3_1", "10_3_2", "10_3_3", "10_10_1", "10_10_2","10_10_3"))
+p2 <- make_plot(c("12_3_1", "12_3_2", "12_3_3", "12_10_1", "12_10_2","12_10_3"))
+
+p1 + plot_spacer() + p2 +
+  plot_layout(guides = "collect", widths = c(.4,.05,.4)) +
+  plot_annotation(caption = "Note: Points = Median, thick line = 66% quantile intervall, thin line = 95% quantile intervall")
+
+ggsave("../figures/temp_dfe_easy_hard_n50.png",width = 14, height = 4)

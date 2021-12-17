@@ -16,7 +16,7 @@ r2 = 4
 
 #RSFT task
 nt = 3 #trials
-b = c(17,19) # budget
+b = c(10,12) # budget
 
 # Sampling
 small = 3 # samplesize: large vs. small
@@ -158,7 +158,52 @@ createData <- function(ps1,pr1,s1,s2,r2,b,small,large, subject_n, beta_n, seed =
   return(db)
 }
 
-subject_n = 5
 db <- createData(ps1 = ps1, pr1 = pr1, s1 = s1, s2 = s2, r2 = r2, b = b, small = small, large = large
                  ,subject_n = subject_n, beta_n = beta_n)
+
+
+
+library(tidybayes) # for fancy density plots, google it, it is great
+# define one plotting function
+make_plot <- function(i) {
+  the_name <- "Sample Size"
+  the_labels <- c("Large (10 per option)", "Small (3 per option)")
+  the_colors <- c("red", "grey25")
+  ggplot(
+    data = db[id %in% i],
+    mapping = aes(x = trial, y = bs1, color = numberOfdraws, fill = numberOfdraws)) +
+    stat_halfeye( # uses median and QI = quantile interval (also known as the percentile interval or equi-tailed interval)
+      .width = c(.66, 0.95), #use .66, .95 to show 66 and 96% HDI
+      slab_alpha = 0.15,
+      position = position_dodge(width = .09),
+      aes(shape = numberOfdraws), point_fill = "white") +
+    theme_classic() +
+    scale_fill_manual(
+      values=the_colors,
+      name = the_name, labels = the_labels) +
+    scale_colour_manual(
+      values=the_colors,
+      name = the_name, labels = the_labels) +
+    scale_shape_manual(
+      values = c(16, 21),
+      name = the_name, labels = the_labels) +
+    facet_wrap(~trial+state, labeller = label_both, scale = "free_x") +
+    ylab("Predicted Proportion of Risky Choices") +
+    labs(title = "Environment",
+         subtitle = paste("Reach", db[id %in% i]$b[1], "in 3 trials")) +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank())
+}
+
+ 
+# plot and combine
+p1 <- make_plot(c("10_3_1", "10_3_2", "10_3_3", "10_10_1", "10_10_2","10_10_3"))
+p2 <- make_plot(c("12_3_1", "12_3_2", "12_3_3", "12_10_1", "12_10_2","12_10_3"))
+
+p1 + p2 +
+  plot_layout(guides = "collect", widths = c(.4,.05,.4)) +
+  plot_annotation(caption = "Note: Points = Median, thick line = 66% quantile intervall, thin line = 95% quantile intervall")
+
+ggsave("../figures/temp_dfe_easy_hard_n50.png",width = 14, height = 4)
 
