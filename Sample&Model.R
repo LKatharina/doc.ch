@@ -61,7 +61,6 @@ get_model <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
                        fix = list(tau = tau))
   
   predict(rsft_model)
-  rsft_model$envid
   rsft_sim <- data.table(trial = (ntrials + 1) - rsft_model$get_timehorizons(),
                          state = rsft_model$get_states(),
                          prhv_rsft = rsft_model$predict("response"),

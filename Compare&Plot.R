@@ -62,10 +62,15 @@ get_plot <- function(i) {
     ylim(c(0,1)) +
     labs(title = "Environment",
          subtitle = paste("Reach", d2[plot_id %in% i]$budget[1], "in 3 trials"),
-         caption = paste0("Beta_n = ", max(d2[plot_id %in% i]$beta_id)/max(d2[plot_id %in% i]$subject_id), 
-                          ", Subject_n = ", max(d2[plot_id %in% i]$subject_id)/length(unique(d2[plot_id %in% i]$dfe_id)))) +
+         caption = paste0("Beta_n = ", max(d2$beta_id)/max(d2$subject_id), 
+                          ", Subject_n = ", max(d2$subject_id)/(length(unique(d2$dfe_id))*length(unique(d2$dfe_id))))) +
     theme(axis.title.x = element_blank(),
           axis.text.x = element_blank(),
-          axis.ticks.x = element_blank())
+          axis.ticks.x = element_blank(),
+          legend.key.size = unit(.2, 'cm'),
+          legend.key.height= unit(.5, 'cm'),
+          legend.key.width= unit(.5, 'cm'),
+          legend.title = element_text(size = 5),
+          legend.text = element_text(size = 5))
 }
 
