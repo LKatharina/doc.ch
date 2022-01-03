@@ -41,7 +41,11 @@ b = c(17,19) # budget
 # Sampling
 small = 3 # samplesize: large vs. small
 large = 10 # samplesize: large vs. small
+<<<<<<< HEAD
 sampleNR = 30 # number of different samples (binominal distribution) / number of participants per sample size
+=======
+sampleNR = 3 # number of different samples (binominal distribution) / number of participants per sample size
+>>>>>>> parent of acda3c3 (dfe sample size)
 
 # Beta distribution
 ndrawsbeta = 100 # draws from beta distribution
@@ -80,6 +84,17 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
 
   data[,count_yh := numberOfdraws - count_xh]
   data[,count_yl := numberOfdraws - count_xl]
+<<<<<<< HEAD
+=======
+  
+  M = bayes_beta_c( ~ count_xh + count_xl,
+                     data = data,
+                     format = "count",
+                     fix = list(delta = 1,
+                                priorpar = c(1,1),
+                                sigma = 0.01))
+  data[, pmax := predict(M)]
+>>>>>>> parent of acda3c3 (dfe sample size)
   data[, nr := 1:nrow(data)]
   data[, id := paste(b,numberOfdraws,sampleNR, sep="_")]
   
@@ -100,8 +115,8 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
   data_bayes[, start := 0]
   data_bayes[, betadraw := 1:nrow(data_bayes)]
   
-
-  #  RSFT model
+  
+  # RSFT model
   rsft_model <- hm1988(
     ~ xh + bxh + yh + byh | xl + bxl  + yl + byl,  # our formula (as before)
     trials = ".ALL",        # NEW: ".ALL" will predict for *all possible* trials
@@ -137,5 +152,9 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
 db <- createData(pxh = pxh, pxl = pxl, xh = xh, yh = yh, yl = yl, b = b, small = small, large = large
            ,sampleNR = sampleNR, ndrawsbeta = ndrawsbeta)
 
+<<<<<<< HEAD
 fwrite(db, "../stimuli/example_bayes_data2.csv")
+=======
+fwrite(db, "../stimuli/example_bayes_data.csv")
+>>>>>>> parent of acda3c3 (dfe sample size)
 
