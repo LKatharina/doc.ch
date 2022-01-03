@@ -55,18 +55,6 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
   count_player = c(small,large)
   
   # Sampling from binominal distribution
-  # for (player in count_player) {
-  #   for(sample in 1:sampleNR){
-  #     outh = rbinom(n=player, size=1, prob=pxh)
-  #     outl = rbinom(n=player, size=1, prob=pxl)
-  #     count_xh = c(count_xh,sum(outh))
-  #     count_xl = c(count_xl,sum(outl))
-  #   }
-  # }
-
-  # -------------------------------------------------------------------
-  # ALTERNATIVE
-  # --> Please double check that it does what it should
   # n: Number of random draws = number of persons = length of output vector
   # size: Number of trials = numnber of samples by person = max count
   count_xh <- c(sapply(count_player, rbinom, n = sampleNR, prob = pxh))
@@ -90,54 +78,23 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
     pyl = rep((1-pxl), nrowsdata)
     )
 
-  # x = 1
-  # d <- data
-  # while(x < length(b)){
-  #   data = rbind(data,d)
-  #   x = x + 1
-  # }
-    
-  # vb = rep(b,each = sampleNR * length(count_player))
-  # data[,b := vb]
   data[,count_yh := numberOfdraws - count_xh]
   data[,count_yl := numberOfdraws - count_xl]
-  
-  # M = bayes_beta_c( ~ count_xh + count_xl,
-  #                    data = data,
-  #                    format = "count",
-  #                    fix = list(delta = 1,
-  #                               priorpar = c(1,1),
-  #                               sigma = 0.01))
-  # data[, pmax := predict(M)] 
   data[, nr := 1:nrow(data)]
   data[, id := paste(b,numberOfdraws,sampleNR, sep="_")]
   
-  # Sampling from beta distribution
-  # i <- 1
-  # data_bayes <- lapply(1:nrow(data), function(i) {
-  #   j = 1
-  #   bxh <- rbeta(n = ndrawsbeta,data$count_xh[i], data$count_yh[i])
-  #   bxl <- rbeta(n = ndrawsbeta,data$count_xl[i], data$count_yl[i])
-  #   d <- data[j,]
-  #   while(j < ndrawsbeta){
-  #      d <- rbind(d,data[i,])
-  #      j = j + 1
-  #   }
-  #   dat <- cbind(d,bxh,bxl)
-  #   return(dat)
-  # }
-  # )
+ 
   # make a longer data frame (expand data)
   data_bayes <- data[rep(1:nrowsdata, each = ndrawsbeta)]
+  
+  # Sampling from beta distribution
   data_bayes[, c("bxh", "bxl") := .(
       rbeta(.N, count_xh + prior[1], count_yh + prior[2]),
       rbeta(.N, count_xl + prior[1], count_yl + prior[2])
     ),
     by = .(numberOfdraws, sampleNR, b)
     ]
-
-  # Make the list into one data table (data frame)
-  # data_bayes <- rbindlist(data_bayes)
+  
   data_bayes[, byh := 1 - bxh]
   data_bayes[, byl := 1 - bxl]
   data_bayes[, start := 0]
@@ -145,7 +102,6 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
   
 
   #  RSFT model
-  debug_data <<- data_bayes
   rsft_model <- hm1988(
     ~ xh + bxh + yh + byh | xl + bxl  + yl + byl,  # our formula (as before)
     trials = ".ALL",        # NEW: ".ALL" will predict for *all possible* trials
@@ -177,8 +133,9 @@ createData <- function(pxh,pxl,xh,yh,yl,b,small,large, sampleNR, ndrawsbeta, see
   return(db)
 }
 
-sampleNR = 50
+
 db <- createData(pxh = pxh, pxl = pxl, xh = xh, yh = yh, yl = yl, b = b, small = small, large = large
            ,sampleNR = sampleNR, ndrawsbeta = ndrawsbeta)
-fwrite(db, "../stimuli/example_bayes_data1.csv")
+
+fwrite(db, "../stimuli/example_bayes_data2.csv")
 

@@ -13,9 +13,9 @@ library(ggplot2)
 # Load data ----------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-db <- read.table("../stimuli/example_bayes_data1.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+db <- read.table("../stimuli/example_bayes_data2.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
 db <- as.data.table(db)
-
+db
 # Parameter ----------------------------------------------------------------
 ntrials <- 3
 nconditions <- 2
@@ -29,18 +29,18 @@ maxdensity <- function(budget){
   sd <- db[grepl(as.character(budget), db$id, fixed = TRUE),]
   sd <- as.data.frame(sd)
   vmax <- NULL
-  s <- rep(conditions, each = ntrials) 
-  t <- rep(c(1:ntrials), nconditions) 
+  s <- rep(conditions, each = ntrials)
+  t <- rep(c(1:ntrials), nconditions)
   for(i in 1:6){
     j <- s[i]
     k <- t[i]
     sdb <- sd[sd$sampling == j & sd$trial == k ,]
-    v = which.max(density(sdb$prhv_rsft)$y)
-    max <- density(sdb$prhv_rsft)$x[v]
+    v = which.max(density(sdb$lvalue)$y)
+    max <- density(sdb$lvalue)$x[v]
     vmax <- c(vmax, max)
     sdb <- NULL
   }
-  
+
   densitypeak <- data.table(sampling = s,trial = t,peak = vmax)
   return(densitypeak)
 }
@@ -50,12 +50,12 @@ maxdensity <- function(budget){
 peakeasy <- maxdensity(17)
 peakhard <- maxdensity(19)
 
-p1 <- ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "17_10_3")], 
-       aes(x=prhv_rsft, fill = sampling, colour = sampling))+
+p1 <- ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "17_10_3")],
+       aes(x=lvalue, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
   scale_x_continuous(limits = c(0,1), expand = c(0,0))+
-  scale_y_continuous(limits = c(0,11), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,40), expand = c(0,0))+
   geom_vline(peakeasy, mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
   coord_flip() +
   scale_fill_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (20)", "small sample (6)")) +
@@ -66,8 +66,8 @@ p1 <- ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "1
 ggsave("../figures/temp_dfe_easy.png",width = 8, height = 6)
 
 
-p2 <- ggplot(db[id %in% c("19_3_1", "19_3_2", "19_3_3", "19_10_1", "19_10_2", "19_10_3")], 
-       aes(x=prhv_rsft, fill = sampling, colour = sampling))+
+p2 <- ggplot(db[id %in% c("19_3_1", "19_3_2", "19_3_3", "19_10_1", "19_10_2", "19_10_3")],
+       aes(x=hvalue, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
   scale_x_continuous(limits = c(0,1), expand = c(0,0))+
@@ -87,7 +87,6 @@ p1 + plot_spacer() + p2 + plot_layout(guides = "collect", widths = c(0.4,0.1,0.4
   (p2 + theme(plot.margin = unit(c(0,0,0,30), "pt"))) + plot_layout(guides = "collect")
 
 
-
 # Alternative to plot
 library(tidybayes) # for fancy density plots, google it, it is great
 # define one plotting function
@@ -97,7 +96,7 @@ make_plot <- function(i) {
   the_colors <- c("red", "grey25")
   ggplot(
     data = db[id %in% i],
-    mapping = aes(x = trial, y = bxh, color = sampling, fill = sampling)) +
+    mapping = aes(x = trial, y = prhv_rsft, color = sampling, fill = sampling)) +
   stat_halfeye( # uses median and QI = quantile interval (also known as the percentile interval or equi-tailed interval)
     .width = c(.66, 0.95), #use .66, .95 to show 66 and 96% HDI
     slab_alpha = 0.15,
@@ -106,7 +105,8 @@ make_plot <- function(i) {
   theme_classic() +
   scale_fill_manual(
     values=the_colors,
-    name = the_name, labels = the_labels) +
+    name = the_name,
+    labels = the_labels) +
   scale_colour_manual(
     values=the_colors,
     name = the_name, labels = the_labels) +
@@ -122,6 +122,7 @@ make_plot <- function(i) {
     axis.ticks.x = element_blank())
 }
 
+p + p1
 
 # plot and combine
 p1 <- make_plot(c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2","17_10_3"))
