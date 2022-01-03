@@ -15,13 +15,15 @@ source("2-shifting-select.R")
 # Plot -----------------------------------------------------------------------------------------
 jitter <- position_jitter(width = 0.1)
 
+# In bearbeitung
+
 plotfunc <- function(i){
   plot <- ggplot(stimuli[nr == unique(nr)[i] & model != "shift"] , 
                  aes(x = trial, y=prhv, fill = model))+
     theme_classic() +
-    geom_hline(yintercept = 0.5, linetype = 2, size = 0.3)+
-    geom_point(size = 1.4, position = jitter, shape = 21) +
-    scale_fill_manual(values=c("blue","red"), name = "Model",labels = c("OPT softmax", "PH softmax"))+
+    geom_hline(yintercept = 0.5, linetype = 2, size = 0.5, alpha = 0.3)+
+    geom_point(size = 3, position = jitter, shape = 21, alpha = 0.3, colour = "black") +
+    scale_fill_manual(values=c("black","white"), name = "Model",labels = c("OPT softmax", "PH softmax"))+
     ylim(0,1) +
     labs(x = 'Trial', y = 'Proportion of Risky Choices', fill = "Model")+
     theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),legend.text = element_text(size = 10),
@@ -39,6 +41,8 @@ plotfunc <- function(i){
   return(plot)
 }
 
+s2 <- stimuli[nr == 4207]
+s2 <- s2[, median(prhv), by = c("model","trial")][model == "shift"]
 s1_opt_ph <- plotfunc(1)
 ggsave("../figures/temp_shifting_a.png",width = 8, height = 6)
 s2_opt_ph <- plotfunc(2)
