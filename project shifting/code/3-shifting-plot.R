@@ -3,7 +3,7 @@
 # ==========================================================================
 
 # Load Packages --------------------------------------------------------------------------------
-pacman::p_load(data.table, ggplot2)
+pacman::p_load(data.table, ggplot2, patchwork)
 library(cognitivemodels)
 windowsFonts(Arial=windowsFont("Arial"))
 
@@ -24,7 +24,7 @@ plotfunc <- function(i){
   
   plot <- ggplot(stimuli[nr == unique(nr)[i] & model != "shift"] , 
                  aes(x = trial, y=prhv, shape = model))+
-    theme_classic() +
+    theme_classic(base_size = 18, base_family = "Arial") +
     geom_hline(yintercept = 0.5, linetype = 2, size = 0.5, alpha = 0.1)+
     geom_point(size = 3, position = jitter, alpha = 0.5, show.legend = FALSE) +
     scale_shape_manual(values=c(1,2,3),name = "Model",labels = c("Probability Heuristic", "Optimal Model", "Shifting Model"))+ # Irgendwie verdreht (????)
@@ -34,58 +34,63 @@ plotfunc <- function(i){
     labs(x = 'Trial', y = 'Proportion of Risky Choices')+
     geom_point(agg[model == "shift"], mapping = aes(x = trial, y = median, shape = model), colour = "blue", inherit.aes = F, size = 4, stroke = 2)+
     geom_line(agg[model == "shift"], mapping = aes(x = trial, y = median, group = 1), linetype = 2, inherit.aes = F, colour = "blue", size = 0.8, alpha = 0.5)+
-    theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),legend.text = element_text(size = 10),
-          text = element_text(family = "Arial", size = 11), axis.title.y = element_text(family = "Arial", size = 13),
-          axis.title.x = element_text(family = "Arial", size = 13), 
-          axis.text.y.left = element_text(family = "Arial", size = 11),
-          axis.text.x.bottom = element_text(family = "Arial", size = 11),
-          strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"))+
+    theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),#legend.text = element_text(size = 10),
+          text = element_text(family = "Arial"), axis.title.y = element_text(family = "Arial"),
+          axis.title.x = element_text(family = "Arial"), 
+          axis.text.y.left = element_text(family = "Arial"),
+          axis.text.x.bottom = element_text(family = "Arial"),
+          strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(family = "Arial"))+
     guides(shape = guide_legend(override.aes = list(alpha = 1, colour = "black", stroke = 1))
            #fill = guide_legend(override.aes = list(alpha = 1)),
-           ) +
-     ggtitle(
-      paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
-             " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
-             " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
-             " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
-             stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
+    ) #+
+    labs(title = "Environment", subtitle = paste0("Reach ", stimuli[nr == unique(stimuli$nr)[i], b[1]],  " in 5 trial" ))
+  # ggtitle(
+  #  paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
+  #         " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
+  #         " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
+  #         " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
+  #         stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
   print(plot)
   return(plot)
 }
 
-#
+
 
 s1_opt_ph <- plotfunc(1)
-ggsave("../figures/temp_shifting_a.png",width = 8, height = 6)
+ggsave("../figures/temp_shifting_a.png",width = 8, height = 4)
 s2_opt_ph <- plotfunc(2)
 ggsave("../figures/temp_shifting_b.png",width = 8, height = 6)
 s3_opt_ph <- plotfunc(3)
 ggsave("../figures/temp_shifting_c.png",width = 8, height = 6)
 
 
-
+comp <- s1_opt_ph  + plot_spacer() + s2_opt_ph  +
+  plot_layout(guides = "collect", widths = c(.4,.05,.4))
+ggsave("../figures/comp.png",width = 11, height = 4)
 # Shifting -------------------------------------------------------------------------
 
 plotfunc1 <- function(i){
   plot <- ggplot(stimuli[nr == unique(nr)[i]] , 
                  aes(x = trial, y=prhv, fill = model))+
-    theme_classic() +
+    theme_classic(base_size = 18, base_family = "Arial") +
     geom_hline(yintercept = 0.5, linetype = 2, size = 0.3)+
     geom_point(size = 1.4, position = jitter, shape = 21) +
     scale_fill_manual(values=c("blue","red", "green"), name = "Model",labels = c("OPT softmax", "PH softmax", "Shifting"))+
     ylim(0,1) +
     labs(x = 'Trial', y = 'Proportion of Risky Choices', fill = "Model")+
-    theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),legend.text = element_text(size = 10),
-          text = element_text(family = "Arial", size = 11), axis.title.y = element_text(family = "Arial", size = 13),
-          axis.title.x = element_text(family = "Arial", size = 13), 
-          axis.text.y.left = element_text(family = "Arial", size = 11),
-          axis.text.x.bottom = element_text(family = "Arial", size = 11),
-          strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"))+
-    ggtitle( paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
-                    " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
-                    " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
-                    " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
-                    stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
+    theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),
+          #legend.text = element_text(size = 13),
+          text = element_text(family = "Arial", size = 11), axis.title.y = element_text(family = "Arial"),
+          axis.title.x = element_text(family = "Arial"), 
+          axis.text.y.left = element_text(family = "Arial"),
+          axis.text.x.bottom = element_text(family = "Arial"),
+          strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(family = "Arial")) +
+    labs(title = "A", subtitle = paste0("Reach ", stimuli[nr == unique(stimuli$nr)[i], b[1]], " in 5 trial" ))
+  # ggtitle( paste0("Stimuli ", unique(stimuli$nr)[i], ". Risky: ", stimuli[nr == unique(stimuli$nr)[i], xh[1]],
+  #                 " (", stimuli[nr == unique(stimuli$nr)[i], pxh[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yh[1]],
+  #                 " /  Safe: ", stimuli[nr == unique(stimuli$nr)[i], xl[1]],
+  #                 " (", stimuli[nr == unique(stimuli$nr)[i], pxl[1]], "); ", stimuli[nr == unique(stimuli$nr)[i], yl[1]],". Budget: ",
+  #                 stimuli[nr == unique(stimuli$nr)[i], b[1]], ". Difficulty: ", stimuli[nr == unique(stimuli$nr)[i], dhbin[1]]))
   return(plot)
 }
 
@@ -102,7 +107,7 @@ ggsave("../figures/temp_shifting_c1.png",width = 8, height = 6)
 plotfunc2 <- function(i){
   
   agg <- stimuli[nr == unique(nr)[i], .(median = median(prhv)), by = c("model","trial")]
-
+  
   plot <- ggplot(stimuli[nr == unique(nr)[i] & model != "shift"] , 
                  aes(x = trial, y=prhv, shape = model))+
     theme_classic() +
@@ -125,7 +130,7 @@ plotfunc2 <- function(i){
           axis.text.x.bottom = element_text(family = "Arial", size = 11),
           strip.background = element_rect(colour="black", size = 0.01),strip.text = element_text(size = 11, family = "Arial"))+
     guides(shape = guide_legend(override.aes = list(alpha = 1, colour = "black", stroke = 1)),
-                                colour = guide_legend(override.aes = list(alpha = 1, colour = "black", stroke = 1))
+           colour = guide_legend(override.aes = list(alpha = 1, colour = "black", stroke = 1))
            #fill = guide_legend(override.aes = list(alpha = 1)),
     ) +
     ggtitle(
