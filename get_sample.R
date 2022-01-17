@@ -27,7 +27,8 @@ get_sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_
                           ps1 = rep(ps1, times = freq_rown),
                           ps2 = rep(ps2, times = freq_rown),
                           pr1 = rep(pr1, times = freq_rown),
-                          pr2 = rep(pr2, times = freq_rown))
+                          pr2 = rep(pr2, times = freq_rown),
+                          seed = rep(seed, times = freq_rown))
   
   data_freq[, `:=` (count_s2 = dfe_id - count_s1, 
                     count_r2 = dfe_id - count_r1,
