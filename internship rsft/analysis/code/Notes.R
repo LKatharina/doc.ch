@@ -4,6 +4,8 @@ library(data.table)
 library(tidybayes)
 library(patchwork)
 library(psych)
+library(future)
+library(future.apply)
 
 rm(list = ls())
 gc()
@@ -11,21 +13,100 @@ gc()
 source("get_sample.R")
 
 subjects <- 5
-betas <- c(seq(1, 10, 1), seq(10, 100, 10), seq(250, 1000, 250), 2000, 3000)
+betas <- c(seq(1, 9, 1), seq(10, 100, 10), seq(250, 1000, 250), 2000, 3000)
 ntrials <- 3
-seeds <- seq(1, 10, 1)
-budget <- 8
+seeds <- seq(1, 20, 1)
+budget <- 18
 dfes <- c(3, 10)
 prior <- c(1, 1)
 ps1 <- 0.5
-s1 <- 1
-s2 <- 2
-pr1 <- 0.8
-r1 <- 0
-r2 <- 4
+s1 <- 6
+s2 <- 8
+pr1 <- 0.25
+r1 <- 1
+r2 <- 9
 
-paras <- as.data.table(expand.grid(beta_n = betas, budget = budget, subject_n = subjects, dfe_n = dfes, seed = seeds))
+paras <- data.table::as.data.table(expand.grid(beta_n = betas, budget = budget, subject_n = subjects, dfe_n = dfes, seed = seeds))
 paras[, `:=` (ps1 = ps1, s1 = s1, s2 = s2, pr1 = pr1, r1 = r1, r2 = r2, para_id = .I)]
+
+rown <- nrow(paras)
+get_betas <- function(data) {
+  l1 <- c(1:(rown/4))
+  l2 <- c((rown/4+1):(rown/2))
+  l3 <- c((rown/2+1):(rown*.75))
+  l4 <- c((rown*.75+1):rown)
+  
+  future::plan(multisession)
+  
+  b1 %<-% {
+    data[l1, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+  }
+  b2 %<-% {
+    data[l2, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+  }
+  b3 %<-% {
+    data[l3, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+  } 
+  b4 %<-% {
+    data[l4, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+  } 
+  rbind(b1, b2, b3, b4)
+}
+beta_sample_f <- get_betas(paras)
+
+
+# for (i in seq(1, nrow(paras), 2)) {
+#   a %<-% {
+#     beta_sample <- paras[i, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
+#   } 
+# }
+# 
+# for (i in seq(2, nrow(paras), 2)) {
+#   b %<-% {
+#     beta_sample <- paras[i, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
+#   } 
+# }
+# 
+# 
+# X <- matrix(c(1:4, 1, 6:8), nrow = 2L)
+
+library(microbenchmark)
+library(ggplot2)
+
+mbm <- microbenchmark::microbenchmark("y0" = {
+  beta_sample <- paras[, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+},
+"y1" = {
+  beta_sample_f <- get_betas(paras)
+},
+times = 10L)
+
+autoplot(mbm)
+
+
+library(rbenchmark)
+
+benchmark("y0" = {
+  beta_sample <- paras[, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+},
+"y1" = {
+  plan(list(multisession, multisession))
+  
+  beta_sample_f %<-% {
+    b1 %<-% {
+      paras[1:250, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+    }
+    b2 %<-% {
+      paras[251:500, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+    }
+    rbind(b1, b2)
+  }
+  beta_sample_f
+},
+replications = 10,
+columns = c("test", "replications", "elapsed",
+            "relative", "user.self", "sys.self"))
+
 
 beta_sample <- paras[, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
 

@@ -1,5 +1,5 @@
 
-get_plot <- function(i) {
+Get_Plot <- function(i) {
   d2[, dfe_id := factor(dfe_id)]
   the_name <- "Sample Size"
   the_labels <- c("Large (10 per option)", "Small (3 per option)")

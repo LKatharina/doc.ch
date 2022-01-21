@@ -1,5 +1,5 @@
 
-get_comparison <- function(df) {
+Get_Comparison <- function(df) {
   
   mean_prhv <- d2[, .(prhv_rsft = mean(prhv_rsft)), 
                   by = .(dfe_id, trial)]

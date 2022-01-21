@@ -1,5 +1,5 @@
 
-get_sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42) {
+Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42) {
   set.seed(seed)
   
   ps2 <- 1-ps1

@@ -1,12 +1,12 @@
 
-get_predictions <- function(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed, ntrials) {
+Get_Predictions <- function(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed, ntrials) {
   # saves all args and values to get predictions
   # args <- as.list(match.call())
   # print(args)
   # calls the function get_sample and implicitly passes the arguments in args to this function
   # d1 <- do.call(what = get_sample, args = args[1:11])
-  d1 <- get_sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior = c(1,1), seed = seed)
-  return(get_model(df = d1, ntrials = ntrials))
+  d1 <- Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior = c(1,1), seed = seed)
+  return(Get_Model(df = d1, ntrials = ntrials))
 }
 
 

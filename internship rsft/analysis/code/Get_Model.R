@@ -1,5 +1,5 @@
 
-get_model <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
+Get_Model <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
   # rsft_model <- hm1988(~ r1 + b_pr1  + r2 + b_pr2 | s1 + b_ps1 + s2 + b_ps2,
   #                      trials = ".ALL",
   #                      data = df,
