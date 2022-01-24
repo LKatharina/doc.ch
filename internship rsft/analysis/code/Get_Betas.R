@@ -22,5 +22,4 @@ Get_Betas <- function(data) {
     data[l4, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
   } 
   return(rbind(b1, b2, b3, b4))
-  
 }

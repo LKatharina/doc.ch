@@ -53,55 +53,83 @@ beta_sample_f <- Get_Betas(paras)
 # beta_sample <- paras[, get_sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
 
 # Create dataset with mean, sd, median and quartiles comparisons between DFE-values and the related variations
-beta_coll <- beta_sample_f[, .(mean_diff_dfe = abs(mean(b_ps1[dfe_id == dfes[1]]) - mean(b_ps1[dfe_id == dfes[2]])), 
-                               sd_diff_dfe = abs(sd(b_ps1[dfe_id == dfes[1]]) - sd(b_ps1[dfe_id == dfes[2]])),
-                               median_diff_dfe = abs(median(b_ps1[dfe_id == dfes[1]]) - median(b_ps1[dfe_id == dfes[2]])),
-                               `1stq_diff_dfe` = abs(quantile(b_ps1[dfe_id == dfes[1]], prob = .25) - quantile(b_ps1[dfe_id == dfes[2]], prob = .25)),
-                               `3rdq_diff_dfe` = abs(quantile(b_ps1[dfe_id == dfes[1]], prob = .75) - quantile(b_ps1[dfe_id == dfes[2]], prob = .75)),
-                               var_diff_dfe = abs(var(b_ps1[dfe_id == dfes[1]]) - var(b_ps1[dfe_id == dfes[2]])),
+beta_coll <- beta_sample_f[, .(mean_dfe1 = mean(b_ps1[dfe_id == dfes[1]]), 
+                               sd_dfe1 = sd(b_ps1[dfe_id == dfes[1]]),
+                               median_dfe1 = median(b_ps1[dfe_id == dfes[1]]),
+                               Q1_dfe1 = quantile(b_ps1[dfe_id == dfes[1]], prob = .25),
+                               Q3_dfe1 = quantile(b_ps1[dfe_id == dfes[1]], prob = .75),
                                var_dfe1 = abs(var(b_ps1[dfe_id == dfes[1]])),
+                               mean_dfe2 = mean(b_ps1[dfe_id == dfes[2]]),
+                               sd_dfe2 = sd(b_ps1[dfe_id == dfes[2]]),
+                               median_dfe2 = median(b_ps1[dfe_id == dfes[2]]),
+                               Q1_dfe2 = quantile(b_ps1[dfe_id == dfes[2]], prob = .25),
+                               Q3_dfe2 = quantile(b_ps1[dfe_id == dfes[2]], prob = .75),
                                var_dfe2 = abs(var(b_ps1[dfe_id == dfes[2]]))),
                            keyby = .(beta_n, seed)]
-beta_coll <- beta_coll[, .(mean = mean(mean_diff_dfe),
-                           sd = mean(sd_diff_dfe),
-                           median = mean(median_diff_dfe),
-                           Q1 = mean(`1stq_diff_dfe`),
-                           Q3 = mean(`3rdq_diff_dfe`),
-                           variance = mean(var_diff_dfe),
+beta_coll <- beta_coll[, .(mean_dfe1 = mean(mean_dfe1),
+                           sd_dfe1 = mean(sd_dfe1),
+                           median_dfe1 = mean(median_dfe1),
+                           Q1_dfe1 = mean(Q1_dfe1),
+                           Q3_dfe1 = mean(Q3_dfe1),
                            var_dfe1 = mean(var_dfe1),
+                           mean_dfe2 = mean(mean_dfe2),
+                           sd_dfe2 = mean(sd_dfe2),
+                           median_dfe2 = mean(median_dfe2),
+                           Q1_dfe2 = mean(Q1_dfe2),
+                           Q3_dfe2 = mean(Q3_dfe2),
                            var_dfe2 = mean(var_dfe2)), 
                        by = .(beta_n)]
-beta_coll <- beta_coll %>%
-  tibble() %>% 
-  mutate(across(.cols = c(2:9), 
-                ~round(.x, 3)))
-
-beta_coll[, (2:9) := round(.SD, 3), .SDcols = c(2:9)]
+# beta_coll[, (2:13) := round(.SD, 3), .SDcols = c(2:13)]
  
 
 ticks <- c(1,2,3,4,5,7,10,20,30,40,50,75,100,200,300,400,500,750,1000,2000,3000)
 plotlabels <- c("Mean", "SD", "Median", "Q1", "Q3", "Variance")
 
-for (i in 1:6) {
-  assign(paste0("plot_", plotlabels[i]),
-         ggplot(mapping = aes_string(x = beta_coll$beta_n, y = beta_coll[[i+1]])) +
-    geom_line(size = .7) +
-    theme_minimal() +
-    scale_x_continuous(trans = "log2", breaks = ticks) +
-    labs(x = "Beta size",
-         y = paste0(plotlabels[i], " difference b_ps1")) +
-    theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)))
+for (i in 1:(length(beta_coll)-1)) {
+  if (i < 7) {
+    assign(paste0("plot_", plotlabels[i], "_1"),
+           ggplot(mapping = aes_string(x = beta_coll[[1]], y = beta_coll[[i+1]])) +
+             geom_line(size = .7) +
+             theme_minimal() +
+             scale_x_continuous(trans = "log2", breaks = ticks) +
+             labs(x = "Beta size",
+                  y = paste0(plotlabels[i], " b_ps1")) +
+             theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
+                   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)))
+    if (i == 6) {
+      main_plot1 <- ggpubr::ggarrange(plot_Mean_1, plot_SD_1, plot_Median_1, plot_Q1_1, plot_Q3_1, plot_Variance_1, 
+                                     labels = c("Mean", "SD", "Median", "1st quantile", "3rd quantile", "Variance"),
+                                     ncol = 3, nrow = 2, hjust = c(-2.2, -4.1, -1.6, -1, -1, -1.4), vjust = 2) %>% 
+        ggpubr::annotate_figure(top = ggpubr::text_grob(label = "Differences in beta distributions between seeds (samplesize 3, 100 seeds)", 
+                                                        face = "bold", size = 18))
+      ggsave(filename = "analysis/figures/Betasize_differences_dfe1.png", plot = main_plot1, height = 20, width = 35, units = "cm")
+    }
+  }
+  if (i >= 7) {
+    assign(paste0("plot_", plotlabels[i-6], "_2"),
+           ggplot(mapping = aes_string(x = beta_coll[[1]], y = beta_coll[[i+1]])) +
+             geom_line(size = .7) +
+             theme_minimal() +
+             scale_x_continuous(trans = "log2", breaks = ticks) +
+             labs(x = "Beta size",
+                  y = paste0(plotlabels[i-6], " b_ps1")) +
+             theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
+                   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)))
+    if (i == 12) {
+      main_plot2 <- ggpubr::ggarrange(plot_Mean_2, plot_SD_2, plot_Median_2, plot_Q1_2, plot_Q3_2, plot_Variance_2, 
+                                     labels = c("Mean", "SD", "Median", "1st quantile", "3rd quantile", "Variance"),
+                                     ncol = 3, nrow = 2, hjust = c(-2.2, -4.1, -1.6, -1, -1, -1.4), vjust = 2) %>% 
+        ggpubr::annotate_figure(top = ggpubr::text_grob(label = "Differences in beta distributions between seeds (samplesize 10, 100 seeds)", 
+                                                        face = "bold", size = 18))
+      ggsave(filename = "analysis/figures/Betasize_differences_dfe2.png", plot = main_plot2, height = 20, width = 35, units = "cm")
+    }
+  }
 }
 
-main_plot <- ggpubr::ggarrange(plot_Mean, plot_SD, plot_Median, plot_Q1, plot_Q3, plot_Variance, 
-                               labels = c("Mean", "SD", "Median", "1st quantile", "3rd quantile", "Variance"),
-                               ncol = 3, nrow = 2, hjust = c(-2.2, -4.1, -1.6, -1, -1, -1.4), vjust = 3) %>% 
-  ggpubr::annotate_figure(top = ggpubr::text_grob(label = "Differences in samplesizes (3, 10) depending on betasizes (100 seeds)", 
-                                                  face = "bold", size = 18))
-main_plot
+main_plot1
+main_plot2
 
-ggsave(filename = "analysis/figures/Betasize_differences.png", plot = main_plot, height = 20, width = 35, units = "cm")
+
 
 
 # cols <- colnames(beta_coll[c(2:7)])
