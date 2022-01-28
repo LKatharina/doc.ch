@@ -13,7 +13,7 @@ library(ggplot2)
 # Load data ----------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-db <- read.table("../stimuli/example_bayes_data2.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+db <- read.table("../stimuli/example_bayes_data2pr.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
 db <- as.data.table(db)
 db
 # Parameter ----------------------------------------------------------------
@@ -24,19 +24,23 @@ conditions <- c("small sample", "large sample")
 # Plots ---------------------------------------------------------------------
 db[, sampling := ifelse(numberOfdraws == min(numberOfdraws), "small sample", "large sample")]
 db[, trial := as.factor(trial)]
+db[,wprhv := prhv_rsft *prstate]
 
 maxdensity <- function(budget){
-  sd <- db[grepl(as.character(budget), db$id, fixed = TRUE),]
+  sd <- db[grepl(as.character(budget), db$id, fixed = TRUE) & b == budget,]
   sd <- as.data.frame(sd)
   vmax <- NULL
   s <- rep(conditions, each = ntrials)
   t <- rep(c(1:ntrials), nconditions)
+  states = unique(sd$state)
+  
   for(i in 1:6){
     j <- s[i]
     k <- t[i]
+    states = 4^(t-1)
     sdb <- sd[sd$sampling == j & sd$trial == k ,]
-    v = which.max(density(sdb$lvalue)$y)
-    max <- density(sdb$lvalue)$x[v]
+    v = which.max(density(sdb$wprhv)$y)
+    max <- density(sdb$wprhv)$x[v]
     vmax <- c(vmax, max)
     sdb <- NULL
   }
@@ -50,12 +54,12 @@ maxdensity <- function(budget){
 peakeasy <- maxdensity(17)
 peakhard <- maxdensity(19)
 
-p1 <- ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "17_10_3")],
-       aes(x=lvalue, fill = sampling, colour = sampling))+
+p1 <- ggplot(db[grepl(as.character(17), db$id, fixed = TRUE) & b == 17],
+       aes(x=wprhv, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
   scale_x_continuous(limits = c(0,1), expand = c(0,0))+
-  scale_y_continuous(limits = c(0,40), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,12), expand = c(0,0))+
   geom_vline(peakeasy, mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
   coord_flip() +
   scale_fill_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (20)", "small sample (6)")) +
@@ -66,12 +70,12 @@ p1 <- ggplot(db[id %in% c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2", "1
 ggsave("../figures/temp_dfe_easy.png",width = 8, height = 6)
 
 
-p2 <- ggplot(db[id %in% c("19_3_1", "19_3_2", "19_3_3", "19_10_1", "19_10_2", "19_10_3")],
-       aes(x=hvalue, fill = sampling, colour = sampling))+
+p2 <- ggplot(db[grepl(as.character(19), db$id, fixed = TRUE) & b == 19],
+       aes(x=wprhv, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
   scale_x_continuous(limits = c(0,1), expand = c(0,0))+
-  scale_y_continuous(limits = c(0,40), expand = c(0,0))+
+  scale_y_continuous(limits = c(0,15), expand = c(0,0))+
   geom_vline(peakhard, mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
   coord_flip() +
   scale_fill_manual(values=c("blue","green")) +
@@ -90,13 +94,13 @@ p1 + plot_spacer() + p2 + plot_layout(guides = "collect", widths = c(0.4,0.1,0.4
 # Alternative to plot
 library(tidybayes) # for fancy density plots, google it, it is great
 # define one plotting function
-make_plot <- function(i) {
+make_plot <- function(data) {
   the_name <- "Sample Size"
   the_labels <- c("Large (10 per option)", "Small (3 per option)")
   the_colors <- c("red", "grey25")
   ggplot(
-    data = db[id %in% i],
-    mapping = aes(x = trial, y = prhv_rsft, color = sampling, fill = sampling)) +
+    data = data,
+    mapping = aes(x = trial, y = wprhv, color = sampling, fill = sampling)) +
   stat_halfeye( # uses median and QI = quantile interval (also known as the percentile interval or equi-tailed interval)
     .width = c(.66, 0.95), #use .66, .95 to show 66 and 96% HDI
     slab_alpha = 0.15,
@@ -113,23 +117,24 @@ make_plot <- function(i) {
   scale_shape_manual(
     values = c(16, 21),
     name = the_name, labels = the_labels) +
-  facet_wrap(~trial, labeller = label_both, scale = "free_x") +
+  facet_wrap(~trial+state, labeller = label_both, scale = "free_x") +
   ylab("Predicted Proportion of Risky Choices") +
   labs(title = "Environment",
-    subtitle = paste("Reach", db[id %in% i]$b[1], "in 3 trials")) +
+    subtitle = paste("Reach", data$b[1], "in 3 trials")) +
   theme(axis.title.x = element_blank(),
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank())
 }
 
-p + p1
 
 # plot and combine
-p1 <- make_plot(c("17_3_1", "17_3_2", "17_3_3", "17_10_1", "17_10_2","17_10_3"))
-p2 <- make_plot(c("19_3_1", "19_3_2", "19_3_3", "19_10_1", "19_10_2","19_10_3"))
+p1 <- make_plot(db[b == 17])
+p2 <- make_plot(db[b == 19])
 
 p1 + plot_spacer() + p2 +
   plot_layout(guides = "collect", widths = c(.4,.05,.4)) +
   plot_annotation(caption = "Note: Points = Median, thick line = 66% quantile intervall, thin line = 95% quantile intervall")
 
 ggsave("../figures/temp_dfe_easy_hard_n50.png",width = 14, height = 4)
+
+db

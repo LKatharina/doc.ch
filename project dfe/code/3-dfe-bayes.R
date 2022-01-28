@@ -36,12 +36,12 @@ yl = stimuli$yl[1]
 
 #RSFT task
 nt = 3 #trials
-b = c(17,19) # budget
+b = c(15,19) # budget
 
 # Sampling
 small = 3 # samplesize: large vs. small
 large = 10 # samplesize: large vs. small
-sampleNR = 30 # number of different samples (binominal distribution) / number of participants per sample size
+sampleNR = 100 # number of different samples (binominal distribution) / number of participants per sample size
 
 # Beta distribution
 ndrawsbeta = 100 # draws from beta distribution

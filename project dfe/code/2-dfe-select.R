@@ -38,6 +38,9 @@ d[, dhbin := cut(difficulty, c(0.1, 0.2, 0.4, 0.6, 0.8, 0.9), include.lowest = T
 stimuli <- d[trial == 1,]
 
 
+stimuli[,diffh := abs(pxh-pyh)]
+stimuli[,diffl := abs(pxl-pyl)]
+stimuli[,difftot := abs(diffh-diffl)]
+stimuli[order(-difftot,badrows)]
 
-
-
+stimuli = stimuli[nr == 1983 | nr == 1987]
