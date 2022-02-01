@@ -25,9 +25,28 @@ setClass(Class="RSFT",
 
 
 # Reward function --------------------------------------------------------------
-R = function(goal,state) { ifelse(state >= goal, 1, 0) }
 
-rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start, Rfunction = R, gstates = NULL, gtrials = NULL){
+# Step reward function ------------------------------------------------------
+step = function(goal,state) { ifelse(state >= goal, 1, 0) }
+
+# EV maximizing reward function ---------------------------------------------
+evmax = function(goal,state){
+  state
+}
+
+# smooth reward function ----------------------------------------------------
+logistic = function(goal,state,k){
+  y = 1/(1+exp(-k*(state-goal)))
+  return(y)
+}
+
+
+KT = function(goal,state,k){
+  y = ifelse(state >= goal, state^k, -2*(state^k)) 
+  return(y)
+}
+
+rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start, Rfunction = "step", k = NULL, gstates = NULL, gtrials = NULL){
 
   #define variables -------------------------------------------------------------
   phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)
@@ -133,13 +152,25 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
   # Run Functions from rsft1988 functions ----------------------------------------
 
   # HV Option: Tree with Probabilities, terminal reward, ER in the last trial
-  statesHV = growTree(outcomes, p = phv, timeHorizon = timeHorizon, start = start)
-  terminalRewardHV = Rfunction(goal = goal,state = statesHV[[timeHorizon]][1,])
-  ERlastHV = statesHV[[timeHorizon]][2,] * terminalRewardHV
-
   # LV Option: Tree with Probabilities, terminal reward, ER in the last trial
+  statesHV = growTree(outcomes, p = phv, timeHorizon = timeHorizon, start = start)
   statesLV = growTree(outcomes, p = plv, timeHorizon = timeHorizon,  start = start)
-  terminalRewardLV  <- Rfunction(goal = goal,state = statesLV[[timeHorizon]][1,])
+  
+  if(Rfunction == "evmax"){
+    terminalRewardHV = evmax(goal = goal,state = statesHV[[timeHorizon]][1,])
+    terminalRewardLV = evmax(goal = goal,state = statesLV[[timeHorizon]][1,])
+  } else if(Rfunction == "logistic") {
+    terminalRewardHV = logistic(goal = goal,state = statesHV[[timeHorizon]][1,],k=k)
+    terminalRewardLV = logistic(goal = goal,state = statesLV[[timeHorizon]][1,],k=k)
+  } else if(Rfunction == "TK"){
+    terminalRewardHV = TK(goal = goal,state = statesHV[[timeHorizon]][1,],k=k)
+    terminalRewardLV = TK(goal = goal,state = statesLV[[timeHorizon]][1,],k=k)
+  } else {
+    terminalRewardHV = step(goal = goal,state = statesHV[[timeHorizon]][1,])
+    terminalRewardLV = step(goal = goal,state = statesLV[[timeHorizon]][1,])
+  }
+  
+  ERlastHV = statesHV[[timeHorizon]][2,] * terminalRewardHV
   ERlastLV = statesLV[[timeHorizon]][2,] * terminalRewardLV
 
   # rsft values
