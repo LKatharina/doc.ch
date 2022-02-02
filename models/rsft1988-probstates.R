@@ -16,6 +16,18 @@ setClass(Class="prstates",
 # FUNCTIONS ====================================================================
 
 rsftStates <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final){
+  notzero = c(pxh,pyl,pxl,pyl)
+  if(any(notzero== 0)){
+    if(pxh == 0){
+      xh = 0
+    } else if(pyh == 0){
+      xh = 0
+    } else if(pxl == 0){
+      xl = 0
+    } else if(pyl == 0){
+      yl = 0
+    } else { }
+  }  else { }
   
   #define variables -------------------------------------------------------------
   phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)

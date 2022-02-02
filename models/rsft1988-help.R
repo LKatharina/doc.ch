@@ -24,8 +24,8 @@ data = data.table(xh = xh, yh = yh, pxh = pxh, pyh = pyh, xl = xl, yl = yl, pxl 
 
 
 # Run Model ==================================================================
-# rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,Rfunction,gstates,gtrials)
-# Rfunction: if no reward function specified the default step function is used
+# rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,Rfunction,k,gstates,gtrials)
+# Rfunction: if no reward function specified the default step function is used / k = parameter
 # gstates, gtrials: if no trials and states are entered the function makes predictions for all possible trials and states
 
 # Step Reward Function (default), all states and trials
@@ -36,9 +36,11 @@ m@extended[,.(policyHV,policyLV)] # Full Tree (is needed to calculate prstate)
 # Step Reward Function (default), given subset of states and trials
 m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0,gtrials = c(2,2),gstates = c(4,5))
 
-# Expected Value maximizing reward function (load rsft1988-rewardfunctions.R first)
-m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0,evmax)
+# Expected Value maximizing reward function
+m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, Rfunction = "evmax")
 
+# Smooth reward function
+m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, Rfunction = "logistic", k= 0.5)
 
 # Choice Rule ================================================================
 #choiceprob(datatable containing values (x and y), tau)

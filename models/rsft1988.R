@@ -49,6 +49,19 @@ KT = function(goal,state,k){
 rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start, Rfunction = "step", k = NULL, gstates = NULL, gtrials = NULL){
 
   #define variables -------------------------------------------------------------
+  notzero = c(pxh,pyl,pxl,pyl)
+  if(any(notzero== 0)){
+    if(pxh == 0){
+      xh = 0
+    } else if(pyh == 0){
+      xh = 0
+    } else if(pxl == 0){
+      xl = 0
+    } else if(pyl == 0){
+      yl = 0
+    } else { }
+  }  else { }
+    
   phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)
   plv = c(0,0,pxl,pyl) #c(0, 0, pxLV, pyLV)
   outcomes = c(xh,yh,xl,yl) #c(xHV,yHV,xLV,yLV)
@@ -56,6 +69,8 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
   Noutcomes = length(outcomes)
   timeHorizon = timeHorizon
   start = start
+  
+  
 
 
   # rsft1988 Functions =========================================================
