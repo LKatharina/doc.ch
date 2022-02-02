@@ -7,40 +7,94 @@
 
 # Load Packages-------------------------------------------------------------
 pacman::p_load(data.table)
-library(cognitivemodels)
-library(cognitiveutils)
 
 
 # Load data --------------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-d <- read.table("../stimuli/dfe_stimuli.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
-d <- as.data.table(d)
+
+stimuli <- read.table("../stimuli/dfe_stimuli-all-20-t5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+stimuli <- as.data.table(stimuli)
+
 
 # bad rows ----------------------------------------------------------------------------------
 
-d[,badrows := ifelse(hvalue == lvalue,1,0)]
-d[,sumbr := round(sum(badrows)/sum(.N),2), by=c("nr","b")]
-d <- d[sumbr < .6] # Exclusion if %bad rows > 60%
-
+stimuli[,badrows := ifelse(policyHV == policyLV,1,0)]
+stimuli[,sumbr := round(sum(badrows)/sum(.N),2), by=c("nr","b")]
+stimuli <- stimuli[sumbr < .6] # Exclusion if %bad rows > 60%
 
 
 # Difficulty Categories ---------------------------------------------------------------------
-d[,difficulty := ifelse(dh >= dl,dh,dl)]
-d <- d[difficulty <= .85 & difficulty >= .3] # Stimuli with difficulties > 0.85 and < 0.3 are excluded
+stimuli[,difficulty := ifelse(dh >= dl,dh,dl)]
+stimuli <- stimuli[difficulty <= .90 & difficulty >= .25] # Stimuli with difficulties > 0.85 and < 0.3 are excluded
 
 int <- 0.1
 boundaries <- seq(0,0.9, int)
-d[, dhbin := cut(difficulty, boundaries, include.lowest = T, labels = F)]
-d[, dhbin := cut(difficulty, c(0.1, 0.2, 0.4, 0.6, 0.8, 0.9), include.lowest = T)]
+stimuli[, dhbin := cut(difficulty, boundaries, include.lowest = T, labels = F)]
+stimuli[, dhbin := cut(difficulty, c(0.1, 0.2, 0.4, 0.6, 0.8, 0.9), include.lowest = T)]
 
 
-stimuli <- d[trial == 1,]
+stimuli <- stimuli[trial == 1,]
 
 
 stimuli[,diffh := abs(pxh-pyh)]
 stimuli[,diffl := abs(pxl-pyl)]
 stimuli[,difftot := abs(diffh-diffl)]
-stimuli[order(-difftot,badrows)]
 
-stimuli = stimuli[nr == 1983 | nr == 1987]
+stimuli =  stimuli[diffh > diffl][order(-difftot,sumbr)]
+stimuli = stimuli[(xh > xl | yh > xl) & (xh > yl | yh > yl)]
+
+#min bad rows by dnbin and difftot
+select = function(x,y){
+  sel = stimuli[dhbin == x & difftot == y][sumbr == min(sumbr),nr] 
+  return(sel)
+}
+
+s = stimuli[,.N, by=c("difftot","dhbin")]
+
+vsnr = NULL
+for(i in 1:nrow(s)){
+  snr = select(s[i,dhbin],s[i,difftot])
+  vsnr = c(vsnr,snr)
+}
+
+stimuli = stimuli[ nr %in% vsnr]
+
+# remove duplicated by dnbin and difftot
+removedup = function(x,y){
+  sel = stimuli[dhbin == x & difftot == y][!duplicated(idh,idl),nr]
+  return(sel)
+}
+
+s = stimuli[,.N, by=c("difftot","dhbin")]
+
+vsnr = NULL
+for(i in 1:nrow(s)){
+  snr = removedup(s[i,dhbin],s[i,difftot])
+  vsnr = c(vsnr,snr)
+}
+
+stimuli = stimuli[ nr %in% vsnr]
+
+
+# random draw by difftot and dhbin
+set.seed(100)
+
+
+drawstimuli = function(x,y){
+  sel = sample(stimuli[dhbin == x & difftot == y]$nr,1)
+  return(sel)
+}
+
+s = stimuli[,.N, by=c("difftot","dhbin")]
+
+vsnr = NULL
+for(i in 1:nrow(s)){
+  snr = drawstimuli(s[i,dhbin],s[i,difftot])
+  vsnr = c(vsnr,snr)
+}
+  
+stimuli = stimuli[ nr %in% vsnr]
+
+fwrite(stimuli, "../stimuli/dfe-stimuli-20-t5.csv")
+
