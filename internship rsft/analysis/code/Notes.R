@@ -5,7 +5,6 @@ library(tidybayes)
 library(patchwork)
 library(psych)
 library(future)
-library(future.apply)
 
 rm(list = ls())
 gc()
@@ -187,4 +186,129 @@ ggplot(
         legend.text = element_text(size = 5))
 
 
+
+
+
+
+library(microbenchmark)
+
+
+mbm <- microbenchmark("new" = {
+  cores <- 4
+  paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+                   rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+  # paras <- as.data.frame(paras)
+  cl <- parallel::makeCluster(2)
+  doParallel::registerDoParallel(cl)
+  parallel::clusterExport(cl, c("Get_Sample", "paras", "cores"))
+  beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+    Get_Sample(s1 = paras$s1[core == x], s2 = paras$s2[core == x], r1 = paras$r1[core == x], r2 = paras$r2[core == x], ps1 = paras$ps1[core == x], pr1 = paras$pr1[core == x], dfe_n = paras$dfe_n[core == x], subject_n = paras$subject_n[core == x], budget = paras$budget[core == x], beta_n = paras$beta_n[core == x], prior = paras$prior[core == x], seed = paras$seed[core == x])
+    # paras[core == x, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
+  # beta_sample_f <- paras[, Get_Betas_2(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed, core), by = para_id]
+  # beta_sample_f <- bind_rows(beta_sample_f, .id = "para_id")
+  }
+},
+"old" = {
+  beta_sample <- paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+},
+times = 10L)
+
+ggplot2::autoplot(mbm)
+
+
+
+
+
+if (nrow(paras) < availableCores()) {
+  cores <- nrow(paras)
+} else {
+  cores <- as.numeric(availableCores())
+}
+# paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+#                   rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+paras[, core := rep(1:cores, length.out = nrow(paras))]
+cl <- parallel::makeCluster(2)
+doParallel::registerDoParallel(cl)
+parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras"))
+beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+  paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+  # Get_Sample(s1 = paras$s1[core == x], s2 = paras$s2[core == x], r1 = paras$r1[core == x], r2 = paras$r2[core == x], ps1 = paras$ps1[core == x], pr1 = paras$pr1[core == x], dfe_n = paras$dfe_n[core == x], subject_n = paras$subject_n[core == x], budget = paras$budget[core == x], beta_n = paras$beta_n[core == x], prior = paras$prior[core == x], seed = paras$seed[core == x])
+  # paras[core == x, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
+  # beta_sample_f <- paras[, Get_Betas_2(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed, core), by = para_id]
+  # beta_sample_f <- bind_rows(beta_sample_f, .id = "para_id")
+}
+parallel::stopCluster(cl)
+
+
+# cores <- 4
+# paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+#                   rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+# # paras <- as.data.frame(paras)
+# cl <- parallel::makeCluster(2)
+# doParallel::registerDoParallel(cl)
+# parallel::clusterExport(cl, c("Get_Sample", "paras", "cores"))
+# # Packages <- c("data.table", "tidybayes", "patchwork", "magrittr")
+# parallel::clusterCall(cl, function() library(data.table))
+# beta_sample_f <- paras[, Get_Betas_2(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+
+
+# cores <- availableCores()
+if (nrow(paras) < availableCores()) {
+  cores <- nrow(paras)
+} else {
+  cores <- as.numeric(availableCores())
+}
+# paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+                  # rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+paras[, core := rep(1:cores, length.out = nrow(paras))]
+registerDoFuture()
+plan(multisession)
+beta_sample_f <- foreach(x = 1:cores, .export = c("Apply_Sample", "Get_Sample", "data.table", "paras"), .combine = "rbind") %dopar% {
+  # Get_Sample(s1 = paras[core == x]$s1, s2 = paras[core == x]$s2, r1 = paras[core == x]$r1, r2 = paras[core == x]$r2,
+  #              ps1 = paras[core == x]$ps1, pr1 = paras[core == x]$pr1, dfe_n = paras[core == x]$dfe_n, subject_n = paras[core == x]$subject_n, 
+  #              budget = paras[core == x]$budget, beta_n = paras[core == x]$beta_n, seed = paras[core == x]$seed)
+  paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+}
+
+
+# sim <- paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+sim <- paras[, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+
+
+
+
+
+
+
+mbm <- microbenchmark::microbenchmark("1" = {
+  cores <- 1
+  paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+                    rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+  cl <- parallel::makeCluster(2)
+  doParallel::registerDoParallel(cl)
+  parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras"))
+  beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+    paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+  }
+  parallel::stopCluster(cl)
+},
+"12" = {
+  if (nrow(paras) < availableCores()) {
+    cores <- nrow(paras)
+  } else {
+    cores <- as.numeric(availableCores())
+  }
+  paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+                    rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+  cl <- parallel::makeCluster(2)
+  doParallel::registerDoParallel(cl)
+  parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras"))
+  beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+    paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+  }
+  parallel::stopCluster(cl)
+},
+times = 10L)
+
+ggplot2::autoplot(mbm)
 
