@@ -9,18 +9,24 @@ pacman::p_load(data.table, patchwork)
 library(cognitivemodels)
 library(cognitiveutils)
 library(ggplot2)
-
+memory.limit(9999999999)
 # Load data ----------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-source("2-dfe-select.R")
 source("../../models/rsft1988.R") # rsft model
 source("../../models/softmax.R")
 source("../../models/rsft1988-probstates.R")
 
+stimuli <- read.table("../stimuli/dfe_stimuli-all-20-t5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+d1 <- read.table("../stimuli/dfe_stimuli-20-t5-420.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+st = read.table("../stimuli/dfe-stimuli-20-t5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+stimuli = as.data.table(stimuli)
+stimuli = stimuli[nr %in% st$nr]
+stimuli[,stimulinr := nr]
+stimuli[,unique(nr)]
+db = readRDS("../stimuli/dfe_stimuli-20-t5-d20.rds")
 
+db = merge(db,stimuli[dh < 0.4,.(prhv,policyHV,policyLV,prstate,trial,state,stimulinr)], by=c("trial","state","stimulinr"))
 
-db <- read.table("../stimuli/example_bayes_20_5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
-db <- as.data.table(db)
 
 # Parameter ----------------------------------------------------------------
 ntrials <- 5
@@ -29,32 +35,14 @@ conditions <- c("small sample", "large sample")
 tau = 0.2
 
 
-# prstate ------------------------------------------------------------------
-rsft_prstate = lapply(1:nrow(stimuli), function(i){
-  d = stimuli[i,]
-  # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-  m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,ntrials,d$start)
-  choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],tau))
-  choiceprob = cbind(m@extended[,.(trial,state)],choiceprob)
-  # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
-  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,ntrials,d$start,choiceprob,F)
-  return(cbind(
-    prstate = prstates$prstate))
-}
-)
-
-for(i in 1:length(rsft_prstate)) {
-  rsft_prstate[[i]] = as.data.table(rsft_prstate[[i]])
-}
-
-prstate = rbindlist(rsft_prstate)
-
-db = cbind(db, prstate)
-
 # Plots ---------------------------------------------------------------------
 db[, sampling := ifelse(numberOfdraws == min(numberOfdraws), "small sample", "large sample")]
 db[, trial := as.factor(trial)]
 db[,wprhv := prhv_belief *prstate]
+db[,wprhv_opt := prhv *prstate]
+
+agg = db[,.(policyHV_belief = median(policyHV_belief),policyLV_belief = median(policyLV_belief)), by=c("trial","sampling")]
+agg[,better := ifelse(policyHV_belief > policyLV_belief, "HV","LV")]
 
 maxdensity <- function(budget){
   sd <- db[grepl(as.character(budget), db$id, fixed = TRUE) & b == budget,]
@@ -83,20 +71,40 @@ maxdensity <- function(budget){
 peakeasy <- maxdensity(unique(db$b)[1])
 peakhard <- maxdensity(19)
 
-p1 <- ggplot(db[grepl(as.character(17), db$id, fixed = TRUE) & b == 17],
-       aes(x=wprhv, fill = sampling, colour = sampling))+
+densplot = function(b){
+  p1 <- ggplot(db[b == b],
+               aes(x=wprhv, fill = sampling, colour = sampling))+
+    theme_classic() +
+    geom_density(alpha = 0.1) +
+    scale_x_continuous(limits = c(0,1), expand = c(0,0))+
+    scale_y_continuous(limits = c(0,50), expand = c(0,0))+
+    geom_vline(maxdensity(b), mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
+    coord_flip() +
+    scale_fill_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (50)", "small sample (6)")) +
+    scale_colour_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (50)", "small sample (6)")) +
+    facet_wrap(~trial, labeller = label_both) +
+    xlab("Predicted Proportion of Risky Choices") +
+    labs(title = "A", subtitle = "Reach 26 in 5 trials")
+  return(p1)
+}
+
+densplot(38)
+stimuli[dh < 0.4,b]
+p1 <- ggplot(db[b == 49],
+             aes(x=wprhv, fill = sampling, colour = sampling))+
   theme_classic() +
   geom_density(alpha = 0.1) +
   scale_x_continuous(limits = c(0,1), expand = c(0,0))+
-  scale_y_continuous(limits = c(0,12), expand = c(0,0))+
-  geom_vline(peakeasy, mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
+  scale_y_continuous(limits = c(0,30), expand = c(0,0))+
+  geom_vline(maxdensity(58), mapping = aes(xintercept = peak, colour= sampling), linetype = 1, size = 0.5, alpha = 1)+
   coord_flip() +
-  scale_fill_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (20)", "small sample (6)")) +
-  scale_colour_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (20)", "small sample (6)")) +
+  scale_fill_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (50)", "small sample (6)")) +
+  scale_colour_manual(values=c("blue","green"), name = "Sample Size",labels = c("large sample (50)", "small sample (6)")) +
   facet_wrap(~trial, labeller = label_both) +
   xlab("Predicted Proportion of Risky Choices") +
-  labs(title = "A", subtitle = "Reach 17 in 3 trials")
-ggsave("../figures/temp_dfe_easy.png",width = 8, height = 6)
+  labs(title = "A", subtitle = "Reach 26 in 5 trials")
+
+ggsave("../figures/temp_dfe_420.png",width = 8, height = 6)
 
 
 p2 <- ggplot(db[grepl(as.character(19), db$id, fixed = TRUE) & b == 19],
@@ -129,7 +137,7 @@ make_plot <- function(data) {
   the_colors <- c("red", "grey25")
   ggplot(
     data = data,
-    mapping = aes(x = trial, y = wprhv, color = sampling, fill = sampling)) +
+    mapping = aes(x = trial, y = prhv_belief, color = sampling, fill = sampling)) +
   stat_halfeye( # uses median and QI = quantile interval (also known as the percentile interval or equi-tailed interval)
     .width = c(.66, 0.95), #use .66, .95 to show 66 and 96% HDI
     slab_alpha = 0.15,
@@ -157,9 +165,45 @@ make_plot <- function(data) {
 
 
 # plot and combine
-p1 <- make_plot(db[b == 17])
+p1 <- make_plot(db[b == 43])
+
+ggsave("../figures/temp_43_.pdf",width = 8, height = 20)
+
 p2 <- make_plot(db[b == 19])
 
+make_plot1 <- function(data) {
+  the_name <- "Sample Size"
+  the_labels <- c("Large (10 per option)", "Small (3 per option)")
+  the_colors <- c("red", "grey25")
+  ggplot(
+    data = data,
+    mapping = aes(x = trial, y = policyLV_belief, color = sampling, fill = sampling)) +
+    stat_halfeye( # uses median and QI = quantile interval (also known as the percentile interval or equi-tailed interval)
+      .width = c(.66, 0.95), #use .66, .95 to show 66 and 96% HDI
+      slab_alpha = 0.15,
+      position = position_dodge(width = .09),
+      aes(shape = sampling), point_fill = "white") +
+    theme_classic() +
+    scale_fill_manual(
+      values=the_colors,
+      name = the_name,
+      labels = the_labels) +
+    scale_colour_manual(
+      values=the_colors,
+      name = the_name, labels = the_labels) +
+    scale_shape_manual(
+      values = c(16, 21),
+      name = the_name, labels = the_labels) +
+    facet_wrap(~trial, labeller = label_both, scale = "free_x") +
+    ylab("Predicted Proportion of Risky Choices") +
+    labs(title = "Environment",
+         subtitle = paste("Reach", data$b[1], "in 3 trials")) +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank())
+}
+
+p1 <- make_plot1(db[b == 23])
 p1 + plot_spacer() + p2 +
   plot_layout(guides = "collect", widths = c(.4,.05,.4)) +
   plot_annotation(caption = "Note: Points = Median, thick line = 66% quantile intervall, thin line = 95% quantile intervall")

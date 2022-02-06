@@ -12,24 +12,24 @@ source("../../models/softmax.R")
 source("../../models/rsft1988-probstates.R")
 
 
-stimuli <- read.table("../stimuli/dfe-stimuli-20-t5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
-stimuli = as.data.table(stimuli)
-stimuli[,s := 0]
-stimuli[,t := 1]
+#stimuli1 <- read.table("../stimuli/dfe_stimuli-all-20-t5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+#stimuli1 = as.data.table(stimuli1)
+#stimuli1 = stimuli1[nr == "420"]
+#stimuli <- read.table("../stimuli/dfe-stimuli-20-t5.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
+#stimuli <- fread("../stimuli/dfe_stimuli-all-10-t3.csv")
+#stimuli <- fread("../stimuli/dfe_stimuli-10-t3-3108.csv")
+stimuli <- fread("../stimuli/dfe_stimuli-10-t3-3057.csv")
 
-ntrials = 5
-d = stimuli[1,]
+#stimuli[,optdiff := abs(hvalue - lvalue)]
+#stimuli[,sumoptdiff := sum(optdiff), by="nr"]
 
-xh = d$xh 
-yh = d$yh
-pxh = d$pxh
-xl = d$xl
-yl = d$yl
-pxl = d$pxl
-b = d$b
-t = d$t
-s = d$s
-ss = 4
+#ex = stimuli[!(lvalue %in% c(0,1)) & !(hvalue %in% c(0,1)) & dh != 1 & dl != 1][order(-optdiff, -sumoptdiff)][6,]
+
+ntrials = 3
+
+# stimuli1[,t := 1]
+# stimuli1[,s := 0]
+
 
 computeExpectedReward = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
 
@@ -48,7 +48,7 @@ computeExpectedReward = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
   rsft_opt = lapply(1:nrow(data), function(i){
     d = data[i,]
     # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,5,0,gtrials = d$t, gstates = d$s)
+    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,ntrials,0,gtrials = d$t, gstates = d$s)
     choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
     print(i)
     return(as.data.table(cbind(
@@ -65,7 +65,7 @@ computeExpectedReward = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
   rsft_sub = lapply(1:nrow(data), function(i){
     d = data[i,]
     # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,5,0,gtrials = d$t, gstates = d$s)
+    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,ntrials,0,gtrials = d$t, gstates = d$s)
     choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
     print(i)
       return(as.data.table(cbind(
@@ -78,31 +78,6 @@ computeExpectedReward = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
   ER = as.matrix(rsft_sub)
   colnames(ER) = c("xh","yh")
   
-  # rsft_opt <- hm1988(
-  #   ~ xh + pxh + yh + pyh | xl + pxl  + yl + pyl,  # our formula (as before)
-  #   trials = ~t,        # NEW: ".ALL" will predict for *all possible* trials
-  #   data = data,            # our data (as before)
-  #   budget = ~b,       # name of our budget column in our data
-  #   initstate = 0,     # name of our starting-state column in our data
-  #   ntrials = ntrials,            # we always 5 trials therefore I hard-code this
-  #   states = ~s,        # NEW: ".ALL" will predict for *all possible* states
-  #   choicerule = "softmax",
-  #   fix = list(tau = 0.2))
-  # 
-  # opt = predict(rsft_opt, type="values")
-  # 
-  # rsft_sub <- hm1988(
-  #   ~ xh + bxh + yh + byh | xl + bxl  + yl + byl,  # our formula (as before)
-  #   trials = ~t,        # NEW: ".ALL" will predict for *all possible* trials
-  #   data = data,            # our data (as before)
-  #   budget = ~b,       # name of our budget column in our data
-  #   initstate = 0,     # name of our starting-state column in our data
-  #   ntrials = ntrials,            # we always 5 trials therefore I hard-code this
-  #   states = ~s,        # NEW: ".ALL" will predict for *all possible* states
-  #   choicerule = "softmax",
-  #   fix = list(tau = 0.2))
-  # 
-  # ER =  predict(rsft_sub, type="values")
   return(list(ER,opt))
 }
 
@@ -114,8 +89,8 @@ computeAbserdiff = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
   ER = ER_opt[[1]]
   opt = ER_opt[[2]]
   subdiff = abs(ER[,1] - ER[,2]) %*% (binomh[com[,1]] * binoml[com[,2]])
-  optdiff = abs(opt[,1] - opt[,2])
-  return(c(subdiff = subdiff, optdiff = optdiff))
+  optdiff = abs(opt[1,1] - opt[1,2])
+  return(list(subdiff = subdiff[1,1], optdiff = unname(optdiff)))
 }
 
 computePrOptimal = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
@@ -130,17 +105,31 @@ computePrOptimal = function(ss,xh,yh,pxh,xl,yl,pxl,b,t,s){
   return(propt[,1])
 }
 
-d = stimuli[1,]
-plotdata = data.table(ss = 1:20)
-
-plotdata[,pr := computePrOptimal(ss,xh = d$xh, d$yh, d$pxh ,d$xl ,d$yl ,d$pxl , d$b, d$t, d$s), by = ss]
+d = ex
 
 
-ggplot(plotdata, aes(x = ss, y = pr))+
-  geom_line() +
-  scale_x_continuous(breaks = 1:max(plotdata$ss)) +
-  scale_y_continuous(breaks = seq(0,1,0.1), limits = c(0,1))
 
-fwrite(plotdata, "../stimuli/plotdata-420-30-t5.csv")
+plotdata_opt = data.table(ss = 1:50)
+# Proportion of choosing better option
+#d = stimuli[nr %in% ex$nr & trial == 1]
+d =stimuli1[trial == 1]
+d[, s := state]
+d[, t := trial]
+plotdata_opt[,pr := computePrOptimal(ss,xh = d$xh, d$yh, d$pxh ,d$xl ,d$yl ,d$pxl , d$b, d$t, d$s), by = ss]
 
-?scale_x_continuous
+
+# Advantage
+#advantage = stimuli[!(lvalue %in% c(0,1)) & !(hvalue %in% c(0,1)) & dh != 1 & dl != 1][order(-optdiff)][1,]
+# d = stimuli1[nr %in% ex$nr & trial == 1]
+# d[,s := 0]
+# d[,t := 1]
+plotdata_adv = data.table(ss = 1:50)
+advantage = ex[ trial == 3 & state == 16][, s := state]
+advantage[,t := trial]
+d = advantage
+
+plotdata_adv[,c("subdiff", "optdiff") := computeAbserdiff(ss,xh = d$xh, d$yh, d$pxh ,d$xl ,d$yl ,d$pxl , d$b, d$t, d$s), by = ss]
+
+
+#saveRDS(plotdata, "../stimuli/plotdata-t3-50.rds")
+

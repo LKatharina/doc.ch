@@ -7,13 +7,13 @@
 pacman::p_load(data.table)
 library(cognitivemodels)
 library(cognitiveutils)
-source("../../models/rsft1988.R") # rsft model
-source("../../models/softmax.R")
-source("../../models/rsft1988-probstates.R")
+
 
 # Source--------------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
+source("../../models/rsft1988.R") # rsft model
+source("../../models/softmax.R")
+source("../../models/rsft1988-probstates.R")
 
 # Rsft Variables ------------------------------------------------------------
 t = 5 # Trails
@@ -27,7 +27,7 @@ mindiff_var <- 5 #minimal variance difference
 
 
 # Table with all possible combinations of x and y and px
-gamble_set <- expand.grid(x = 1:8, px = c(.1 ,.2, .25, .3, .4, .5, .6, .7, .75, .8, .9), y = 1:9)
+gamble_set <- expand.grid(x = 1:19, px = c(.1 ,.2, .25, .3, .4, .5, .6, .7, .75, .8, .9), y = 1:20)
 gamble_set <- as.data.table(gamble_set)
 
 # calculate py, EV and Var
@@ -116,7 +116,6 @@ pairs[,start := 0]
 budget_diff = pairs
 
 # order by variance -----------------------------------------------------------
-budget_diff[, o <- ifelse(var1 > var2,1, 0)]
 for(i in 1:nrow(budget_diff)){
   if(budget_diff$var1[i] > budget_diff$var2[i]){
     budget_diff[i, ':=' (varh = var1, varl = var2, xh = x1, yh = y1 , xl = x2,
@@ -130,6 +129,15 @@ for(i in 1:nrow(budget_diff)){
   }
 }
 
+# Apply exclusion criteria before computation of the optimal model (reduce run time)
+# Diff in probabilities = Diff  Risky > Diff Safe
+budget_diff[,diffh := abs(pxh-pyh)]
+budget_diff[,diffl := abs(pxl-pyl)]
+budget_diff[,difftot := round(abs(diffh-diffl),2)]
+budget_diff = budget_diff[diffh > diffl][order(-difftot)]
+budget_diff = budget_diff[difftot > 0.2]
+# Delete if budget = bmix & budget = bmax
+budget_diff = budget_diff[ b != bmin & b != bmax]
 budget_diff[,nr := 1:nrow(budget_diff)]
 
 
@@ -142,6 +150,7 @@ rsft = lapply(1:nrow(budget_diff), function(i){
   # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
   prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,5,0,choiceprob,F)
   choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
+  print(i)
   return(cbind(
     m@compact,
     prhv = choiceprob$policyHV,
@@ -214,5 +223,5 @@ sim[, c(drops) := NULL]
 sim <- sim[,list(nr,id,idh,idl,ev1,varh,varl,xh,yh,pxh,pyh,xl,yl,pxl,pyl,dh,dl,b,start,trial,state,policyHV,policyLV,prhv,prstate)]
 
 # Save --------------------------------------------------------------------------------------
-fwrite(sim, "../stimuli/dfe_stimuli_t5.csv")
+fwrite(sim, "../stimuli/dfe_stimuli_20_t5.csv")
 

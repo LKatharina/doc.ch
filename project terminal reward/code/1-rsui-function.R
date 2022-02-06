@@ -9,8 +9,6 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source("../../models/rsft1988.R") # rsft model
 source("../../models/softmax.R")
 source("../../models/rsft1988-probstates.R") 
-data <- read.csv("../data/rsft-gain-loss-processed.csv", header=T, as.is=T, na.strings=c("-77","-99","-66", "NA"))
-
 
 # Transform into data table -------------------------------------------------
 library(ggplot2)
@@ -54,7 +52,7 @@ ChangeReward = function(data,tau,k,Rfunction){
   return(rsft_reward)
 }
 
-
+RiskseekingUnderImpossibility = function(data){
 # Optimal Model with Step Function ------------------------------------------
 stimuli = data[trial == 1]
 stimuli = stimuli[duplicated(nr) == F]
@@ -125,8 +123,8 @@ data[,.(mean(choice),mean(prhv)), by= c("parameter","difficulty")]
 impossible = data[stepHV == 0 & stepLV == 0]
 impossible[, mean(choice)]
 impossible[, .(choice = mean(choice), reward = mean(prhv)), by=c("parameter")]
-
-
+return(impossible)
+}
 
 
 # TK Value Function  ----------------------------------------------------
