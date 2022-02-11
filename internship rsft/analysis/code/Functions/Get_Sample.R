@@ -1,5 +1,5 @@
 
-Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42) {
+Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42, design_id) {
   set.seed(seed)
   
   ps2 <- 1-ps1
@@ -25,7 +25,8 @@ Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_
                           ps2 = ps2,
                           pr1 = pr1,
                           pr2 = pr2,
-                          seed = seed)
+                          seed = seed,
+                          design_id = design_id)
   
   data_freq[, `:=` (count_s2 = dfe_id - count_s1, 
                     count_r2 = dfe_id - count_r1,
@@ -35,8 +36,8 @@ Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_
   # data_beta <- data_freq[rep(1:.N, beta_n)]
   
   
-  data_beta[, `:=` (b_ps1 = rbeta(.N, count_s1 + prior[1], count_s2 + prior[2]),
-                    b_pr1 = rbeta(.N, count_r1 + prior[1], count_r2 + prior[2])),
+  data_beta[, `:=` (b_ps1 = round(rbeta(.N, count_s1 + prior[1], count_s2 + prior[2]), 3),
+                    b_pr1 = round(rbeta(.N, count_r1 + prior[1], count_r2 + prior[2]), 3)),
             by = .(subject_id)]
   
   data_beta[, `:=` (b_ps2 = 1 - b_ps1,

@@ -193,51 +193,47 @@ ggplot(
 library(microbenchmark)
 
 
-mbm <- microbenchmark("new" = {
-  cores <- 4
-  paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
-                   rep(c(1:cores), each = floor(nrow(paras)/cores)))]
-  # paras <- as.data.frame(paras)
-  cl <- parallel::makeCluster(2)
-  doParallel::registerDoParallel(cl)
-  parallel::clusterExport(cl, c("Get_Sample", "paras", "cores"))
-  beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
-    Get_Sample(s1 = paras$s1[core == x], s2 = paras$s2[core == x], r1 = paras$r1[core == x], r2 = paras$r2[core == x], ps1 = paras$ps1[core == x], pr1 = paras$pr1[core == x], dfe_n = paras$dfe_n[core == x], subject_n = paras$subject_n[core == x], budget = paras$budget[core == x], beta_n = paras$beta_n[core == x], prior = paras$prior[core == x], seed = paras$seed[core == x])
-    # paras[core == x, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
-  # beta_sample_f <- paras[, Get_Betas_2(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed, core), by = para_id]
-  # beta_sample_f <- bind_rows(beta_sample_f, .id = "para_id")
-  }
-},
-"old" = {
-  beta_sample <- paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
-},
-times = 10L)
-
-ggplot2::autoplot(mbm)
-
-
+# mbm <- microbenchmark("new" = {
+#   cores <- 4
+#   paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
+#                    rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+#   # paras <- as.data.frame(paras)
+#   cl <- parallel::makeCluster(2)
+#   doParallel::registerDoParallel(cl)
+#   parallel::clusterExport(cl, c("Get_Sample", "paras", "cores"))
+#   beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+#     Get_Sample(s1 = paras$s1[core == x], s2 = paras$s2[core == x], r1 = paras$r1[core == x], r2 = paras$r2[core == x], ps1 = paras$ps1[core == x], pr1 = paras$pr1[core == x], dfe_n = paras$dfe_n[core == x], subject_n = paras$subject_n[core == x], budget = paras$budget[core == x], beta_n = paras$beta_n[core == x], prior = paras$prior[core == x], seed = paras$seed[core == x])
+#     # paras[core == x, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
+#   # beta_sample_f <- paras[, Get_Betas_2(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed, core), by = para_id]
+#   # beta_sample_f <- bind_rows(beta_sample_f, .id = "para_id")
+#   }
+# },
+# "old" = {
+#   beta_sample <- paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed), by = para_id]
+# },
+# times = 10L)
+# 
+# ggplot2::autoplot(mbm)
 
 
 
-if (nrow(paras) < availableCores()) {
-  cores <- nrow(paras)
-} else {
-  cores <- as.numeric(availableCores())
-}
-# paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
-#                   rep(c(1:cores), each = floor(nrow(paras)/cores)))]
-paras[, core := rep(1:cores, length.out = nrow(paras))]
-cl <- parallel::makeCluster(2)
-doParallel::registerDoParallel(cl)
-parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras"))
-beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
-  paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
-  # Get_Sample(s1 = paras$s1[core == x], s2 = paras$s2[core == x], r1 = paras$r1[core == x], r2 = paras$r2[core == x], ps1 = paras$ps1[core == x], pr1 = paras$pr1[core == x], dfe_n = paras$dfe_n[core == x], subject_n = paras$subject_n[core == x], budget = paras$budget[core == x], beta_n = paras$beta_n[core == x], prior = paras$prior[core == x], seed = paras$seed[core == x])
-  # paras[core == x, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
-  # beta_sample_f <- paras[, Get_Betas_2(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed, core), by = para_id]
-  # beta_sample_f <- bind_rows(beta_sample_f, .id = "para_id")
-}
-parallel::stopCluster(cl)
+
+
+# cores <- min(availableCores(), nrow(paras))
+# paras[, core := rep(1:cores, length.out = nrow(paras))]
+# cl <- parallel::makeCluster(2)
+# doParallel::registerDoParallel(cl)
+# parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras", "cores"))
+# beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+#   # paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+#   # Get_Sample(s1 = paras$s1[core == x], s2 = paras$s2[core == x], r1 = paras$r1[core == x], r2 = paras$r2[core == x], ps1 = paras$ps1[core == x], pr1 = paras$pr1[core == x], dfe_n = paras$dfe_n[core == x], subject_n = paras$subject_n[core == x], budget = paras$budget[core == x], beta_n = paras$beta_n[core == x], prior = paras$prior[core == x], seed = paras$seed[core == x])
+#   # paras[core == x, Get_Sample(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed)]
+#   # beta_sample_f <- paras[, Get_Betas_2(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, prior, seed, core), by = para_id]
+#   # beta_sample_f <- bind_rows(beta_sample_f, .id = "para_id")
+#   do.call(Map, c(f = Get_Sample, paras[core == x, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)]))
+# }
+# parallel::stopCluster(cl)
+# beta_sample_f <- rbindlist(beta_sample_f)
 
 
 # cores <- 4
@@ -252,63 +248,148 @@ parallel::stopCluster(cl)
 # beta_sample_f <- paras[, Get_Betas_2(s1, s2 , r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
 
 
-# cores <- availableCores()
-if (nrow(paras) < availableCores()) {
-  cores <- nrow(paras)
-} else {
-  cores <- as.numeric(availableCores())
-}
-# paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
-                  # rep(c(1:cores), each = floor(nrow(paras)/cores)))]
+cores <- min(availableCores(), nrow(paras))
 paras[, core := rep(1:cores, length.out = nrow(paras))]
 registerDoFuture()
 plan(multisession)
-beta_sample_f <- foreach(x = 1:cores, .export = c("Apply_Sample", "Get_Sample", "data.table", "paras"), .combine = "rbind") %dopar% {
+beta_sample_f <- foreach(x = 1:cores, .export = c("Apply_Sample", "Get_Sample", "data.table", "paras", "cores"), .combine = "rbind") %dopar% {
   # Get_Sample(s1 = paras[core == x]$s1, s2 = paras[core == x]$s2, r1 = paras[core == x]$r1, r2 = paras[core == x]$r2,
   #              ps1 = paras[core == x]$ps1, pr1 = paras[core == x]$pr1, dfe_n = paras[core == x]$dfe_n, subject_n = paras[core == x]$subject_n, 
   #              budget = paras[core == x]$budget, beta_n = paras[core == x]$beta_n, seed = paras[core == x]$seed)
-  paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+  # paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+  do.call(Map, c(f = Get_Sample, paras[core == x, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)]))
 }
-
-
-# sim <- paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
-sim <- paras[, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+b <- rbindlist(beta_sample_f)
 
 
 
+# paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+b <- paras[, Get_Sample(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, budget = budget, beta_n = beta_n, seed = seed), by = para_id]
+rbindlist(do.call(Map, c(f = Get_Sample, paras[, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)])))
+rbindlist(apply(paras, 1, FUN = function(x) Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)))
 
 
 
 
-mbm <- microbenchmark::microbenchmark("1" = {
-  cores <- 1
-  paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
-                    rep(c(1:cores), each = floor(nrow(paras)/cores)))]
-  cl <- parallel::makeCluster(2)
-  doParallel::registerDoParallel(cl)
-  parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras"))
-  beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
-    paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
-  }
-  parallel::stopCluster(cl)
+mbm <- microbenchmark::microbenchmark("normal" = {
+  sim <- paras[, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
 },
-"12" = {
-  if (nrow(paras) < availableCores()) {
-    cores <- nrow(paras)
-  } else {
-    cores <- as.numeric(availableCores())
+# "parallel" = {
+#   cores <- min(availableCores(), nrow(paras))
+#   paras[, core := rep(1:cores, length.out = nrow(paras))]
+#   cl <- parallel::makeCluster(cores)
+#   doParallel::registerDoParallel(cl)
+#   parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras", "cores"))
+#   beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
+#     do.call(Map, c(f = Get_Sample, paras[core == x, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)]))
+#   }
+#   parallel::stopCluster(cl)
+#   rbindlist(beta_sample_f)
+# },
+"future" = {
+  registerDoFuture()
+  plan(multisession)
+  beta_sample_f <- foreach(x = 1:cores, .export = c("Apply_Sample", "Get_Sample", "data.table", "paras", "cores"), .combine = "rbind") %dopar% {
+    do.call(Map, c(f = Get_Sample, paras[core == x, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)]))
   }
-  paras[, core := c(rep(1, times = nrow(paras)-floor(nrow(paras)/cores)*cores), 
-                    rep(c(1:cores), each = floor(nrow(paras)/cores)))]
-  cl <- parallel::makeCluster(2)
-  doParallel::registerDoParallel(cl)
-  parallel::clusterExport(cl, c("Apply_Sample", "Get_Sample", "data.table", "paras"))
-  beta_sample_f <- foreach(x = 1:cores, .combine = "rbind") %dopar% {
-    paras[core == x, Apply_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
-  }
-  parallel::stopCluster(cl)
+  beta_sample_f <- rbindlist(beta_sample_f)
 },
 times = 10L)
 
 ggplot2::autoplot(mbm)
+
+
+
+
+mbm <- microbenchmark::microbenchmark("data.table" = {
+  paras[, Get_Sample(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed), by = para_id]
+},
+"do.call" = {
+  rbindlist(do.call(Map, c(f = Get_Sample, paras[, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)])))
+},
+times = 10L)
+
+ggplot2::autoplot(mbm)
+
+
+
+# Clear environment and set working directory-----------------------------------
+rm(list = ls())
+gc()
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+
+# Load Package------------------------------------------------------------------
+library(ggplot2)
+library(data.table)
+library(cognitivemodels)
+library(tidybayes)
+library(patchwork)
+library(psych)
+library(future)
+library(doFuture)
+
+
+# Source Scripts----------------------------------------------------------------
+source("Get_Sample.R")
+source("Get_Model.R")
+source("Get_Comparison.R")
+source("Get_Plot.R")
+source("Get_Predictions.R")
+source("Apply_Sample.R")
+
+
+# Set Parameters----------------------------------------------------------------
+ps1 <- 0.5
+s1 <- 6
+s2 <- 8
+pr1 <- 0.25
+r1 <- 1
+r2 <- 9
+prior <- c(1, 1)
+
+subject_n <- 50
+beta_n <- seq(10, 500, 10)
+budget <- 18
+dfe_n <- c(3, 10)
+
+seed <- 42
+
+ntrials <- 3
+
+
+# Execution code----------------------------------------------------------------
+
+# Create dataset with all possible combinations of parameters
+paras <- as.data.table(expand.grid(beta_n = beta_n, budget = budget, subject_n = subject_n, ntrials = ntrials, seed = seed, dfe_n = dfe_n))
+paras[, `:=` (ps1 = ps1, s1 = s1, s2 = s2, pr1 = pr1, r1 = r1, r2 = r2, para_id = .I)]
+cores <- min(availableCores(), nrow(paras))
+paras[, core := rep(1:cores, length.out = nrow(paras))]
+
+parallel <- "y"
+
+if (parallel == "y") {
+  registerDoFuture()
+  plan(multisession)
+  system.time({
+    beta_sample_f <- foreach(x = 1:cores, .export = c("Apply_Sample", "Get_Sample", "data.table", "paras", "cores"), .combine = "rbind") %dorng% {
+      paras[core == x, Get_Sample(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, budget = budget, beta_n = beta_n, seed = seed), by = para_id]
+    }
+  })
+} else {
+  system.time({
+    beta_sample_n <- do.call(Map, c(f = Get_Sample, paras[, .(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n, seed)]))
+  })
+}
+
+
+
+beta_sample_f <- rbindlist(beta_sample_f)
+beta_sample_n <- rbindlist(beta_sample_n)
+
+dim(beta_sample_f)
+dim(beta_sample_n)
+
+
+
 

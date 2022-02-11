@@ -67,8 +67,7 @@ beta_coll <- beta_sample_f[, .(mean_dfe1 = mean(b_ps1[dfe_id == dfes[1]]),
                                var_dfe2 = var(b_ps1[dfe_id == dfes[2]])),
                            keyby = .(beta_n, seed)]
 beta_coll <- beta_coll[, lapply(.SD, var), by = .(beta_n)]
-# beta_coll[, (2:13) := round(.SD, 3), .SDcols = c(2:13)]
- 
+
 
 ticks <- c(1,2,3,4,5,7,10,20,30,40,50,75,100,200,300,400,500,750,1000,2000,3000)
 plotlabels <- c("Mean", "SD", "Median", "Q1", "Q3", "Variance")
@@ -218,103 +217,6 @@ for (i in 1:(length(subject_coll)-2)) {
 
 main_plot1
 main_plot2
-
-
-# cols <- colnames(beta_coll[c(2:7)])
-# lapply(names(beta_coll[c(2:7)]),
-#        function(a, b = plotlabels, c = ylabels) 
-#          assign(paste0("plot_", b),
-#                 ggplot(mapping = aes(x = beta_coll$beta_n, y = a)) +
-#                   geom_line(size = .7) +
-#                   theme_minimal() +
-#                   scale_x_continuous(trans = "log2",
-#                                      breaks = ticks) +
-#                   labs(x = "Beta size",
-#                        y = paste0(c, " difference b_ps1")) +
-#                   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#                         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))))
-# 
-# models <- colnames(beta_coll[,c(2:7)])
-# plotlist <- list()
-# for (i in 1:length(models))
-# {
-#   plotlist[[i]] <- data.frame(modname = models[i], 
-#                               xvar = c(1:10), 
-#                               yvar = rnorm(10), 
-#                               avar = c(1:10),
-#                               bvar = rnorm(10, mean = 1),
-#                               stringsAsFactors = FALSE)   
-#   
-# }
-# 
-# alldata <- do.call(rbind, plotlist)
-# 
-# ggplot(alldata, aes(xvar, yvar)) + 
-#   geom_line() + 
-#   geom_line(aes(avar,bvar)) +
-#   facet_grid(~modname)
-# 
-# 
-# 
-# plot_m <- ggplot(data = beta_coll, mapping = aes(x = beta_n, y = mean)) +
-#   geom_line(size = .7) +
-#   theme_minimal() +
-#   scale_x_continuous(trans = "log2",
-#                      breaks = ticks) +
-#   labs(x = "Beta size",
-#        y = "Mean difference b_ps1") +
-#   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-#   
-# plot_sd <- ggplot(data = beta_coll, mapping = aes(x = beta_n, y = sd)) +
-#   geom_line(size = .7) +
-#   theme_minimal() +
-#   scale_x_continuous(trans = "log2",
-#                      breaks = ticks) +
-#   labs(x = "Beta size",
-#        y = "SD difference b_ps1") +
-#   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-# 
-# plot_med <- ggplot(data = beta_coll, mapping = aes(x = beta_n, y = median)) +
-#   geom_line(size = .7) +
-#   theme_minimal() +
-#   scale_x_continuous(trans = "log2",
-#                      breaks = ticks) +
-#   labs(x = "Beta size",
-#        y = "Median difference b_ps1") +
-#   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-# 
-# plot_q1 <- ggplot(data = beta_coll, mapping = aes(x = beta_n, y = Q1)) +
-#   geom_line(size = .7) +
-#   theme_minimal() +
-#   scale_x_continuous(trans = "log2",
-#                      breaks = ticks) +
-#   labs(x = "Beta size",
-#        y = "Q1 difference b_ps1") +
-#   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-# 
-# plot_q3 <- ggplot(data = beta_coll, mapping = aes(x = beta_n, y = Q3)) +
-#   geom_line(size = .7) +
-#   theme_minimal() +
-#   scale_x_continuous(trans = "log2",
-#                      breaks = ticks) +
-#   labs(x = "Beta size",
-#        y = "Q3 difference b_ps1") +
-#   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-# 
-# plot_var <- ggplot(data = beta_coll, mapping = aes(x = beta_n, y = variance)) +
-#   geom_line(size = .7) +
-#   theme_minimal() +
-#   scale_x_continuous(trans = "log2",
-#                      breaks = ticks) +
-#   labs(x = "Beta size",
-#        y = "Variance difference b_ps1") +
-#   theme(plot.margin = margin(t = .5, r = .5, b = .5, l = .5, unit = "cm"),
-#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
 

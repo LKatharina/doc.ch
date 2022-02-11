@@ -119,7 +119,6 @@ budget_diff[,start := 0]
 
 
 # order by variance -----------------------------------------------------------
-budget_diff[, o <- ifelse(var1 > var2,1, 0)]
 for(i in 1:nrow(budget_diff)){
   if(budget_diff$var1[i] > budget_diff$var2[i]){
     budget_diff[i, ':=' (varh = var1, varl = var2, xh = x1, yh = y1 , xl = x2,
@@ -133,7 +132,8 @@ for(i in 1:nrow(budget_diff)){
   }
 }
 
-budget_diff[,nr := 1:nrow(budget_diff)]
+budget_diff[, design_id := 1:nrow(budget_diff)]
+
 
 ## Simulations =======================================================
 choicerule = "softmax"
