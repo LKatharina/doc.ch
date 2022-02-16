@@ -1,6 +1,6 @@
 # ==============================================================================
 # Simulate multiple combinations of parameters in a decision task assuming
-# random foresting.
+# random foresting and using bayesian cognitive models.
 # ==============================================================================
 
 
@@ -11,13 +11,12 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
 # Load packages-----------------------------------------------------------------
-pacman::p_load(ggplot2, data.table, tidybayes, patchwork, psych, future, doFuture)
+pacman::p_load(data.table, tidybayes, patchwork, psych, future, doFuture)
 library(cognitivemodels)
 
 
 # Source all scripts in the folder Functions------------------------------------
 lapply(list.files("Functions", full = TRUE), source)
-# source("Get_Plot.R")
 
 
 # Set Parameters----------------------------------------------------------------
@@ -45,8 +44,8 @@ parallel <- FALSE
 stimuli <- Get_Stimuli(rewards_x = `1st_gamble`, rewards_y = c(`1st_gamble`, max(`1st_gamble`)+1), probs_x = probs_1st, min_var = min_var, ntrial = trial_n)
 paras <- Get_Paras(dfe_n = dfe_n, subject_n = subject_n, beta_n = beta_n, seed = seed, trial_n = trial_n)
 stimuli_paras <- cbind(stimuli[rep(1:.N, each = nrow(paras)),], paras[rep(1:.N, times = nrow(stimuli)),])
-stimuli_paras[, para_id := .I]
-stimuli_paras <- stimuli_paras[seq(1, 1000, 100),]
+stimuli_paras[, para_design_id := .I]
+stimuli_paras <- stimuli_paras[1:500,]
 
 # Execute-----------------------------------------------------------------------
 
@@ -57,11 +56,21 @@ if (parallel) {
   registerDoFuture()
   plan(multisession)
   sim <- foreach(x = 1:cores, .export = c("Get_Predictions", "Get_Sample", "Get_Model", "data.table", "cognitivemodels", "stimuli_paras", "cores"), .combine = "rbind") %dorng% {
-    stimuli_paras[core == x, Get_Predictions(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, budget = budget, beta_n = beta_n, seed = seed, ntrials = ntrials, design_id = design_id), by = para_id]
+    stimuli_paras[core == x, Get_Predictions(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, 
+                                             budget = budget, beta_n = beta_n, seed = seed, ntrials = ntrials, design_id = design_id), 
+                  by = para_design_id]
   }
 } else {
   system.time({
-    sim <- stimuli_paras[, Get_Predictions(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, budget = budget, beta_n = beta_n, seed = seed, ntrials = ntrials, design_id = design_id), by = para_id]
+    sim <- stimuli_paras[, Get_Predictions(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, 
+                                           budget = budget, beta_n = beta_n, seed = seed, ntrials = ntrials, design_id = design_id), 
+                         by = para_design_id]
   })
 }
+
+setwd("..")
+saveRDS(object = sim, file = "data/sim_1_500.RDS")
+
+
+# lapply(dfe_n, function(z) {stimuli[, Get_Predictions(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = z, subject_n = subject_n, budget = budget, beta_n = beta_n, seed = seed, ntrials = trial_n, design_id = design_id), by = design_id]})
 
