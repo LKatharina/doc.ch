@@ -1,3 +1,7 @@
+# ==============================================================================
+# Function to apply the bayesian learning model from Houston & McNamara (1988) 
+# to simulated data in a data set
+# ==============================================================================
 
 Get_Model <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
   
@@ -28,8 +32,6 @@ Get_Model <- function(df, ntrials, choicerule = "softmax", tau = 0.2) {
                                "budget", "trial", "state", "prhv_rsft", 
                                "rvalue", "svalue", "count_s1", 
                                "count_s2", "count_r1", "count_r2"))
-  
-  db[, plot_id := paste(beta_n, budget, dfe_id, trial, sep = "_")]
-  
+
   return(db)
 }

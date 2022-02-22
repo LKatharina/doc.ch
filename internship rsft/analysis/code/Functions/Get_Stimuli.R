@@ -1,3 +1,6 @@
+# ==============================================================================
+# Function to create data set with all possible combinations of design stimuli
+# ==============================================================================
 
 Get_Stimuli <- function(rewards_x, rewards_y, probs_x, min_var, ntrials) {
   
@@ -100,7 +103,7 @@ Get_Stimuli <- function(rewards_x, rewards_y, probs_x, min_var, ntrials) {
   budget_diff[,]
   
   
-  # order by variance -----------------------------------------------------------
+  # order by variance-----------------------------------------------------------
   for(i in 1:nrow(budget_diff)){
     if(budget_diff$var1[i] > budget_diff$var2[i]){
       budget_diff[i, `:=` (varh = var1, varl = var2, 

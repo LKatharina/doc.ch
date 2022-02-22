@@ -1,6 +1,6 @@
 # ==============================================================================
-# Simulate multiple combinations of parameters in a decision task assuming
-# random foresting.
+# Simulate multiple combinations of parameters (manually) in a decision task 
+# assuming random foresting and using bayesian cognitive models
 # ==============================================================================
 
 
@@ -12,11 +12,11 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Load Package------------------------------------------------------------------
 pacman::p_load(ggplot2, data.table, tidybayes, patchwork, psych, future, doFuture)
-library(cognitivemodels)
+pacman::p_load_gh("cognitivemodels")
 
 
 # Source Scripts----------------------------------------------------------------
-lapply(list.files("Functions", full = TRUE), source)
+invisible(lapply(list.files("Functions", full = TRUE), source))
 
 
 # Set Parameters----------------------------------------------------------------
@@ -64,40 +64,3 @@ if (parallel) {
     sim <- paras[, Get_Predictions(s1 = s1, s2 = s2, r1 = r1, r2 = r2, ps1 = ps1, pr1 = pr1, dfe_n = dfe_n, subject_n = subject_n, budget = budget, beta_n = beta_n, seed = seed, ntrials = ntrials), by = para_id]
   })
 }
-
-sim1 <- rbindlist(sim1)
-sim2 <- rbindlist(sim2)
-
-dim(sim1)
-dim(sim2)
-
-
-
-# Up for debate
-b1 <- beta_n[1]
-b2 <- beta_n[2]
-budg1 <- budget[1]
-budg2 <- budget[2]
-dfe1 <- dfe_n[1]
-dfe2 <- dfe_n[2]
-# measure <- NULL
-measure <- rbind(measure,
-                 cbind(mean_bps1 = c(mean(sim[dfe_id == dfe1 & budget == budg1 & beta_n == b1]$b_ps1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg1 & beta_n == b1]$b_ps1),
-                                     mean(sim[dfe_id == dfe1 & budget == budg2 & beta_n == b1]$b_ps1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg2 & beta_n == b1]$b_ps1),
-                                     mean(sim[dfe_id == dfe1 & budget == budg1 & beta_n == b2]$b_ps1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg1 & beta_n == b2]$b_ps1),
-                                     mean(sim[dfe_id == dfe1 & budget == budg2 & beta_n == b2]$b_ps1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg2 & beta_n == b2]$b_ps1)),
-                       mean_bps1 = c(mean(sim[dfe_id == dfe1 & budget == budg1 & beta_n == b1]$b_pr1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg1 & beta_n == b1]$b_pr1),
-                                     mean(sim[dfe_id == dfe1 & budget == budg2 & beta_n == b1]$b_pr1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg2 & beta_n == b1]$b_pr1),
-                                     mean(sim[dfe_id == dfe1 & budget == budg1 & beta_n == b2]$b_pr1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg1 & beta_n == b2]$b_pr1),
-                                     mean(sim[dfe_id == dfe1 & budget == budg2 & beta_n == b2]$b_pr1),
-                                     mean(sim[dfe_id == dfe2 & budget == budg2 & beta_n == b2]$b_pr1)),
-                       expand.grid(beta_n = beta_n, budget = budg, subject_n = subjects, ntrials = ntrials, seed = seed, dfe_n = dfe)))
-
-

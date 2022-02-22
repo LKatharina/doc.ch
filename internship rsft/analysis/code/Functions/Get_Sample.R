@@ -1,3 +1,6 @@
+# ==============================================================================
+# Function to simulate random foresting and make beta draws for all outcomes
+# ==============================================================================
 
 Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_n = 100, prior = c(1,1), seed = 42, design_id) {
   set.seed(seed)
@@ -13,7 +16,6 @@ Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_
                           count_r1 = count_r1,
                           dfe_id = dfe_n,
                           budget = budget,
-                          # subject_nr = rep(1:subject_n, times = dfe_l * budget_l),
                           subject_id = 1:subject_n,
                           subject_n = subject_n,
                           beta_n = beta_n,
@@ -30,11 +32,9 @@ Get_Sample <- function(s1, s2, r1, r2, ps1, pr1, dfe_n, subject_n, budget, beta_
   
   data_freq[, `:=` (count_s2 = dfe_id - count_s1, 
                     count_r2 = dfe_id - count_r1,
-                    env_id = paste(ps1, s1, s2, pr1, r1, r2, budget, sep = "_"))]
+                    env_id = paste0("S", ps1, "_", s1, "_", s2, "_", "R", pr1, "_", r1, "_", r2, "_", "B", budget))]
   
   data_beta <- data_freq[rep(1:.N, each = beta_n[1])]
-  # data_beta <- data_freq[rep(1:.N, beta_n)]
-  
   
   data_beta[, `:=` (b_ps1 = round(rbeta(.N, count_s1 + prior[1], count_s2 + prior[2]), 3),
                     b_pr1 = round(rbeta(.N, count_r1 + prior[1], count_r2 + prior[2]), 3)),

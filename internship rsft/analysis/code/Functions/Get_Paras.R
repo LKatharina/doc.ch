@@ -1,3 +1,6 @@
+# ==============================================================================
+# Function to create data set with all design parameters
+# ==============================================================================
 
 Get_Paras <- function(dfe_n, subject_n, beta_n, seed, trial_n) {
   
