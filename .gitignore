@@ -13,3 +13,5 @@ project dfe/stimuli/dfe-stimuli-20-t5.csv
 project dfe/stimuli/example_bayes_20_5.csv
 project dfe/stimuli/plotdata-420-20-t5.csv
 project dfe/stimuli/plotdata-420-30-t5.csv
+
+project shifting/data/
