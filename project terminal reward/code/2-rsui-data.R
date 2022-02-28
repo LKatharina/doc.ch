@@ -16,7 +16,7 @@ d2 <- fread("../data/rsft-dcpt-processed.csv")
 
 # clean data 1
 d1 = d1[,.(pid,nr,xh,pxh,yh,pyh,xl,pxl,yl,pyl,budget,start,trial,state,choice,difficulty)]
-d1[,dataset := "Marbacher et al. \n (2021)"]
+d1[,dataset := "Mangold et al. \n (2021)"]
 
 
 # clean data 2

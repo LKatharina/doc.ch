@@ -8,9 +8,11 @@ pacman::p_load(data.table)
 library(cognitivemodels)
 library(cognitiveutils)
 
-
 # Source--------------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+source("../../models/rsft1988.R") # rsft model
+source("../../models/softmax.R")
+source("../../models/rsft1988-probstates.R")
 
 
 # Rsft Variables ------------------------------------------------------------
@@ -139,60 +141,79 @@ budget_diff[,nr := 1:nrow(budget_diff)]
 choicerule = "softmax"
 tau = 0.2
 
-#Reward Function for rsft
-R <- function(a, x_c) {
-  ifelse(a >= x_c, 1, 0)
+rsft = lapply(1:nrow(budget_diff), function(i){
+  d = budget_diff[i,]
+  # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
+  m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,5,0)
+  choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],0.2))
+  choiceprob = cbind(m@extended[,.(trial,state)],choiceprob)
+  # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
+  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,5,0,choiceprob,F)
+  choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
+  print(i)
+  return(cbind(
+    m@compact,
+    prhv_rsft = choiceprob$policyHV,
+    prstate = prstates$prstate))
 }
-
-# 1. RSFT model -----------------------------------------
-rsft_model <- hm1988(
-  ~ xh + pxh + yh + pyh | xl + pxl  + yl + pyl,  # our formula (as before)
-  trials = ".ALL",        # NEW: ".ALL" will predict for *all possible* trials
-  data = budget_diff,         # our data (as before)
-  budget = ~b,      # name of our budget column in our data
-  initstate = ~start,    # name of our starting-state column in our data
-  ntrials = 5,            # we always 5 trials therefore I hard-code this
-  states = ".ALL",        # NEW: ".ALL" will predict for *all possible* states
-  choicerule = choicerule,
-  fix = list(tau = tau))
-
-predict(rsft_model)
-
-# From this rsft_model object I will not only simulate the predictions, but ...
-#  I let the model tell me the trials and states that are possible in these trials
-#  I also predict the probability of ending up in one state (prstate)
-
-rsft_sim <- data.table(
-  trial = 6 - rsft_model$get_timehorizons(), # get trials that are *remaining*
-  state =   rsft_model$get_states(),         # get possible states
-  prhv_rsft =    rsft_model$predict("response"),  # get pr(hv) prediction
-  prstate = rsft_model$predict("pstate"), # get pr(state)
-  hvalue = predict(rsft_model, type="values")[,1],
-  lvalue = predict(rsft_model, type="values")[,2]
 )
 
-# Stimuli nr
+rsft_sim = rbindlist(rsft)
 rsft_sim[, nr := cumsum(trial == 1)]
-
-
 sim <- merge(rsft_sim,budget_diff, by="nr")
+
+
+# # 1. RSFT model -----------------------------------------
+# rsft_model <- hm1988(
+#   ~ xh + pxh + yh + pyh | xl + pxl  + yl + pyl,  # our formula (as before)
+#   trials = ".ALL",        # NEW: ".ALL" will predict for *all possible* trials
+#   data = budget_diff,         # our data (as before)
+#   budget = ~b,      # name of our budget column in our data
+#   initstate = ~start,    # name of our starting-state column in our data
+#   ntrials = 5,            # we always 5 trials therefore I hard-code this
+#   states = ".ALL",        # NEW: ".ALL" will predict for *all possible* states
+#   choicerule = choicerule,
+#   fix = list(tau = tau))
+# 
+# predict(rsft_model)
+# 
+# # From this rsft_model object I will not only simulate the predictions, but ...
+# #  I let the model tell me the trials and states that are possible in these trials
+# #  I also predict the probability of ending up in one state (prstate)
+# 
+# rsft_sim <- data.table(
+#   trial = 6 - rsft_model$get_timehorizons(), # get trials that are *remaining*
+#   state =   rsft_model$get_states(),         # get possible states
+#   prhv_rsft =    rsft_model$predict("response"),  # get pr(hv) prediction
+#   prstate = rsft_model$predict("pstate"), # get pr(state)
+#   hvalue = predict(rsft_model, type="values")[,1],
+#   lvalue = predict(rsft_model, type="values")[,2]
+# )
+# 
+# # Stimuli nr
+# rsft_sim[, nr := cumsum(trial == 1)]
+# 
+# 
+# sim <- merge(rsft_sim,budget_diff, by="nr")
 
 ## 2 Ph Heuristic ------------------------------------------------------------------
 
 Probheuristic <- function(data){
-  high = max(data$xh, data$yh)
-  low = max(data$xl, data$yl)
-  data$probh <- ifelse(data$xh == high, data$pxh, data$pyh)
-  data$probl <- ifelse(data$xl == low, data$pxl, data$pyl)
+  data$high = data[,max(xh,yh), by = 1:nrow(data)]$V1
+  data$low = data[,max(xl,yl), by = 1:nrow(data)]$V1
+  data$probh <- ifelse(data$xh == data$high, data$pxh, data$pyh)
+  data$probl <- ifelse(data$xl == data$low, data$pxl, data$pyl)
   
-  sim_heurisik <- softmax(~ probh | probl,
-          d = data,
-          c(tau = 0.2))
+  sim_heuristik = as.data.table(cr_softmax(x = data[,.(probh,probl)],0.2))
+  
+  # sim_heurisik <- softmax(~ probh | probl,
+  #         d = data,
+  #         c(tau = 0.2))
   
   ph_sim <- data.table(
     probh_ph = data$probh,
     probl_ph = data$probl,
-    prhv_ph = predict(sim_heurisik))
+    prhv_ph = sim_heuristik$probh)
   
   return(ph_sim)
 }
@@ -201,6 +222,7 @@ ph_sim <- Probheuristic(sim)
 
 # Combine data
 sim <- cbind(sim, ph_sim)
+
 
 
 # 3. Shifting -----------------------------------------------------------------------------------
@@ -215,12 +237,12 @@ sim <- cbind(sim, prhv_shift)
 
 
 # Difficulty -------------------------------------------------------------------------------
-d <- sim[trial == 1, .(dh = hvalue, dl=lvalue), by = c("nr","b")]
+d <- sim[trial == 1, .(dh = policyHV, dl=policyLV), by = c("nr","b")]
 sim <- merge(sim,d, by=c("nr","b"))
 
 
 # bad rows ----------------------------------------------------------------------------------
-sim[,badrows := ifelse(hvalue == lvalue,1,0)]
+sim[,badrows := ifelse(policyHV == policyLV,1,0)]
 
 
 
@@ -230,7 +252,7 @@ drops <- c("ev2","x1", "x2", "y1", "y2", "px1", "px2", "py1", "py2", "bmin", "bm
            "id1", "id2", "cdiff", "cdir", "c1", "prdir","prc1", "mdiff", "sumbr", "diff", "sumc1", "sumdir", "dir")
 sim[, c(drops) := NULL]
 
-sim <- sim[,list(nr,id,idh,idl,ev1,varh,varl,xh,yh,pxh,pyh,xl,yl,pxl,pyl,dh,dl,b,start,trial,state,hvalue,lvalue,prhv_rsft,prstate,
+sim <- sim[,list(nr,id,idh,idl,ev1,varh,varl,xh,yh,pxh,pyh,xl,yl,pxl,pyl,dh,dl,b,start,trial,state,policyHV,policyLV,prhv_rsft,prstate,
        probh_ph, probl_ph,prhv_ph,prhv_shift, badrows)]
 
 # Save --------------------------------------------------------------------------------------

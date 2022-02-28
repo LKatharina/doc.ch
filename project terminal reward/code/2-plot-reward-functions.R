@@ -79,7 +79,7 @@ p = ggplot(plotdata[parameter %in% par[which(par != "0.5")]],
   geom_line(show.legend = F, colour = "grey50", linetype = 2, size = 0.8, alpha = 0.5) +
   labs(x = 'States', y = 'Terminal Reward', tag = "a")+
   scale_x_continuous(breaks = c(12.5,24.999,25,37.5), labels = c("state < goal"," ","state = goal","state > goal")) +
-  scale_y_continuous(limits = c(0,1), expand = c(0,0))+
+  scale_y_continuous(breaks = seq(0,1, 0.25),limits = c(0,1.1), expand = c(0,0))+
   theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),
         legend.title = element_text(size=11),legend.text = element_text(size = 10),
         text = element_text(family = "Arial", size = 11),
@@ -92,13 +92,15 @@ p = ggplot(plotdata[parameter %in% par[which(par != "0.5")]],
 
 RFplot = p + 
   theme_classic(base_family = "Arial") +
-  geom_line(plotdata[parameter %in% c("0.5","-99")], mapping = aes(x = s, y = values, group = parameter, colour = parameter), linetype = 1, size = 0.8, inherit.aes = F, show.legend = F) +
+  geom_line(plotdata[parameter %in% c("0.5","-99")], mapping = aes(x = s, y = values, group = parameter, colour = parameter),
+            linetype = 1, size = 0.8, inherit.aes = F, show.legend = T) +
   labs(x = 'States', y = 'Terminal Reward', tag = "a")+
-  scale_color_manual(values=c("black","blue"),name = "Reward \n Function",labels = c("Step","S-shaped (k = 0.5)"))+
+  scale_color_manual(values=c("black","blue"),name = "Reward Function:",labels = c("Step","Logistic\n(k = 0.5)"))+
   scale_x_continuous(breaks = c(12.5,24.9999,25,37.5), labels = c("state < goal"," ","state = goal","state > goal")) +
-  scale_y_continuous(limits = c(0,1), expand = c(0,0))+
-  theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "black"),
+  scale_y_continuous(breaks = seq(0,1, 0.25),limits = c(0,1.1), expand = c(0,0))+
+  theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "white"),
         legend.title = element_text(size=11),legend.text = element_text(size = 10),
+        legend.position = c(0.8,0.25),
         text = element_text(family = "Arial", size = 11),
         axis.title.y = element_text(family = "Arial", size = 13),
         axis.title.x = element_text(family = "Arial", size = 13), 

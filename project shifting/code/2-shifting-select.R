@@ -65,22 +65,22 @@ utility_of_design <- function(x, w, m1, m2){
 # Utiltiy of design --> Berechnet einen Wert für jeden Stimuli (bestehend aus 2 Gambles)
 # u1 = Differenzen (von den Paarvergleichen) aufsummieren und den mean berechnen (jedoch nur, wenn die Differenz nicht = 0)
 # u2 = Prozentsatz an vorhersagen, wo die Vorhersagen nicht in die gleiche Richtung gehen
-# utility_of_design <- function(x, m1, m2,f){
-#   colm1 <- grep(m1,names(x)) # Sucht nach einem Muster in einem Vektor, bei uns nach dem Namen rsft
-#   colm2 <- grep(m2,names(x)) # Sucht nach einem Muster in einem Vektor, bei uns nach dem Namen dcpt
-#   utvec <- utility_of_paired_comparisons(x = x[,..colm1], y = x[,..colm2]) # .. --> Ausserhalb der data table suchen
-#   if(any(utvec > 0)){
-#     if(f == "mean"){
-#     u1 <- mean((utvec))
-#     } else {
-#     u1 <- sd(utvec)
-#     }
-#   } else {
-#     u1 <- 0
-#   }
-#   u2 <- mean(as.numeric(utvec > 0.0001))
-#   return(u1)
-# }
+utility_of_design <- function(x, m1, m2,f){
+  colm1 <- grep(m1,names(x)) # Sucht nach einem Muster in einem Vektor, bei uns nach dem Namen rsft
+  colm2 <- grep(m2,names(x)) # Sucht nach einem Muster in einem Vektor, bei uns nach dem Namen dcpt
+  utvec <- utility_of_paired_comparisons(x = x[,..colm1], y = x[,..colm2]) # .. --> Ausserhalb der data table suchen
+  if(any(utvec > 0)){
+    if(f == "mean"){
+    u1 <- mean((utvec))
+    } else {
+    u1 <- sd(utvec)
+    }
+  } else {
+    u1 <- 0
+  }
+  u2 <- mean(as.numeric(utvec > 0.0001))
+  return(u1)
+}
 
 # Calculate Utility ---------------------------------------------------------------------------
 sim[ , ut := utility_of_design(.SD, m1 = "prhv_rsft", m2 = "prhv_ph", f = "mean"), by= "nr"]
