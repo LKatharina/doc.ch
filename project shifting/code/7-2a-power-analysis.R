@@ -15,24 +15,19 @@ windowsFonts(Arial=windowsFont("Arial"))
 # Read data ----------------------------------------------------------------
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 data = fread("../data/power_data_shift.csv")
-
-
-# Set Contrasts: Sum coding ------------------------------------------------
-# (effect are in contrast to the overall mean)
-contrasts(data$advantage) = car::contr.Sum(levels(data$advantage))
-contrasts(data$dstate) = car::contr.Sum(levels(data$dstate))
-contrasts(data$doutcome) = car::contr.Sum(levels(data$doutcome))
-
-data
-
-# Regression model  ----------------------------------
+data = data[ad_risky != 0 & domain == "positive gain"]
+data[,pid := as.factor(pid)]
 data[,abs_ad := abs(ad_risky)]
-fit_freq1 <- glmer(optBehavior ~ trial + abs_ad  + (1 | pid),  data = data[ad_risky != 0], family = "binomial")
+
+# Regression model  ---------------------------------------
+
+fit_freq1 <- glmer(optBehavior ~ trial + abs_ad  + (1 | pid),  data = data, family = "binomial")
 summary(fit_freq1)
 
 interact_plot(fit_freq1, pred = trial, modx = abs_ad) +
   xlim(1,5) +
   ylim(0,1)
+
 
 # Power analysis based on the effects of the pretest -----------------------
 # Simulate new data based on the pretest data to assess the required sample size
@@ -40,27 +35,20 @@ interact_plot(fit_freq1, pred = trial, modx = abs_ad) +
 # The model including the effect of interest will be compared with an alternative model that
 # does not include the effect of interest.
 
-# Observed Power 
-#sim_advantage <- powerSim(fit_freq, nsim=100, test = fcompare(choice~dstate + doutcome))
-#sim_dstate <- powerSim(fit_freq, nsim=100, test = fcompare(choice~advantage + doutcome))
-#sim_doutcome <- powerSim(fit_freq, nsim=100, test = fcompare(choice~advantage + dstate))
-
-#sim_trial <- powerSim(fit_freq1, nsim=10, test = fcompare(choice~advantage))
 
 # Smallest effect of interest  ----------------------------------------------
 model_SESOI <- fit_freq1
-fixef(model_SESOI)['dstate[S.negative]'] <- -0.03
+fixef(model_SESOI)['trial'] <- 0.07
 
 # Increase Sample Size ------------------------------------------------------
 model_ext_pid <- extend(model_SESOI, along="pid", n=150)
 
 
 #sim_advantage <- powerSim(model_ext_pid, nsim=50, test = fcompare(choice~advantage))
+p_curve_trial <- powerCurve(model_ext_pid, test=fcompare(optBehavior~abs_ad), along="pid", breaks=c(100), nsim =  1000)
+plot(p_curve_trial)
 
-p_curve_doutcome <- powerCurve(model_ext_pid, test=fcompare(choice~advantage + dstate), along="pid", breaks=c(50,60,70,80))
-p_curve_dstate <- powerCurve(model_ext_pid, test=fcompare(choice~advantage + doutcome), along="pid", breaks=c(60,70,80))
-p_curve_advantage <- powerCurve(model_ext_pid, test=fcompare(choice~dstate + doutcome), along="pid", breaks=c(60,70,80))
-
+saveRDS("../data/p_curve_trial.rds")
 
 
 p_curve_dstate <- readRDS("../pwrmodels/p_curve_dstate.rds")
@@ -96,3 +84,6 @@ AGG <- merge(AGG, Advantage, by="Version")
 AGG[,DiffLossGain := loss - gain, ]
 AGG[,DiffRiskySafe := risky - safe,]
 AGG[,DiffNegativePositive := negative - positive,]
+
+
+

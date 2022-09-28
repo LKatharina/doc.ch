@@ -67,24 +67,24 @@ rsft = lapply(1:nrow(stimuli), function(i){
                  timeHorizon = 5,
                  d$start)
   
-  choiceprob = as.data.table(cr_softmax(x = m@extended[, .(policyHV, policyLV)], tau))
-  choiceprob = cbind(m@extended[, .(trial, state)], choiceprob)
+  # choiceprob = as.data.table(cr_softmax(x = m@extended[, .(policyHV, policyLV)], tau))
+  # choiceprob = cbind(m@extended[, .(trial, state)], choiceprob)
   
   # rsftStates(xh, yh, xl, yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob, final)
-  prstates = rsftStates(d$xh, d$yh, d$xl, d$yl,
-                        d$pxh, d$pyh, d$pxl, d$pyl,
-                        d$budget,
-                        timeHorizon = 5,
-                        d$start,
-                        choiceprob,
-                        F)
+  # prstates = rsftStates(d$xh, d$yh, d$xl, d$yl,
+  #                       d$pxh, d$pyh, d$pxl, d$pyl,
+  #                       d$budget,
+  #                       timeHorizon = 5,
+  #                       d$start,
+  #                       choiceprob,
+  #                       F)
   
   choiceprob = as.data.table(cr_softmax(x = m@compact[, .(policyHV, policyLV)], tau))
   
   return(cbind(
     m@compact,
     prhv = choiceprob$policyHV,
-    prstate = prstates$prstate,
+    #prstate = prstates$prstate,
     parameter = -99))
 }
 )
@@ -96,7 +96,7 @@ optdata$stepLV = optdata$policyLV
 optdata$stepHV = optdata$policyHV
 
 # Is needed to exclude states, where ER != 0
-data = merge(data,rsft[,.(policyHV, policyLV, trial, state, nr, prstate)], by = c("trial", "state", "nr"))
+data = merge(data,rsft[,.(policyHV, policyLV, trial, state, nr)], by = c("trial", "state", "nr"))
 setnames(data, "policyHV", "stepHV")
 setnames(data, "policyLV", "stepLV")
 data = data[order(pid, nr, trial, state),]

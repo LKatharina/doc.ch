@@ -28,9 +28,8 @@ rsft = lapply(1:nrow(s), function(i){
   # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
   m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,3,0)
   choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],0.2))
-  choiceprob = cbind(m@extended[,.(trial,state)],choiceprob)
   # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
-  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,3,0,choiceprob,F)
+  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,3,0,choiceprob,m@extended, F)
   choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
   return(cbind(
     m@compact,

@@ -15,7 +15,16 @@ setClass(Class="prstates",
 
 # FUNCTIONS ====================================================================
 
-rsftStates <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final){
+rsftStates <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,extendedModel = NULL,final){
+  if(class(choiceprob)[1] == "data.table"){
+    choiceprob = cbind(extendedModel[,.(trial,state)],choiceprob)
+  } else {
+    
+  }
+  
+  
+  originaloutcomes = c(xh,yh,xl,yl)
+  
   notzero = c(pxh,pyl,pxl,pyl)
   if(any(notzero== 0)){
     if(pxh == 0){
@@ -29,10 +38,36 @@ rsftStates <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start
     } else { }
   }  else { }
   
+  
   #define variables -------------------------------------------------------------
-  phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)
-  plv = c(0,0,pxl,pyl) #c(0, 0, pxLV, pyLV)
-  outcomes = c(xh,yh,xl,yl) #c(xHV,yHV,xLV,yLV)
+  if(any(c(pxh,pyh) == 0) & any(c(pxl,pyl) == 0)){
+    if(pxh == 0){
+      phv = c(pyh,0)
+      if(pxl == 0){
+        plv = c(0,pyl)
+        outcomes = c(yh,yl)}
+      if(pyl == 0){
+        plv = c(0,pxl)
+        outcomes = c(yh,xl)
+      }
+    }
+    if(pyh == 0){
+      phv = c(pxh,0)
+      if(pxl == 0){
+        plv = c(0,pyl)
+        outcomes = c(xh,yl)
+      }
+      if(pyl == 0){
+        plv = c(0,pxl)
+        outcomes = c(xh,xl)
+      }
+    }
+  } else {
+    phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)
+    plv = c(0,0,pxl,pyl) #c(0, 0, pxLV, pyLV)
+    outcomes = c(xh,yh,xl,yl) #c(xHV,yHV,xLV,yLV)
+  }
+  
   goal = goal
   Noutcomes = length(outcomes)
   timeHorizon = timeHorizon
@@ -151,6 +186,7 @@ rsftStates <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start
   states = growTree(outcomes, phv = phv, plv, timeHorizon = timeHorizon, start = start)
   states = states[order(szenario,trial)]
   states[del == 1][order(trial,state)]
+  
   # multiply probabilities of the outcomes with choice probabilities
   if(class(choiceprob)[1] == "data.table"){
     choiceprobext = expandchoiceprob(choiceprob = choiceprob, timeHorizon = timeHorizon) # use predicted choices
@@ -166,6 +202,7 @@ rsftStates <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start
   d[,cumprob := cumprod(pr),by=szenario]
   smalld = d[del == 1] #keep originals
   probstates = smalld[order(trial,state),.(prstate = sum(cumprob)), by=c("trial","state")]
+  probstates = probstates[prstate != 0]
   
   prstateTable = new("prstates",
                      prstate = probstates[trial != max(trial)],

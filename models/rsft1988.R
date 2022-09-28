@@ -13,7 +13,6 @@
 # Packages =========================================================================
 library(data.table)
 
-# Reward Functions =================================================================
 
 # Model ============================================================================
 setClass(Class="RSFT",
@@ -24,7 +23,9 @@ setClass(Class="RSFT",
 )
 
 
-# Reward function --------------------------------------------------------------
+# Reward function ===========================================================
+# Standard optimal model uses a step reward function.
+# model with subjective rewards uses a logistic reward function.
 
 # Step reward function ------------------------------------------------------
 step = function(goal,state) { ifelse(state >= goal, 1, 0) }
@@ -46,33 +47,60 @@ KT = function(goal,state,k){
   return(y)
 }
 
+# Optimal Model =================================================================
 rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start, Rfunction = "step", k = NULL, gstates = NULL, gtrials = NULL){
-
+  originaloutcomes = c(xh,yh,xl,yl)
+  
   #define variables -------------------------------------------------------------
-  notzero = c(pxh,pyl,pxl,pyl)
-  if(any(notzero== 0)){
+  notzero = c(pxh,pyh,pxl,pyl)
+  if(any(notzero == 0)){
     if(pxh == 0){
       xh = 0
-    } else if(pyh == 0){
-      xh = 0
-    } else if(pxl == 0){
+    }
+    if(pyh == 0){
+      yh = 0
+    }
+    if(pxl == 0){
       xl = 0
-    } else if(pyl == 0){
+    }
+    if(pyl == 0){
       yl = 0
-    } else { }
+    }
   }  else { }
-    
-  phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)
-  plv = c(0,0,pxl,pyl) #c(0, 0, pxLV, pyLV)
-  outcomes = c(xh,yh,xl,yl) #c(xHV,yHV,xLV,yLV)
+
+  if(any(c(pxh,pyh) == 0) & any(c(pxl,pyl) == 0)){
+    if(pxh == 0){
+      phv = c(pyh,0)
+      if(pxl == 0){
+        plv = c(0,pyl)
+        outcomes = c(yh,yl)}
+      if(pyl == 0){
+        plv = c(0,pxl)
+        outcomes = c(yh,xl)
+      }
+    }
+    if(pyh == 0){
+      phv = c(pxh,0)
+      if(pxl == 0){
+        plv = c(0,pyl)
+        outcomes = c(xh,yl)
+      }
+      if(pyl == 0){
+        plv = c(0,pxl)
+        outcomes = c(xh,xl)
+      }
+    }
+  } else {
+    phv = c(pxh,pyh,0,0) #c(pxHV, pyHV, 0, 0)
+    plv = c(0,0,pxl,pyl) #c(0, 0, pxLV, pyLV)
+    outcomes = c(xh,yh,xl,yl) #c(xHV,yHV,xLV,yLV)
+  }
+
   goal = goal
   Noutcomes = length(outcomes)
   timeHorizon = timeHorizon
   start = start
   
-  
-
-
   # rsft1988 Functions =========================================================
 
 
@@ -163,6 +191,27 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
     }
     return(tab)
   }
+  
+  # function delete impossible states --------------------------------------------
+  deleteImpossible = function(dt){
+    for(i in 2:timeHorizon){
+      repeatestates = rep(dt[trial == i]$state, each = length(outcomes))
+      
+      if(sum(notzero == 0) == 2){
+        compare = rep(dt[trial == i]$state, each = length(outcomes)) - outcomes
+      } else {
+        compare = rep(dt[trial == i]$state, each = length(outcomes)) - originaloutcomes
+      }
+      
+      dcompare = data.table(trial = i, state = repeatestates, comparevalue = compare)
+      dcompare[,contain := ifelse(compare %in% alloptimal[trial == i-1,state],1,0)]
+      check = dcompare[,.(checkvalues = sum(contain)),by="state"]
+      vcheck = check[checkvalues != 0,state]
+      dt = dt[trial != i | trial == i & (state %in% vcheck)]
+    }
+    return(dt)
+  }
+  
 
   # Run Functions from rsft1988 functions ----------------------------------------
 
@@ -170,6 +219,7 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
   # LV Option: Tree with Probabilities, terminal reward, ER in the last trial
   statesHV = growTree(outcomes, p = phv, timeHorizon = timeHorizon, start = start)
   statesLV = growTree(outcomes, p = plv, timeHorizon = timeHorizon,  start = start)
+  
   
   if(Rfunction == "evmax"){
     terminalRewardHV = evmax(goal = goal,state = statesHV[[timeHorizon]][1,])
@@ -209,25 +259,39 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
 
 
   # add states
-  alloptimal[[1]] = as.data.table(t(rbind(trial = 1, state = start, alloptimal[[1]])))
+  alloptimal[[1]] = as.data.table(t(rbind(trial = 1, state = start, alloptimal[[1]], ph = 1, pl = 1)))
 
   t = 2
    for(i in 1:(length(statesHV)-1)) {
-    alloptimal[[t]] = as.data.table(t(rbind(trial = t, state = statesHV[[i]][1,],alloptimal[[t]])))
+    alloptimal[[t]] = as.data.table(t(rbind(trial = t, state = statesHV[[i]][1,],alloptimal[[t]],ph = statesHV[[i]][2,], pl = statesLV[[i]][2,])))
     t = t + 1
    }
   
   completealloptimal = rbindlist(alloptimal)
-  completealloptimal = completealloptimal[order(trial,state),.(trial,state,policyHV,policyLV)]
-  
-  # remove duplicated
-  t = 2
-  for(t in 2:timeHorizon){
-    alloptimal[[t]] = cbind(alloptimal[[t]][!duplicated(alloptimal[[t]][,2]),])
-  }
+  completealloptimal = completealloptimal[order(trial,state),.(trial,state,policyHV,policyLV,ph,pl)]
 
-  alloptimal = rbindlist(alloptimal)
+ 
+  # delete impossible and remove dublicated
+  alloptimal = completealloptimal[(ph != 0 | pl != 0),]
   alloptimal = alloptimal[order(trial,state),.(trial,state,policyHV,policyLV)]
+
+  # remove duplicated
+  alloptimal = unique(alloptimal)
+
+  # delete impossible states
+  if(any(notzero == 0) & !any(originaloutcomes == 0)){
+    alloptimal_withoutZero = alloptimal[trial > 1 & state != 0,]
+    alloptimal_t1 = alloptimal[trial == 1]
+    alloptimal = rbind(alloptimal_t1,alloptimal_withoutZero)
+  }
+  
+
+  #completealloptimal = completealloptimal[(ph != 0 | pl != 0),]
+  alloptimal = alloptimal[order(trial,state),.(trial,state,policyHV,policyLV)]
+  completealloptimal = completealloptimal[order(trial,state),.(trial,state,policyHV,policyLV)]
+
+  alloptimal = deleteImpossible(alloptimal)
+  #completealloptimal = deleteImpossible(completealloptimal)
   
   ERdata = function(compact=alloptimal, extended=completealloptimal){
     return(new("RSFT",
