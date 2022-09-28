@@ -27,6 +27,7 @@ pids = data.table(id = unique(d2$id),
 d2 = merge(d2,pids, by="id")
 d2[, c("pxh","pyh","pxl","pyl","choice","start") := list(ph, 1-ph, pl, 1-pl,choice_1isHighVar,0)]
 d2 = d2[,.(pid,xh,pxh,yh,pyh,xl,pxl,yl,pyl,budget,start,trial,state,choice)]
+d2 = d2[ pid != 7]
 
 stimuli_j = unique(d2[,.(xh,yh,pxh,pyh,xl,pxl,yl,pyl,budget,start)])
 stimuli_j[,nr := 1:nrow(stimuli_j)]
@@ -34,7 +35,7 @@ stimuli_j[,nr := 1:nrow(stimuli_j)]
 # Impossible States ??? -------------------------------------------------------
 stimuli2 = unique(d2[,.(xh,yh,pxh,pyh,xl,pxl,yl,pyl,budget,start,trial,state)])
 
-d2diff = lapply(1:nrow(stimuli2), function(i){
+d2diff = lapply(1:nrow(stimuli2), function(i){ # Returns warnings due to impossible states
   
   d = stimuli2[i,]
   
@@ -44,7 +45,8 @@ d2diff = lapply(1:nrow(stimuli2), function(i){
                 timeHorizon = 5,
                 0,
                 gtrials = d$trial,
-                gstates = d$state)
+                gstates = d$state
+                )
   
   
   return(cbind(
@@ -55,13 +57,8 @@ d2diff = lapply(1:nrow(stimuli2), function(i){
 )
 
 d2diff = rbindlist(d2diff)
-d2diff[is.na(d2diff$policyHV) == T | is.na(d2diff$policyHV) == T]
 
-merge(d2,d2diff[is.na(d2diff$policyHV) == T | is.na(d2diff$policyHV) == T], by = c("xh","yh","xl","yl",
-                                                                                        "pxh","pyh","pxl","pyl",
-                                                                                        "budget","start","trial","state"))
 
-d2 = d2[ pid != 7]
 d2diff = d2diff[is.na(d2diff$policyHV) == F | is.na(d2diff$policyHV) == F]
 
 d2 = merge(d2,d2diff, by = c("xh","yh","xl","yl","pxh","pyh","pxl","pyl","budget","start","trial","state"))

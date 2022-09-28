@@ -17,8 +17,8 @@ jitter <- position_jitter(width = 0.1)
 stimuli[, model := as.factor(model)]
 stimuli[,prhv := prhv * 100]
 
-# # Median Shifting + PH & OPT Vorhersagen ----------------------------------------------------
-plotfunc <- function(i){
+# # Median Shifting + PH & OPT Predictions ----------------------------------------------------
+plotpredictions <- function(i){
   
   agg <- stimuli[nr == unique(nr)[i], .(median = median(prhv)), by = c("model","trial")]
   
@@ -53,21 +53,21 @@ plotfunc <- function(i){
 }
 
 
-s1_opt_ph <- plotfunc(1)
-ggsave("../figures/temp_shifting_a.png",width = 8, height = 4)
-s2_opt_ph <- plotfunc(2)
-ggsave("../figures/temp_shifting_b.png",width = 8, height = 6)
-s3_opt_ph <- plotfunc(3)
-ggsave("../figures/temp_shifting_c.png",width = 5, height = 4, scale = 0.9)
+# s1_opt_ph <- plotpredictions(1)
+# ggsave("../figures/temp_shifting_a.png",width = 8, height = 4)
+# s2_opt_ph <- plotpredictions(2)
+# ggsave("../figures/temp_shifting_b.png",width = 8, height = 6)
+# s3_opt_ph <- plotpredictions(3)
+# ggsave("../figures/temp_shifting_c.png",width = 5, height = 4, scale = 0.9)
 
 
-comp <- s1_opt_ph  + plot_spacer() + s2_opt_ph  +
-  plot_layout(guides = "collect", widths = c(.4,.05,.4))
-ggsave("../figures/comp.png",width = 11, height = 4)
+# comp <- s1_opt_ph  + plot_spacer() + s2_opt_ph  +
+#   plot_layout(guides = "collect", widths = c(.4,.05,.4))
+# ggsave("../figures/comp.png",width = 11, height = 4)
 
-# Nur Median -----------------------------------------------------------------------
-i = 3
-plotfunc1 <- function(i){
+# Plot Median Predictions  -----------------------------------------------------------------------
+
+plotmedian <- function(i){
   
   agg <- stimuli[nr == unique(nr)[i], .(median = median(prhv)), by = c("model","trial")]
   
@@ -80,20 +80,20 @@ plotfunc1 <- function(i){
     scale_colour_manual(values=c("black","green")) +
    # scale_fill_manual(values=c("grey","grey","blue"), name = "Model",labels = c("Probability Heuristic", "Optimal Model", "Shifting Model (c=3)"))+
     ylim(0,100) +
-    scale_y_continuous(limits = c(0,100), expand = c(0,0)) +
-    labs(x = 'Trial', y = '% Risky Choices')+
+    scale_y_continuous(breaks = seq(0,100, 25), limits = c(0,110), expand = c(0,0)) +
+    labs(x = 'Trial', y = '% Risky Choices',tag = 'b')+
     #ggtitle(expression(paste(bold("Figure 2."), italic(" Model Predictions"))))+
     geom_point(agg[model == "shift"], mapping = aes(x = trial, y = median, shape = model), colour = "blue", inherit.aes = F, size = 4, stroke = 2)+
     geom_line(agg[model == "shift"], mapping = aes(x = trial, y = median, group = 1), linetype = 2, inherit.aes = F, colour = "blue", size = 0.8, alpha = 0.5)+
     theme(legend.background = element_rect(linetype = 1, size = 0.01, colour = "white", fill = alpha("white",0)),
-          legend.position = c(0.25 , 0.20),
-          legend.title = element_text(size=12),legend.text = element_text(size = 11),
+          legend.position = c(0.40 , 0.20),
+          legend.title = element_text(size=13),legend.text = element_text(size = 12),
           title = element_text(size=13, family = "Arial"),
           text = element_text(family = "Arial", size = 11),
-          axis.title.y = element_text(family = "Arial", size = 13),
-          axis.title.x = element_text(family = "Arial", size = 13), 
-          axis.text.y.left = element_text(family = "Arial", size = 11),
-          axis.text.x.bottom = element_text(family = "Arial", size = 11),
+          axis.title.y = element_text(family = "Arial", size = 15),
+          axis.title.x = element_text(family = "Arial", size = 15), 
+          axis.text.y.left = element_text(family = "Arial", size = 12),
+          axis.text.x.bottom = element_text(family = "Arial", size = 12),
           strip.background = element_rect(colour="black", size = 0.01),
           strip.text = element_text(family = "Arial")) + 
     guides(shape = guide_legend(override.aes = list(alpha = 1, colour = "black", stroke = 1)))
@@ -102,7 +102,7 @@ plotfunc1 <- function(i){
 }
 
 
-s3_opt_ph <- plotfunc1(3)
+s3_opt_ph <- plotmedian(3)
 ggsave("../figures/temp_shifting_c.png",width = 5, height = 4, scale = 0.9)
 
 # Shifting -------------------------------------------------------------------------
@@ -133,12 +133,12 @@ plotfunc1 <- function(i){
 }
 
 
-s1 <- plotfunc1(1)
-ggsave("../figures/temp_shifting_a1.png",width = 8, height = 6)
-s2 <- plotfunc1(2)
-ggsave("../figures/temp_shifting_b1.png",width = 8, height = 6)
-s3 <- plotfunc1(3)
-ggsave("../figures/temp_shifting_c1.png",width = 8, height = 6)
+# s1 <- plotfunc1(1)
+# ggsave("../figures/temp_shifting_a1.png",width = 8, height = 6)
+# s2 <- plotfunc1(2)
+# ggsave("../figures/temp_shifting_b1.png",width = 8, height = 6)
+# s3 <- plotfunc1(3)
+# ggsave("../figures/temp_shifting_c1.png",width = 8, height = 6)
 
 
 # Nur Shifting ------------------------------------------------------------------------
@@ -182,17 +182,14 @@ plotfunc2 <- function(i){
 }
 
 #
-
-s1_opt_ph <- plotfunc2(1)
-
-ggsave("../figures/temp_shifting_a.png",width = 8, height = 6)
-s2_opt_ph <- plotfunc(2)
-ggsave("../figures/temp_shifting_b.png",width = 8, height = 6)
-s3_opt_ph <- plotfunc(3)
-ggsave("../figures/temp_shifting_c.png",width = 8, height = 6)
-
-s4_opt_ph <- plotfunc(4)
-s4_opt_ph <- plotfunc(5)
+# 
+# s1_opt_ph <- plotfunc2(1)
+# 
+# ggsave("../figures/temp_shifting_a.png",width = 8, height = 6)
+# s2_opt_ph <- plotfunc(2)
+# ggsave("../figures/temp_shifting_b.png",width = 8, height = 6)
+# s3_opt_ph <- plotfunc(3)
+# ggsave("../figures/temp_shifting_c.png",width = 8, height = 6)
 
 
 # plotfunc2 <- function(i){

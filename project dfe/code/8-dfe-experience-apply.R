@@ -14,7 +14,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source("../../models/rsft1988.R") # rsft model
 source("../../models/softmax.R")
 source("../../models/rsft1988-probstates.R")
-source("7-dfe-optsampler.R")
+source("7-dfe-experience-functions.R")
 
 ntrials = 3
 

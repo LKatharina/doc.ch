@@ -31,7 +31,7 @@ data = data.table(xh = xh, yh = yh, pxh = pxh, pyh = pyh, xl = xl, yl = yl, pxl 
 # Step Reward Function (default), all states and trials
 m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0)
 m@compact[,.(policyHV,policyLV)] # Tree without duplications
-m@extended[,.(policyHV,policyLV)] # Full Tree (is needed to calculate prstate)
+m@extended[,.(policyHV,policyLV)] # Full Tree (is only needed to calculate prstate, contains impossible states)
 
 # Step Reward Function (default), given subset of states and trials
 m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0,gtrials = c(2,2),gstates = c(4,5))
@@ -50,12 +50,11 @@ choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
 
 # PrState ====================================================================
 # First run rsft model and choice rule
-# rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
+# rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob, extendedModel, final) # final = probability to end in a certain state
 m <- rsftModel(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0)
 choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],0.2))
-choiceprob_st = cbind(m@extended[,.(trial,state)],choiceprob)
-prstates = rsftStates(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, choiceprob_st, F) # Without final state
-prstates = rsftStates(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, choiceprob_st, T) # only final state
+prstates = rsftStates(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, choiceprob, m@extended, F) # Without final state
+prstates = rsftStates(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, choiceprob, m@extended, T) # only final state
 
 # Run RSFT Model data table ==================================================
 xh = 2
@@ -72,12 +71,11 @@ s = rbind(data,d2)
 
 rsft = lapply(1:nrow(s), function(i){
   d = s[i,]
-  # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
+  # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,)
   m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$budget,2,0)
   choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],0.2))
-  choiceprob = cbind(m@extended[,.(trial,state)],choiceprob)
-  # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
-  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$budget,2,0,choiceprob,F)
+  # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,extendedModel, final) # final = probability to end in a certain state
+  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$budget,2,0,choiceprob,m@extended,F)
   choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
   return(cbind(
     m@compact,
