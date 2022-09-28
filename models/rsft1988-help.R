@@ -16,7 +16,7 @@ yh = 0
 pxh = 0.5
 pyh = 0.5
 xl = 4
-yl = 4
+yl = 0
 pxl = 1
 pyl = 0
 budget = 10
@@ -56,7 +56,6 @@ choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],0.2)
 choiceprob_st = cbind(m@extended[,.(trial,state)],choiceprob)
 prstates = rsftStates(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, choiceprob_st, F) # Without final state
 prstates = rsftStates(data$xh, data$yh, data$xl, data$yl, data$pxh, data$pyh, data$pxl, data$pyl, data$budget, 2,0, choiceprob_st, T) # only final state
-
 
 # Run RSFT Model data table ==================================================
 xh = 2

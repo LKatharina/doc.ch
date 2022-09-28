@@ -22,7 +22,3 @@ Variances = function(v, p){
 # Variances(c(3,0),c(0.25,0.75))
 # Variances(c(32,0),c(0.025,0.975))
 
-for(i in 1:10){
-  print(i)
-}
-i

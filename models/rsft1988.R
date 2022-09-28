@@ -8,7 +8,7 @@
 # Wahrscheinlichkeiten der 2 Optionen
 # k <- c(0.1,0.8,0.1) #c(pxHV, pyHV, 0, 0)
 # l <- c(0.4,0.2,0.4) #c(0, 0, pxLV, pyLV)
-# x <- c(0,1,2) #c(xHV,yHV,xLV,yLV)
+# x <- c(0,1,2,0) #c(xHV,yHV,xLV,yLV)
 
 # Packages =========================================================================
 library(data.table)
@@ -78,15 +78,17 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
 
   # function for decision tree ---------------------------------------------------
   growTree = function(outcomes, p, timeHorizon, start){
-    results = vector("list", timeHorizon)
-    results[[1]] = rbind(outcomes + start, p)
-
+    results = vector("list", timeHorizon) #list with length = timeHorizon --> store states and probabilities for each trial
+    
+    # Fill list
+    results[[1]] = rbind(outcomes + start, p) # states and probs after the 1st choice
+    
     for(t in 2:timeHorizon) {
       states = NULL
       for(i in results[[t-1]][1,]){
         states = c(states, (i + outcomes))
       }
-      probStates = rep(p, length(outcomes)^(t-1))
+      probStates = rep(p, length(outcomes)^(t-1)) 
       results[[t]] = rbind(states, probStates)
     }
     return(results)
@@ -171,6 +173,7 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
   statesHV = growTree(outcomes, p = phv, timeHorizon = timeHorizon, start = start)
   statesLV = growTree(outcomes, p = plv, timeHorizon = timeHorizon,  start = start)
   
+  # calculates reward based on final states (e.g. step function: 1 if final state >= goal, else 0)
   if(Rfunction == "evmax"){
     terminalRewardHV = evmax(goal = goal,state = statesHV[[timeHorizon]][1,])
     terminalRewardLV = evmax(goal = goal,state = statesLV[[timeHorizon]][1,])
@@ -185,14 +188,14 @@ rsftModel <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,
     terminalRewardLV = step(goal = goal,state = statesLV[[timeHorizon]][1,])
   }
   
-  ERlastHV = statesHV[[timeHorizon]][2,] * terminalRewardHV
+  ERlastHV = statesHV[[timeHorizon]][2,] * terminalRewardHV # probabilities * terminal reward
   ERlastLV = statesLV[[timeHorizon]][2,] * terminalRewardLV
 
   # rsft values
-  policyHV = makePoliciesLast(outcomes = outcomes, ERlasttrial = ERlastHV)
-  policyLV = makePoliciesLast(outcomes = outcomes, ERlasttrial = ERlastLV)
-  optimalPolicyLast = determineOptimal(policyHV = policyHV, policyLV = policyLV)
-  optBeforeLast = makePoliciesElse(optimalPolicy = optimalPolicyLast)
+  policyHV = makePoliciesLast(outcomes = outcomes, ERlasttrial = ERlastHV) # sum ERlasttrial for HV
+  policyLV = makePoliciesLast(outcomes = outcomes, ERlasttrial = ERlastLV) # sum ERlasttrial for LV
+  optimalPolicyLast = determineOptimal(policyHV = policyHV, policyLV = policyLV) # optimal option
+  optBeforeLast = makePoliciesElse(optimalPolicy = optimalPolicyLast) # Backward induction
 
 
   # Combined list with all trials and states --------------------------------------
