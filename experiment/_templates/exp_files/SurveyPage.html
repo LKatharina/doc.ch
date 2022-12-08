@@ -1,0 +1,43 @@
+{% extends "exp_files/Page.html" %}
+{% load otree static %}
+
+{% block global_styles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'exp_files/css/theme.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'exp_files/survey/vendor/select2/select2.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'exp_files/survey/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'exp_files/survey/css/main.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'exp_files/survey/fonts/iconic/css/material-design-iconic-font.css' %}">
+{% endblock %}
+
+
+{% block global_scripts %}
+	<script src="{% static 'exp_files/survey/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'exp_files/survey/vendor/animsition/js/animsition.min.js' %}"></script>
+	<script src="{% static 'exp_files/survey/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'exp_files/survey/vendor/select2/select2.min.js' %}"></script>
+	<script src="{% static 'exp_files/survey/js/main.js' %}"></script>
+
+	<script>
+		/* This script is for drop-down menus, to re-style those
+		    we use a library from the web called "select2"
+		    which assigns classes to the dropdown
+		    google it before making changes! */
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+			$(".js-select2").each(function(){
+				$(this).on('select2:close', function (e){
+					if($(this).val() == "Please choose") {
+						$('.js-show-service').slideUp();
+					}
+					else {
+						$('.js-show-service').slideUp();
+						$('.js-show-service').slideDown();
+					}
+				});
+			});
+		});
+	</script>
+{% endblock %}

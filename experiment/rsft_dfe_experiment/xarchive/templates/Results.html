@@ -1,0 +1,81 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree static %}
+
+
+{% block title %}
+<!--     <span class = "goal parent lightorange">
+    <p class = "center">
+      {% blocktrans trimmed %}
+      Ziel <br> {{ successes }} von {{ num_blocks }} x erreicht.
+      {% endblocktrans %}
+    </p>
+  </span> -->
+{% endblock %}
+
+
+
+{% block content %}
+  <div class = "row1 parent center-children">
+    <div class = 'center-children flex-row-flex-start center-me-h'>
+      <div class = "chart-icon"><i class="far fa-2x fa-clock center-me-v"></i></div>
+      <div class="chart-trial" id = "chart-trial"></div>
+    </div>
+  </div>
+
+  <div class = "row parent center-children">
+    <div class = 'center-children flex-row-flex-start center-me-h'>
+      <div class = "chart-icon"><i class="fas fa-signal fa-2x center-me-v"></i></div>
+      <div class="chart-earnings" id="chart-earnings"></div>
+    </div>
+  </div>
+
+  <div class = "row parent flex">
+      
+    {% if player.choice == 0 %}
+      <button disabled class="option rsft-btn-choices rsft-btn-chosen">
+        <div class="center">
+          <p>+&puncsp;{{player.outcome}}</p>
+        </div>
+      </button>
+      {% else %}
+        <button disabled class="option rsft-btn-choices">
+          <span class = "rsft-span-choices">
+            <div class="center-me-hv">
+            </div>
+          </span>
+        </button>
+
+      {% endif %}
+      
+      {% if player.choice == 1 %}
+      <button disabled class="option rsft-btn-choices rsft-btn-chosen">
+        <div class="center">       
+          <p>+&puncsp;{{player.outcome}}</p>
+        </div>
+      </button>
+      {% else %}
+        <button disabled class="option rsft-btn-choices">
+          <span class = "rsft-span-choices">
+            <div class="center-me-hv">         
+            </div>
+            </span>
+        </button>
+      {% endif %}
+
+  </div>
+
+   <span class = 'hidden'>{% next_button %}</span>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    drawTrial('chart-trial', true, {{ trial }}, {{ Constants.num_trials}}, {{ Constants.trial_label|json }});
+    drawEarnings('chart-earnings', {{ state|json }}, {{ budget|json }}, {{ max_less_state|json }}, {{ max_earning|json }}, true, true, {{ Constants.point_label|json }});
+    drawAction('option1', {{ LV|json }}, {{ LP|json }}, true, true, {{ Constants.point_label|json }});
+    drawAction('option2', {{ HV|json }}, {{ HP|json }}, true, true, {{ Constants.point_label|json }});
+    $('.otree-btn-next').delay(1000).click();
+
+  </script>
+{% endblock %}
+

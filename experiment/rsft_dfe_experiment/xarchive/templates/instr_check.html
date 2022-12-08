@@ -1,0 +1,32 @@
+{% extends "rsft_dfe_experiment/SurveyPage.html" %}
+{% load otree static %}
+
+
+{% block title %}
+  Comprehension check
+{% endblock %}
+
+
+{% block content %}
+  {% if !dfe_condition %}
+    <p>It is important that you understand the task. Below you see an example of a choice phase situation. Please answer the questions regarding this situation.</p>
+    <div style = "display: inline-block; width: 60%; margin-top:40px;">
+    <img style = 'border:.1em solid #000000' src='{% static "img/dfdcheck.png" %}'/ width = '98%'>
+    </div>
+  {% else %}
+    <p>It is important that you understand the task. Below you see an example of a choice phase situation. Please answer the questions regarding this situation.</p>
+    <div style = "display: inline-block; width: 60%; margin-top:40px;">
+    <img style = 'border:.1em solid #000000' src='{% static "img/dfecheck.png" %}'/ width = '98%'>
+    </div>
+  {% endif %}
+
+  <div style = "display: inline-block; width: 40%; margin-top:0px;">
+    {% formfields %}
+  </div>
+  
+  <p>click "Next" to move on.</p>
+
+  {% next_button %}
+
+{% endblock %}
+

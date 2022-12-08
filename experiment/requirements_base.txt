@@ -1,0 +1,5 @@
+### otree 5.xx does not support django anymore
+numpy
+pandas
+otree>= 3.2.7
+

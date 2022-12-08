@@ -1,0 +1,21 @@
+{% extends "exp_files/SurveyPage.html" %}
+{% load i18n %}
+{% load otree static %}
+
+{% block title %}
+    Demographics
+{% endblock %}
+
+{% block content %}
+
+    <p>
+     Finally, we would like to ask you some demographic questions. Your anonymity will be preserved and is guaranteed.
+    </p>
+
+    {% for field in form %}
+        {% formfield field %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}

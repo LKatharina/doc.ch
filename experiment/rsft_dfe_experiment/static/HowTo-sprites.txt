@@ -1,0 +1,23 @@
+1) R Skripte laufen lassen: Die Sprites werden in den Ordnern sprites_XX gespeichert.
+2) Sprites hochladen auf: https://spritegen.website-performance.org/
+2.1) Nach laden der Webseite auf Clear drücken
+2.2) Auf open und dann den Ordner auswählen und alle Sprites öffnen
+3) Auf download und spritesheet und stylesheet herunterladen
+5) spritesheet umbenennen (z.B. in dfd.png)
+4) Stylesheet in .css Datei umwandeln, und mit als sprites.css speichern in --> appname/static/css
+5) sprites.css öffnen und bei 
+.sprite {
+    background-image: url(spritesheet.png);
+    background-repeat: no-repeat;
+    display: block;
+}
+die erste Zeile löschen.
+6) im sprites.css folgende Zeile hinzufügen:
+.dfd {
+    background-image: url(dfd.png);
+}
+
+Wenn man mehrere spritesheets hat, den Vorgang wiederholen und für jedes Spritesheet eine Klasse im sprites.css hinzufügen (Schritt 6).
+Auf der html Seite, auf welcher die Sprites benutzt werden muss über die Klasse auf das jeweilige .png zugegriffen werden.
+
+7) im sprites.css .sprite-sprite_10_10_8_featurecolor10 das erste sprite- herauslöschen (für alle sprites)

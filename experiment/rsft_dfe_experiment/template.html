@@ -1,0 +1,28 @@
+<!-- =====================================================================
+This is the general page template for this study
+
+All pages should inherit from this template
+if the page has 
+* in __init.py__: C PAGE_TEMPLATE = "rsft_dfe_experiment/templates.html"
+* in html pages: include C PAGE_TEMPLATE
+
+All pages inherit for instance:
+* css files (stylesheets)
+* custom font families
+* javascript functions
+===================================================================== -->
+
+<!-- =====================================================================
+This code loads the css styles. They are in the folder: static/css/
+css styles: Text files with the ending "css" that define the
+layout (fonts, font size, colors, etc) of the html pages
+===================================================================== -->
+<link type="text/css" rel="stylesheet" href="{{ static 'rsft_dfe/css/theme.css' }}"/>
+<link type="text/css" rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
+<link type="text/css" rel="stylesheet" href="{{ static 'css/sprites.css' }}" >
+
+<!-- =====================================================================
+This code loads the javascript scripts. They are in the folder: 'static/js/'
+Scripts contain code with functions to interact with buttons etc. on a page
+===================================================================== -->
+<script src="{{ static 'js/functions.js' }}"></script>
