@@ -1,0 +1,48 @@
+{% extends "rsft_dfe_experiment/template.html" %}
+{% load otree static %}
+
+
+{% block title %}
+      {% blocktrans trimmed %}New Block{% endblocktrans %}
+{% endblock %}
+
+
+{% block content %}
+  <div>
+      <p>
+      {% if round_number > 1 %}
+        {% if success == 1 %}
+            {% blocktrans trimmed %}
+                You reached the threshold in the last block.
+            {% endblocktrans %}
+        {% else %}
+            {% blocktrans trimmed %}
+                You did not reach the threshold in the last block.
+            {% endblocktrans %}
+        {% endif %}
+        {% blocktrans trimmed %}
+           Continue to the next block (block
+        {% endblocktrans %}
+        {{ round_number }}).
+      {% endif %}
+      </p>
+  </div>
+
+  <p>{% blocktrans trimmed %}
+      <b>Click on "Next" to start the next block.</b>
+  {% endblocktrans %}</p>
+
+
+  <div class = "right">
+    {% next_button %}
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    /* drawAction('option1', {{ x1|json }}, {{ p1|json }}, true, true, {{ Constants.point_label|json }}, {{ Constants.action_label|json }} +" A");
+    drawAction('option2', {{ x2|json }}, {{ p2|json }}, true, true, {{ Constants.point_label|json }}, {{ Constants.action_label|json }} + " B");*/
+
+    </script>
+{% endblock %}

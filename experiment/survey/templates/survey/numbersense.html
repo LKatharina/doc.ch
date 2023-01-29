@@ -1,0 +1,20 @@
+{% extends "exp_files/SurveyPage.html" %}
+{% load i18n %}
+{% load otree static %}
+
+{% block title %}
+    Number sense
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+     please answer following questions:
+    </h3>
+
+    {% formfields %}
+
+
+    {% next_button %}
+
+{% endblock %}

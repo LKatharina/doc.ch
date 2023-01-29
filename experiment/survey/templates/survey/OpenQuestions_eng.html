@@ -1,0 +1,16 @@
+{% extends "exp_files/SurveyPage.html" %}
+{% load i18n %}
+{% load otree static %}
+
+{% block title %}
+    Comments
+{% endblock %}
+
+{% block content %}
+    {% for field in form %}
+        {% formfield field %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}

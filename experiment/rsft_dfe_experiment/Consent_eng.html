@@ -1,0 +1,74 @@
+{% extends "rsft_gain_loss_experiment/Page.html" %}
+{% load otree static %}
+{% load i18n %}
+
+{% block title %}
+    {% blocktrans trimmed %}Information{% endblocktrans %}
+{% endblock %}
+
+
+{% block content %}
+  <div class = "dialogue" id = "checkdisplay">
+    <p>You need a screen wider than 800px for this study. Cellphones won't work, a tablet may work.</p>
+  </div>
+
+
+  <p> {% blocktrans trimmed %} Dear participant, <br> thank you for your interest in taking part in this study. The study aims at investigating human decision making. Your participation in this study will require approximately {{duration}} minutes.
+  {% endblocktrans %} </p>
+
+
+  <h3>{% blocktrans trimmed %}Procedure{% endblocktrans %}</h3>
+  <p>{% blocktrans trimmed %} 
+   In this study we will ask you to repeatedly make decisions on the computer, and afterwards you will answer questions about yourself. Your task is to decide as well as possible, and to answer the questions  truthfully. The questions may contain personal questions (for instance, about your financial situation). Please note that the study also contains attentioncheck choices and attentioncheck questions. Attentioncheck choices are easy decisions, for which it is obvious how to choose.
+  {% endblocktrans %}
+  </p>
+
+  
+  <!-- Die Aufwandsentschädigung erhalten Sie nur persönlich an der Universität Basel. Die Studie wird durch den Lehrstuhl für ökonomische Psychologie an der Universität Basel finanziert. -->
+
+  <h3>{% blocktrans trimmed %}Benefits and Risks{% endblocktrans %}</h3>
+  <p>{% blocktrans trimmed %}
+  By participating in this study you have the possibility to gain insight into
+  psychological research. Furthermore, information collected in this study may benefit others in the future by helping to gain insight into psychological research questions. The participation in this study is not associated with known risks.
+  {% endblocktrans %}
+  </p>
+
+  <h3>{% blocktrans trimmed %}Remuneration{% endblocktrans %}</h3>
+  <p> {% blocktrans with fee=participation_fee n=num_vouchers%}
+  Participants receive {{fee}} as compensation for their effort. In addition to this, you can receive a bonus payment (from 0£ to 1.0£). The exact height of your bonus payment depends on your choices during the course of the study.{% endblocktrans %}
+  </p>
+
+
+  <h3>{% blocktrans trimmed %}Data protection{% endblocktrans %}</h3>
+  <p>{% blocktrans trimmed %} All data collected during this study will be stored and processed without reference to you as a person. All information that could identify you will be kept confidential. Your identity will not be associated with any research findings. The results of this study will be presented at conferences, and published in journals, books, and the popular media. These presentations will include the data in grouped summarized form. {% endblocktrans %}</p>
+
+  <p>{% blocktrans trimmed %}
+    The anonymized answers given during this survey - this means the answers <u>without</u> information that could identify you - will be made publicly available in an online database to be shared with the research community at large to advance science. The anonymized answers, which will be shared, may include gender or age, for example. We will remove or code any personal information that could identify you before files are shared to ensure that, by current scientific standards and known methods, no one will be able to identify you from the information we share.
+  {% endblocktrans %}
+  </p>
+
+  <h3>{% blocktrans trimmed %}Voluntary participation{% endblocktrans %}</h3>
+  <p>{% blocktrans trimmed %}
+  Participation in this study is entirely voluntary at all times. You can revoke this consent at any time of the duration of the study by emailing laura.marbacher@unibas.ch. By doing so, the data you have provided thus far will be deleted from the collected data and will not be shared. Please note that after you have completed the study, it is not possible anymore to remove the data you provided from the stored data. This is because after the end of the study we cannot identify you individually in the data, because of the anonymized data storage.
+  {% endblocktrans %}
+  </p>
+
+   <h3>{% blocktrans trimmed %}Open Questions{% endblocktrans %}</h3>
+  <p>{% blocktrans trimmed %}
+  	If you have questions regarding this study, please contact
+  	laura.marbacher@unibas.ch or jana.jarecki@unibas.ch.
+  {% endblocktrans %}
+  </p>
+
+  <p>You may print this page for your future reference.</p>
+
+  <p><strong>{% blocktrans trimmed %}
+  I had enough time to make a choice. By clicking the “next” button, you indicate that you have read and understand the above information, that you agree to participate in this survey, and that your age is 18 years or older. If you do not agree please exit the survey now.
+  {% endblocktrans %}
+  </strong></p>
+
+  {% next_button %}
+
+{% endblock %}
+
+

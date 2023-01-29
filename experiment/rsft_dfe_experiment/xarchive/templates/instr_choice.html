@@ -1,0 +1,38 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree static %}
+
+
+{% block title %}
+    {% blocktrans trimmed %}Instructions Choices{% endblocktrans %}
+{% endblock %}
+
+
+{% block content %}
+    <p>Your goal is to make choices such that you will reach or exceed a point threshold by choosing between two options. For instance "reach 10 points in {{num_trials}} choices." Each option pays points with a certain probability; and there are two options. In the experiment you make repeated choices.
+
+    <h3>Your task</h3>
+    <p>Your task is to {{ if dfe_condition }} first <b>learn the probabilities of the options' points</b>, and then {{ endif }} make the <b>best choice that would best reach/exceed a point threshhold by the end of the remaining time</b>.<p>
+
+    <h3>Example</h3>
+    <p>The threshold will be shown like this. In the example you have 0 points and need to reach 29 points:</p>
+    <div class = "flex-row">
+        <div>
+            <div>
+                <img class = 'center' src='{% static "img/gain1E.png" %}' / width = '60%'>
+{#                 <p class = 'example2E'>
+                In the example you have 0 points and need to reach 29 points
+                </p> #}
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <h3>Comprehension Check</h3>
+    {% formfields %}
+    <p><b>On the next page you will see an example of a choice phase. Click on "Next" to navigate to the next page.</b></p>
+
+  {% next_button %}
+
+{% endblock %}
+

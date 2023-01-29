@@ -1,0 +1,1086 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-19 16:54+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .\models.py:28
+msgid "Punkte"
+msgstr ""
+
+#: .\models.py:29
+msgid "Entscheidung"
+msgstr ""
+
+#: .\models.py:30
+msgid "Option"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:7
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:10
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:14
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:6
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:6
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:12
+msgid "Collecting points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:12
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:15
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:20
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:6
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:6
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:21
+msgid "Decreasing points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:21
+#, python-format
+msgid "In this block you will see %(num_blocks)s decision rounds."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:23
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:28
+msgid ""
+"In these rounds you will choose between two options, which <b>offer points</"
+"b>. Your goal is to <b>reach or exceed the threshold</b>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:32
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:37
+msgid ""
+"In these rounds you will choose between two options, which <b> deduct points "
+"</b>. Your goal is to <b>avoid falling below the threshold</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Block_Instruction1_eng.html:43
+msgid "Click on \"Next\" to start the first decision round."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:6
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:6
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:6
+msgid "Information"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:16
+#, python-format
+msgid ""
+"Dear participant, <br> thank you for your interest in taking part in this "
+"study. The study aims at investigating human decision making. Your "
+"participation in this study will require approximately %(duration)s minutes."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:20
+msgid "Procedure of the study"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:21
+msgid ""
+"In this study we will ask you to repeatedly make decisions using the "
+"computer, and afterwards you will answer questions about yourself. Your task "
+"is to decide as good as possible, and to answer truthfully to the questions. "
+"The questions can contain personal questions (for instance, about your "
+"financial situation)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:29
+msgid "Benefits and Risks"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:30
+msgid ""
+"By participating in this study you have the possibility to gain insight into "
+"psychological research. Furthermore, information collected in this study may "
+"benefit others in the future by helping to gain insight into psychological "
+"research questions. There are no known risks if you decide to participate in "
+"this research study."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:37
+msgid "Remuneration"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:38
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:35
+#, python-format
+msgid ""
+"\n"
+"  Personen, die an der Universität Basel Psychologie studieren, erhalten je "
+"nach Zeitaufwand Unterschriften als symbolische Aufwandsentschädigung (0.5 "
+"Unterschrift pro angefangene Viertelstunde). Die Unterschriften erhalten Sie "
+"nur persönlich an der Universität Basel.\n"
+"  Am Ende der Studie werden zudem %(n)s Gutscheine im Wert von %(fee)s "
+"Franken unter allen TeilnehmerInnen verlost. Während der Studie haben Sie "
+"die Möglichkeit durch Ihre Entscheidungen Ihre Gewinnchancen zu erhöhen."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:44
+msgid "Data protection"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:45
+msgid ""
+"All data collected during this study will be stored and processed without "
+"reference to you as a person. All information that could identify you will "
+"be kept confidential. You identity will not be associated with any research "
+"findings. The results of this study will be presented at conferences, and "
+"published in journals, books, and the popular media. These presentations "
+"will include the data in grouped summarized form."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:47
+msgid ""
+"The anonymized answers given during this survey -- this means the answers "
+"<u>without</u> information that could identify you -- will be made "
+"publically available in an online database to be shared with the research "
+"community at large to advance science. The anonymized answers, which will be "
+"shared, may include gender, or age, for example. We will remove or code any "
+"personal information that could identify you before files are shared to "
+"ensure that, by current scientific standards and known methods, no one will "
+"be able to identify you from the information we share."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:52
+msgid "Voluntary participation"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:53
+msgid ""
+"Participation in this study is entirely voluntary at all times. You can "
+"revoke this consent at any time the duration of the study by emailing laura."
+"marbacher@unibas.ch. If so, the data you will provide will be deleted from "
+"the collected data and will not be shared. Please note that after you have "
+"completed the study, it is not possible anymore to remove the data you "
+"provided from the stored data. This is because after the end of the study we "
+"cannot identify you individually in the data, because of the anonymized data "
+"storage."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:58
+msgid "Open Questions"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:59
+msgid ""
+"If you have questions regarding this study, please contact laura."
+"marbacher@unibas.ch or jana.jarecki@unibas.ch."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Consent_eng.html:65
+msgid ""
+"My age is 18 years or older and i have read and understood the terms above. "
+"I had enough time to make a choice. By clicking the “next” button, you are "
+"indicating that you have read and understand the above information, that you "
+"agree to participate in this survey, and that your age is 18 years or older. "
+"You may print this page for your future reference. If you do not agree "
+"please exit the survey now."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:6
+msgid "Aufgabenstellung"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:11
+msgid ""
+"Im Verlauf der Studie treffen Sie Entscheidungen über Punkte in mehreren "
+"Runden. Jede Runde startet mit einem vorgegebenen Punktestand, dieser kann "
+"negativ, null oder positiv sein. Sie verändern Ihren Punktestand durch "
+"Entscheidungen zwischen zwei Optionen, die mit einer bestimmten "
+"Wahrscheinlichkeit eine bestimmten Anzahl Punkte ergeben. Ihr Ziel ist es, "
+"Ihren Punktestand so zu ändern, dass er zu einem Schwellenwert passt (siehe "
+"unten). Der Schwellenwert kann negativ, null oder positiv sein."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:15
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:7
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:10
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:12
+msgid "Punkte sammeln"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:16
+msgid ""
+"In manchen Runden <b>erhöhen die Optionen Ihren Punktestand</b>. Der "
+"<b>Schwellenwert</b> ist dann <b>positiv</b> (z.B. 10) oder <b>0</b> . In "
+"diesen Runden ist es das Ziel, dass Ihr Punktestand am Ende einer Runde den "
+"<b>Schwellenwert mindestens erreicht hat</b> (gleich hoch oder höher)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:21
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:12
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:15
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:20
+msgid "Punkte abgeben"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:22
+msgid ""
+"In anderen Runden <b>vermindern die Optionen Ihren Punktestand</b>. Der "
+"<b>Schwellenwert</b> ist dann <b>negativ</b> (z.B. -10) oder <b>0</b> .  In "
+"diesen Runden ist das Ziel, dass Ihr Punktestand am Ende einer Runde den "
+"<b>Schwellenwert nicht unterschritten hat</b> (nicht niedriger)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:27
+msgid "Verständnisfragen zum Schwellenwert"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory.html:28
+msgid "Bitte beantworten Sie folgende Verständnisfragen zum Schwellenwert."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_check_gain_eng.html:7
+msgid "Comprehension check for collecting points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_check_gain_eng.html:12
+#: .\templates\rsft_gain_loss_experiment\Coverstory_check_loss_eng.html:12
+msgid ""
+"For this study, it is important that you understand the task. The picture "
+"below shows one example choice you will make during this study. Please "
+"answer the questions regarding this choice."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_check_loss_eng.html:7
+msgid "Comprehension check for decreasing points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:6
+msgid "Instructions"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:11
+msgid ""
+"In this study you repeatedly make decisions about points in several rounds. "
+"Each round starts with a given amount of points. This starting score can be "
+"negative, zero or positive. You change the score by choosing between two "
+"options. Your task is to change your score in a way that it matches a "
+"threshold (see below). The threshold can negative, zero or positive."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:15
+msgid ""
+"In some rounds <b>the options increase your score</b>. In that case the "
+"<b>threshold</b> is <b>positive</b> (i.e. 10) or <b>0</b>. In these rounds "
+"your goal is that your score <b>reaches or exceeds the threshold</b> (equal "
+"or higher)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:21
+msgid ""
+"In other rounds <b>the options decrease your score</b>. In that case the "
+"<b>threshold</b> is <b>negative</b> (i.e. -10) or <b>0</b>. In these rounds "
+"your goal is that your score <b>does not fall below the threshold</b> (not "
+"smaller)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:26
+msgid "Comprehension question regarding the threshold"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_eng.html:28
+msgid "Please answer the following comprehension questions correctly."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:11
+msgid ""
+"Here you learn about the layout and the procedure of decisions rounds "
+"(rounds), where you collect points."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:15
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:14
+msgid "Example of options"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:17
+msgid ""
+"You will choose between <b> two options 5 times</b>, in order to <b>collect "
+"points</b> and reach the <b>threshold</b>. The following graphic shows two "
+"possible options in a round. Each option offers <b>points with a "
+"probability</b>. You choose an <b> option by clicking on it</b>. Right after "
+"the choice you get feedback about how many points you received. No matter "
+"how often you choose an option, the probabilities stays the same during the "
+"round."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:27
+#, python-format
+msgid ""
+"This option offers +7&nbsp;points with a probability of 40&nbsp;%% or +5 "
+"points with a probability 80&nbsp;%%."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:35
+#, python-format
+msgid ""
+"This option offers +9&nbsp;points with a probability of 40&nbsp;%% or +3 "
+"points with a probability 60&nbsp;%%."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain1_eng.html:42
+msgid ""
+"On the next page you will see an example of the threshold for collecting "
+"points."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:11
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:11
+msgid "Example of score and threshold"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:13
+msgid ""
+"The following graphic shows a possible score and threshold at the beginning "
+"of a round. Here you start with -29 points. The threshold is 0 points. The "
+"<b>goal</b> is <b>to reach at least 0 points</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:20
+msgid ""
+"A second example: Your score is 0 and the threshold is +29. The <b>goal</b> "
+"is to reach <b>at least +29 points</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:28
+msgid "Example for collecting points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:29
+msgid ""
+"Imaging you choose an option and receive +5&nbsp;points. Your score "
+"increases from 0 to +5&nbsp;points (see below)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:37
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:36
+msgid "Score: 0 points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:45
+msgid "Score: +5 points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:52
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:51
+msgid "Practise round"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_gain2_eng.html:53
+msgid ""
+"<b>The next page shows a decision round. This round is for you to try out "
+"the task and get familiar with it. Click on \"Next\" and choose an option by "
+"clicking on it.</b>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:11
+msgid ""
+"Here you learn about the layout and the procedure of decisions rounds "
+"(rounds), where your point score decreases."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:15
+msgid ""
+"You will choose between <b> two options 5 times</b>. The options<b>decrease "
+"your score</b>. You should <b>avoid</b> that your score <b>falls below the "
+"threshold</b>. The following graphic shows two possible options in a round. "
+"Each option deducts <b>points with a probability</b>. You choose an <b> "
+"option by clicking on it</b>. Right after the choice you get feedback about "
+"how many points were deducted. No matter how often you choose an option, the "
+"probabilities stays the same during the round."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:25
+#, python-format
+msgid ""
+"This option deduct 8&nbsp; points with a probability of 40&nbsp;%% or 2 "
+"points with a probability of with 60&nbsp;%%."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:33
+#, python-format
+msgid ""
+"This option deduct 5&nbsp;points with a probability of 70&nbsp;%% or 3&nbsp;"
+"points with a probability of with 30&nbsp;%%."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss1_eng.html:40
+msgid ""
+"On the next page you will see an example of the threshold for decreasing "
+"points."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:12
+msgid ""
+"The following graphic shows a possible score and threshold at the beginning "
+"of a round. Here you start with 21 points. The threshold is 0 points. The "
+"<b>goal</b> is <b>not to fall below 0 points</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:19
+msgid ""
+"A second example: Your score is 0 and the threshold is -21. The <b>goal</b> "
+"is <b>not to fall below -21 points</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:26
+msgid "Example for decreasing points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:27
+msgid ""
+"Imaging, you choose an option and it deducts -5&nbsp;points. Your score "
+"decreases from 0 to -5&nbsp;points (see below)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:44
+msgid "Score: -5 points"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_loss2_eng.html:52
+msgid ""
+"<b> The next page shows a decision round. This round is for you to try out "
+"the task and get familiar with it. Click on \"Next\" and choose an option by "
+"clicking on it.</b>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:6
+msgid "Summary"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:14
+msgid ""
+"<ul> <li>The goal is to collect points in order to reach or exceed a "
+"predefined threshold. <li>You collect points through choosing between two "
+"options. <li>What matters is, that you <b>reach the threshold</b> in 5 "
+"decisions. </ul>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:23
+msgid ""
+"<ul> <li> The goal is to avoid that the score falls below a predefined "
+"threshold. <li> You choose between two options, which deduct points. <li> "
+"What matters is, that your score is <b>not lower than the threshold</b> "
+"after 5 decisions. </ul>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:29
+msgid "Rounds"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Coverstory_sum_eng.html:31
+msgid ""
+"<ul> <li><b>After 5 decisions a round ends</b>. A new round with a new "
+"starting score, new threshold and new options starts. Note that the "
+"decisions you make in a round do not affect the next round. The rounds are "
+"independent of each other. </ul>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:21
+#, python-format
+msgid "In diesem Block sehen Sie %(num_blocks)s Entscheidungsrunden."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:23
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:28
+msgid ""
+"In diesen Runden wählen sie zwischen Optionen die <b>Punkte ergeben</b>. Ihr "
+"Ziel ist es den <b>Schwellenwert zu erreichen oder zu überschreiten</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:32
+msgid ""
+"In diesen Runden wählen sie zwischen Optionen die <b>Punkte abziehen</b>. "
+"Ihr Ziel ist es den <b>Schwellenwert nicht zu unterschreiten</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:37
+msgid ""
+"In diesen Runden wählen sie zwischen Optionen die <b>Punkte abziehen</b>. "
+"Ihr Ziel ist es den <b> Schwellenwert nicht zu unterschreiten</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Block_Instruction1.html:43
+msgid "Mit \"Weiter\" gelangen Sie zur ersten Entscheidungsrunde."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:15
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:15
+#, python-format
+msgid ""
+"Liebe Studieninteressentin, lieber Studieninteressent, <br> vielen Dank für "
+"Ihr Interesse an dieser Studie. Das Ziel dieser Studie ist es, menschliche "
+"Entscheidungen zu untersuchen. Die Studie dauert ungefähr %(duration)s "
+"Minuten."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:19
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:19
+msgid "Ablauf der Studie"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:20
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:20
+msgid ""
+"Die Studie, an der Sie nun teilnehmen werden, untersucht Entscheidungen. Im "
+"Verlauf der Studie werden Ihnen unterschiedliche Entscheidungsrunden "
+"präsentiert, in einigen geht es um das Sammeln von Punkten in anderen um die "
+"Abgabe von Punkten. Ihre Aufgabe ist es, die Entscheidungen so gut wie "
+"möglich zu treffen. Nach den Entscheidungsaufgaben folgen Fragen zu Ihrer "
+"Person. Ihre Aufgabe ist es diese Fragen wahrheitsgemäss zu beantworten. Die "
+"Fragen zu Ihrer Person können Fragen persönlicher Natur (z.B. über Ihre "
+"finanzielle Situation) beinhalten."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:27
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:27
+msgid "Möglicher Nutzen und Risiken"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:28
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:28
+msgid ""
+"Durch Ihre Teilnahme an dieser Studie haben Sie die Möglichkeit, nähere "
+"Einblicke in die psychologische Forschung zu erhalten. Darüber hinaus helfen "
+"die Ergebnisse dieser Studie uns allen in unserem Verständnis zu "
+"menschlichem Entscheidungsverhalten. Die Teilnahme an dieser Studie ist mit "
+"keinerlei gesundheitlichen Risiken verbunden."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:34
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:34
+msgid "Entschädigung"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:41
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:40
+msgid "Datenschutz und Datenveröffentlichung"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:42
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:41
+msgid ""
+"Alle in dieser Studie gesammelten Daten werden anonymisiert ausgewertet und "
+"für wissenschaftliche Zwecke verwendet. Die Ergebnisse werden anonymisiert "
+"und in einer Gruppe zusammengefasst auf wissenschaftlichen Konferenzen "
+"präsentiert und in wissenschaftlichen Zeitschriften und anderen Medien "
+"veröffentlicht."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:44
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:43
+msgid ""
+"Die de-identifizierten Daten — die Daten <u>ohne</u> Informationen, die Sie "
+"als Einzelperson identifizieren könnten — werden in einer Onlinedatenbank "
+"anderen Forschenden zur Verfügung gestellt, um den wissenschaftlichen "
+"Fortschritt zu beschleunigen. Wir werden alle persönlichen Informationen "
+"entfernen oder abändern bevor die Daten veröffentlicht werden, um zu "
+"verhindern, dass Sie, nach aktuellem Stand der Wissenschaft, als "
+"Einzelperson in den Daten identifizieren werden können. Die online geteilten "
+"Daten enthalten zum Beispiel Angaben zu Geschlecht, Alter, Beziehungsstatus, "
+"und die Einkommensklasse."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:49
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:48
+msgid ""
+"Falls Sie sich für Hintergrund und Resultate der Studie interessieren, "
+"schreiben Sie gerne eine Email an laura.marbacher@unibas.ch oder an jana."
+"jarecki@unibas.ch."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:53
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:52
+msgid "Freiwilligkeit"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:54
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:53
+msgid ""
+"Die Teilnahme an der Studie ist freiwillig. Sie haben jederzeit die "
+"Möglichkeit, ohne Angabe von Gründen die Studie abzubrechen. Die "
+"Einwilligung zur Verwendung Ihrer Daten können Sie während der "
+"Studienteilnahme jederzeit per Email an laura.marbacher@unibas.ch "
+"widerrufen. Ein nachträglicher Widerruf nach Beendigung der Studie ist nicht "
+"möglich, da  die Daten in anonymisierter Form gespeichert werden. Das "
+"bedeutet, nach Beendigung der Studie ist es nicht mehr möglich, Ihre Daten "
+"aus der Gesamtheit der Daten zu löschen."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:60
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:59
+msgid "Fragen"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:61
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:60
+msgid ""
+"Falls Sie Fragen zu dieser Studie haben, senden Sie eine Email an laura."
+"marbacher@unibas.ch oder an jana.jarecki@unibas.ch."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Consent.html:66
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:65
+msgid ""
+"Ich bin mindestens 18 Jahre alt und ich habe die aufgeführten Bedingungen "
+"gelesen und verstanden. Ich hatte genügend Zeit eine Entscheidung zu "
+"treffen. Mit Anklicken auf „Weiter“ bestätige ich, dass ich die "
+"Einverständniserklärung gelesen habe und an dieser Studie teilnehmen möchte. "
+"In diesem Fall speichern Sie sich bitte diese Einverständniserklärung für "
+"Ihre Unterlagen ab oder drucken diese Erklärung aus. Falls Sie nicht "
+"einverstanden sind, verlassen Sie die Studie bitte jetzt."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\ConsentVorstudie.html:35
+msgid ""
+"\n"
+"  Personen, die an der Universität Basel Psychologie studieren, erhalten je "
+"nach Zeitaufwand Unterschriften als symbolische Aufwandsentschädigung (0.5 "
+"Unterschrift pro angefangene Viertelstunde)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_check_gain.html:7
+msgid "Verständnisfragen zum Punkte sammeln"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_check_gain.html:12
+msgid ""
+"Für diese Studie ist es wichtig, dass Sie die Darstellungsweise der Aufgabe "
+"verstehen. Unten sehen Sie eine Entscheidungssituation und einige Fragen zu "
+"der Situation. Bitte beantworten Sie diese korrekt."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_check_loss.html:7
+msgid "Verständnisfragen zum Punkte abgeben"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_check_loss.html:12
+msgid ""
+"Für diese Studie ist es wichtig, dass Sie die Darstellungsweise der Aufgabe "
+"verstehen. Unten sehen Sie eine Entscheidungssituation und einige Fragen zu "
+"der Situation. Bitte beantworten Sie diese."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:6
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:6
+msgid "Aufgabe beim Punkte sammeln"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:11
+msgid ""
+"Hier lernen Sie die Darstellung und den Ablauf von Entscheidungsrunden "
+"(Runden) kennen, in denen um das Punkte sammeln geht."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:15
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:13
+msgid "Beispiel für Optionen"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:17
+msgid ""
+"Sie werden <b>5 Mal</b> zwischen <b>zwei Optionen</b> wählen, um <b>Punkte "
+"zu sammeln</b> und einen <b>Schwellenwert zu erreichen</b>. Die nachfolgende "
+"Grafik zeigt mögliche Optionen in einer Runde. Jede Option führt mit einer "
+"<b>gewissen Wahrscheinlichkeit</b> zu einer <b>gewissen Anzahl an Punkten</"
+"b>. Sie wählen eine <b>Option durch Anklicken</b>. Danach sehen Sie, wie "
+"viele Punkte Sie erhalten. Egal wie oft Sie eine Option wählen, alle "
+"gezeigten Wahrscheinlichkeiten bleiben in einer Runde gleich."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:27
+#, python-format
+msgid ""
+"Mit dieser Option erhalten Sie +7&nbsp;Punkte mit 20&nbsp;%% "
+"Wahrscheinlichkeit oder +5 Punkt mit 80&nbsp;%% Wahrscheinlichkeit."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:35
+#, python-format
+msgid ""
+"Mit dieser Option erhalten Sie +9&nbsp;Punkte mit 40&nbsp;%% "
+"Wahrscheinlichkeit, oder 3&nbsp;Punkte mit 60&nbsp;%% Wahrscheinlichkeit."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain1.html:42
+msgid ""
+"Auf der nächsten Seite sehen Sie ein Beispiel für den Schwellenwert beim "
+"Punkte sammeln."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:11
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:11
+msgid "Beispiel für Punktestand und Schwellenwert"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:13
+msgid ""
+"Die nachfolgende Grafik zeigt einen möglichen Punktestand und Schwellenwert "
+"am Anfang einer Runde. Im Beispiel starten Sie mit -29 Punkten. Der "
+"Schwellenwert beträgt 0 Punkte.  Das <b>Ziel</b> ist es <b>0 oder mehr "
+"Punkte zu erreichen</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:20
+msgid ""
+"Ein zweites Beispiel: Ihr Punktestand beträgt 0, der Schwellenwert ist +29. "
+"Das <b>Ziel</b> ist es <b>+29 oder mehr Punkte zu erreichen</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:28
+msgid "Beispiel für Punkte sammeln"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:29
+msgid ""
+"Stellen Sie sich vor, Sie haben eine Option gewählt und +5&nbsp;Punkte "
+"erhalten. Ihr Punktestand erhöht sich von 0 auf +5&nbsp;Punkte (siehe unten)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:37
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:36
+msgid "Punktestand: 0 Punkte"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:45
+msgid "Punktestand: +5 Punkte"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:52
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:51
+msgid "Übungsrunde"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_gain2.html:53
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:52
+msgid ""
+"<b>Auf der nächsten Seite folgt eine Übungsrunde. Diese Runde dient dem "
+"Kennenlernen. Klicken Sie auf \"Weiter\". Wählen Sie dann eine Option durch "
+"Anklicken aus.</b>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:6
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:6
+msgid "Aufgabe beim Punkte abgeben"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:11
+msgid ""
+"Hier lernen Sie die Darstellung und den Ablauf von Entscheidungsrunden "
+"(Runden) kennen, bei denen es um das Punkte abgeben geht."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:14
+msgid ""
+"Sie wählen <b>5 Mal</b> zwischen <b>zwei Optionen</b>, die Ihnen <b>Punkte "
+"abziehen</b>. Dabei sollten Sie <b>vermeiden</b>, dass Ihr Punktestand einen "
+"<b>Schwellenwert unterschreitet</b>. Die nachfolgende Grafik zeigt mögliche "
+"Optionen in einer Runde. Jede Option <b>zieht</b> Ihnen mit einer "
+"<b>bestimmten Wahrscheinlichkeit Punkte ab</b>. Sie wählen eine <b>Option "
+"durch Anklicken</b>. Danach sehen Sie, wie viele Punkte abgezogen wurden. "
+"Egal wie oft Sie eine Option wählen, alle gezeigten Wahrscheinlichkeiten "
+"bleiben in einer Runde gleich."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:21
+#, python-format
+msgid ""
+"Diese Option zieht Ihnen 8&nbsp;Punkte mit 40&nbsp;%% Wahrscheinlichkeit "
+"oder 2 Punkte mit 60&nbsp;%% Wahrscheinlichkeit ab."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:29
+#, python-format
+msgid ""
+"Diese Option zieht Ihnen 5&nbsp;Punkte mit 70&nbsp;%% Wahrscheinlichkeit "
+"oder 3&nbsp;Punkte mit 30&nbsp;%% Wahrscheinlichkeit ab."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss1.html:36
+msgid ""
+"Auf der nächsten Seite sehen Sie ein Beispiel für den Schwellenwert beim "
+"Punkte abgeben."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:12
+msgid ""
+"Die nachfolgende Grafik zeigt einen möglichen Punktestand und Schwellenwert "
+"am Anfang einer Runde. Im Beispiel starten Sie mit 21&nbsp;Punkten. Der "
+"Schwellenwert beträgt 0&nbsp;Punkte. Das <b>Ziel</b> ist es, dass Ihr "
+"Punktestand <b>nicht unter 0&nbsp;Punkte fällt</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:19
+msgid ""
+"Ein zweites Beispiel: Ihr Punktestand beträgt 0, der Schwellenwert ist -21. "
+"Das <b>Ziel</b> ist es, dass Ihr Punktestand <b>nicht unter -21&nbsp;Punkte "
+"fällt</b>."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:26
+msgid "Beispiel für Punkte abgeben"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:27
+msgid ""
+"Stellen Sie sich vor, Sie haben eine Option gewählt und Ihnen wurden -5&nbsp;"
+"Punkte abgezogen. Ihr Punktestand vermindert sich von 0 auf -5&nbsp;Punkte."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_loss2.html:44
+msgid "Punktestand: -5 Punkte"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:6
+msgid "Zusammenfassung"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:14
+msgid ""
+"<ul> <li>Ihr Ziel ist es Punkte zu sammeln, um ein vorgegebenen "
+"Schwellenwert zu erreichen oder zu überschreiten. <li>Sie sammeln Punkte, "
+"indem Sie zwischen zwei Optionen wählen. <li>Was zählt ist, dass Sie nach 5 "
+"Entscheidungen den <b>Schwellenwert erreicht</b> haben. </ul>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:22
+msgid ""
+"<ul> <li>Ihr Ziel ist zu vermeiden, dass Ihr aktueller Punktestand unter "
+"einen vorgegebenen Schwellenwert fällt. <li>Sie wählen zwischen zwei "
+"Optionen, die Ihnen Punkte abziehen. <li>Was zählt ist, dass Ihr aktueller "
+"Punktestand nach 5 Entscheidungen <b>nicht unter dem Schwellenwert liegt</"
+"b>. </ul>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:28
+msgid "Runden"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Coverstory_sum.html:30
+msgid ""
+"<ul> <li><b>Nach der fünften Entscheidung endet die aktuelle Runde</b>. Es "
+"beginnt eine neue Runde mit neuem Schwellenwert und neuen Optionen. Ihre "
+"Entscheidungen in der letzten Runde beeinflussen die Entscheidungen in der "
+"nächsten Runde nicht. </ul>"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\General_Instruction.html:6
+msgid "Beginn"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\General_Instruction.html:11
+#, python-format
+msgid ""
+"Bitte stellen Sie sicher, dass Sie jetzt %(duration)s Minuten ungestört Zeit "
+"haben."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Instruction_Choices.html:6
+msgid "Entscheidungen"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Instruction_Choices.html:13
+#, python-format
+msgid ""
+"Jetzt sehen Sie 4 mal %(num_blocks)s Entscheidungsrunden. Sie können 1 - 2 "
+"Minuten Pausen zwischen den Runden einlegen, um Ihre Augen auszuruhen. Bitte "
+"machen Sie keine Pause während einer Runde. Bitte bleiben auf Sie der Seite "
+"während einer Pause."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\Instruction_Choices.html:17
+msgid "Mit \"Weiter\" gelangen Sie zum ersten Block."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:6
+msgid "Neue Runde"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:15
+msgid "Sie haben das Ziel in der letzten Runde erreicht."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:21
+msgid "Sie haben das Ziel in der letzten Runde nicht erreicht."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:25
+msgid "Weiter zur nächsten Runde (Runde"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:33
+msgid "Startwert und Schwellenwert für nächste Runde:"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:36
+#, python-format
+msgid ""
+"\n"
+"      Der <b>Startwert</b> beträgt <span class = \"blue white new-goal-info"
+"\">%(pstart)s</span> Punkte und der <b>Schwellenwert</b> beträgt <span class "
+"= \"blue white new-goal-info\">%(budget)s</span> Punkte.\n"
+"      "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:42
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:47
+msgid "<b>Erreichen</b> Sie den Schwellenwert in 5 Entscheidungen."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:51
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:56
+msgid ""
+"<b>Fallen</b> Sie <b>nicht</b> auf oder unter den Schwellenwert während 5 "
+"Entscheidungen."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\DE\NewBlock.html:64
+msgid "Optionen für nächste Runde:"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\General_Instruction_eng.html:6
+msgid "Start"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\General_Instruction_eng.html:11
+#, python-format
+msgid "Please ensure, that you have %(duration)s minutes to attend the study."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:7
+msgid "Gutscheinverlosung"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:12
+#, python-format
+msgid ""
+"\n"
+"  Unter allen Teilnehmern/innen, die diese Studie beenden, <b>verlosen</b> "
+"wir %(n)s <b>Büchergutscheine</b> im Wert von je %(fee)s, indem zufällig "
+"%(n)s Probandencodes aus allen Probandencodes gezogen werden. Ihr "
+"Probandencode geht ein Mal in die Verlosung ein.\n"
+"  "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:17
+msgid ""
+"\n"
+"  Ihre <b>Gewinnchancen</b> können sich folgendermassen <b>verbessern</b>, "
+"abhängig von Ihren Entscheidungen: Nach Ihrer letzten Runde in dieser Studie "
+"wählen wir zufällig <b>fünf Runden</b> und zählen, wie oft Sie in diesen "
+"fünf Runden das jeweilige <b>Ziel erreicht</b> haben. Für jede "
+"Zielerreichung kommt Ihr Probandencode dann <b>ein Mal mehr</b> in die "
+"Verlosung. Ihr Probandencode geht also mindestens ein und höchstens sechs "
+"Mal in die Verlosung ein.\n"
+"  "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:22
+msgid ""
+"\n"
+"    Sie haben in drei von fünf relevanten Runden das Ziel erreicht. Ihr "
+"Probandencode geht nun anstatt 1 Mal&nbsp;1 + 3 = 4 Mal, in die Verlosung "
+"mit ein.\n"
+"   "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:27
+msgid ""
+"\n"
+"    Wichtig ist, dass sich Ihre Gewinnchance nur für Runden erhöht, in denen "
+"Sie das Ziel erreicht haben (d.h. nur wenn Sie beim Punkte sammeln "
+"mindestens den Schwellenwert erreicht und beim Punkte abgeben den "
+"Schwellenwert nicht unterschritten haben).\n"
+"  "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:31
+msgid "Bitte beantworten Sie diese Verständnisfragen richtig."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Incentives.html:35
+msgid ""
+" <b>Wie häufig geht Ihr Probandencode in die Verlosung ein, wenn...</b>\n"
+"  "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Instruction_Choices_eng.html:6
+msgid "Decisions"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Instruction_Choices_eng.html:13
+#, python-format
+msgid ""
+"On the next pages you will see 4 decision blocks and each block contains "
+"%(num_blocks)s decision rounds. You can take short breaks (a couple of "
+"seconds) between rounds, if you like. However, please complete the whole "
+"study in one go without longer breaks (don't interrupt the study, don't make "
+"a longer pause, please)."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Instruction_Choices_eng.html:17
+msgid "Click on \"Next\" to start the first block."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:6
+msgid "New Round"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:15
+msgid "You reached the goal in the last round."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:21
+msgid "You did not reach the goal in the last round."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:25
+msgid "Continue to the next round (round"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:33
+msgid "Starting score and threshold:"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:36
+#, python-format
+msgid ""
+"\n"
+"      The <b>starting score</b> is <span class = \"blue white new-goal-info"
+"\">%(pstart)s</span> points and the <b>threshold</b> is <span class = \"blue "
+"white new-goal-info\">%(budget)s</span> points.\n"
+"      "
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:42
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:47
+msgid "<b>Reach</b> the threshold in 5 decisions."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:51
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:56
+msgid "<b> Do not fall below </b> the threshold in 5 decisions."
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\NewBlock_eng.html:64
+msgid "Options:"
+msgstr ""
+
+#: .\templates\rsft_gain_loss_experiment\Results.html:8
+#, python-format
+msgid "Ziel <br> %(successes)s von %(num_blocks)s x erreicht."
+msgstr ""

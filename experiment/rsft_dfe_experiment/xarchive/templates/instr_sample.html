@@ -1,0 +1,102 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree static %}
+
+
+{% block title %}
+    {% blocktrans trimmed %}Instructions Learning Phase{% endblocktrans %}
+{% endblock %}
+
+
+{% block content %}
+    <p> {% blocktrans trimmed %}
+            Here you learn about the layout and procedure of learning phases.
+    {% endblocktrans %}</p>
+
+  <h3>{% blocktrans trimmed %}Example of options{% endblocktrans %}</h3>
+
+
+
+    {% if sample_condition == 1 %}
+      {% if goal_condition == 1 %}
+        {% blocktrans trimmed %}
+        <p>In learning phases you will see two options like below. The options offer point amounts with some probability.
+        You know the amount of points (e.g., 5 points and 7 points). But you <b>will not see the probabilities.</b>
+        Each amount of points occurs with some probability (e.g., 5 points 80% of the time).</p>
+        <p><b>Your task is to learn about the hidden probabilities.</b> To learn about the probabilities you can click on an option.
+        Clicking causes the option to play out a point draw according to the hidden probabilities and show the drawn amount of points
+        (e.g., 5 points will appear in 80 of 100 clicks if the hidden probability is 80%).</p>
+        <p>You will have a maximum of {{ num_samples }} clicks per block to learn about the hidden probabilities (=50 clicks per learning phase). However, you can move on at any time.
+        Once you feel like you understand the probabilities of the options you can continue to phase 2 by clicking on the
+        “I am ready to move on” button.</p>
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed %}
+        <p>In learning phases you will see two options like below. The options offer point amounts with some probability.
+        You know the amount of points (e.g., 5 points and 7 points) but you <b>will not see the probabilities.</b>
+        Each amount of points occurs with some probability (e.g., 5 points 80% of the time).</p>
+        <p><b>Your task is to learn about the hidden probabilities.</b> To learn about the probabilities you can click on an option.
+        Clicking causes the option to play out a point draw according to the hidden probabilities and show the drawn amount of points
+        (e.g., 5 points will appear in 80 of 100 clicks if the hidden probability is 80%).</p>
+        <p>You will have a maximum of {{ num_samples }} clicks per block to learn about the hidden probabilities. However, you can move on at any time.
+        Once you feel like you understand the probabilities of the options you can continue to phase 2 by clicking on the
+        “I am ready to move on” button. </p>
+        {% endblocktrans %}
+      {% endif %}
+  {% else %}
+      {% if goal_condition == 1 %}
+        {% blocktrans trimmed %}
+            <p>You will see the probabilities of the options, such as 5 points with a probability of 80% and 7 points with a probability of 20%, or some other probability. Your task is to view the options.
+            Once you feel like you understand the probabilities of the options you can continue to phase 2 by clicking on the “I am ready to move on” button.</p>
+            <p>Above the options there will be a header that reads “Your threshold will be XX”. This informs you about the threshold you will have to reach or exceed in phase 2 (The threshold will be explained further on the next page).</p>
+        {% endblocktrans %}
+      {% else %}
+        <p>{% blocktrans trimmed %}
+            You will see the probabilities of the options, such as 5 points with a probability of 80% and 7 points with a probability of 20%, or some other probability. Your task is to view the options.
+            Once you feel like you understand the probabilities of the options you can continue to phase 2 by clicking on the “I am ready to move on” button.
+        {% endblocktrans %}</p>
+      {% endif %}
+  {% endif %}
+  {% if sample_condition == 1 %}
+    <div class = "flex-row">
+        <div>
+            <img class = 'center' src='{% static "img/dfe_1.png" %}'/ width = '70%'>
+            <p class = 'example2E'>
+            {% blocktrans trimmed %}
+                This option offers +7 points with some probability or +5 points with some probability.
+            {% endblocktrans %}</p>
+        </div>
+        <div>
+            <img class = 'center' src='{% static "img/dfe_2.png" %}'/ width = '70%'>
+            <p class = 'example2E'>
+            {% blocktrans trimmed %}
+                This option offers +3&nbsp;points with some probability or +9 points with some probability.
+            {% endblocktrans %}</p>
+        </div>
+    </div>
+  {% else %}
+      <div class = "flex-row">
+        <div>
+            <img class = 'center' src='{% static "img/gop1m.png" %}'/ width = '70%'>
+            <p class = 'example2E'>
+            {% blocktrans trimmed %}
+                This option offers +7&nbsp;points with a probability of 20&nbsp;% or +5 points with a probability of 80&nbsp;%.
+            {% endblocktrans %}</p>
+        </div>
+        <div>
+            <img class = 'center' src='{% static "img/gop2.png" %}'/ width = '70%'>
+            <p class = 'example2E'>
+            {% blocktrans trimmed %}
+                This option offers +3&nbsp;points with a probability of 60&nbsp;% or +9 points with a probability of 40&nbsp;%.
+            {% endblocktrans %}</p>
+        </div>
+    </div>
+  {% endif %}
+    <h3>Comprehension Check</h3>
+    {% formfields %}
+  {% blocktrans trimmed %}
+      <p><b>On the next page you will see an example of a learning phase. Click on "Next" to navigate to the next page.</b></p>
+  {% endblocktrans %}
+  {% next_button %}
+
+{% endblock %}
+

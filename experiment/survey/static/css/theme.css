@@ -1,0 +1,938 @@
+/* =============================================================
+  This file defines all format elements for this app
+  Authors: Jana B. Jarecki, Laura Marbacher
+================================================================== */
+
+
+/* =============================================================
+
+  # Introduction
+  For an introduction to how to change the format, please read: 
+  
+  https://www.w3schools.com/css/css_intro.asp
+
+============================================================= */
+
+
+/* ---------------------------------------------------------------------------
+Self-defined styles
+--------------------------------------------------------------------------- */
+.dialogue {
+  font-size: inherit;
+  z-index: 9999;
+  width: 98%;
+  height: 98%;
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 1%;
+  background: rgba(256,256,256,1);
+}
+
+.dialogue p {
+  color: grey;
+  letter-spacing: .15em; /* Adjust as needed */
+}
+
+/* ---------------------------------------------------------------------------
+Checks for the width of the display (against using a phone)
+--------------------------------------------------------------------------- */
+div#checkdisplay {
+  display: none;
+}
+
+@media only screen and (max-device-width:800px) {
+    div#checkdisplay { display: block; }
+}
+
+
+
+/* ---------------------------------------------------------------------------
+Classes for magnifying
+--------------------------------------------------------------------------- */
+.fs2, .fs2 p {
+  font-size: 150%;
+}
+
+.fs3, .fs3 p {
+  font-size: 300%;
+}
+
+.fs4, .fs4 p {
+  font-size: 400%;
+}
+
+.fs5, .fs5 p {
+  font-size: 500%;
+}
+
+
+.otree-title {
+  /*font-size: 1eM; */
+}
+
+
+/* ---------------------------------------------------------------------------
+Useful classes
+--------------------------------------------------------------------------- */
+.Fhidden {
+  display: none;
+  visibility: hidden;
+}
+
+.img {
+  width: 600px;
+  max-width: 95%;
+  margin-bottom: 2rem;
+}
+
+/* ---------------------------------------------------------------------------
+Page layout for the choice page(s)
+--------------------------------------------------------------------------- */
+.row {
+  min-height: 200px;
+  max-height: 200px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.row1 {
+  height: 50px;
+  max-height: 50px;
+  min-height: 50px;
+}
+
+
+
+
+/* ---------------------------------------------------------------------------
+  Choices (risky options)
+--------------------------------------------------------------------------- */
+.rsft-choices {
+  margin: 0;
+  padding: 0;
+  margin: auto;
+}
+
+.option {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  margin: auto;
+  padding: 0px;
+}
+
+#option1,
+#option2 {
+  height: 100%;
+}
+
+/* outcome fedback */
+.outcome {
+  font-size: 1em;
+}
+
+
+/* ---------------------------------------------------------------------------
+Overall alignments (risky options)
+--------------------------------------------------------------------------- */
+.right p, .right h2 {
+  text-align: right;
+}
+
+.center p, .center h2 {
+  text-align: center;
+}
+
+.center-me-h {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.center {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.center-me-hv {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  text-align: center;
+}     
+
+.center-me-h {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+}
+
+
+
+.flex-row {
+  width: 100%;
+  position: relative;
+  display: -webkit-flex;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+  align-content: space-around;
+  align-items: center;
+  outline: none;
+  border: none;
+}
+
+.flex-row-flex-start {
+  position: relative;
+  display: -webkit-flex;
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-content: center;
+}
+
+.flex-col {
+  width: 100%;
+  position: relative;
+  display: -webkit-flex;
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+  align-content: space-around;
+  align-items: center;
+  outline: none;
+  border: none;
+}
+
+.rsft-btn-choices {
+  border: 1px solid transparent;   
+  border-radius: 0.2rem;
+  font-size:1.4eM;
+  background: none;
+  outline:none;
+  border: none;
+}
+
+.rsft-btn-chocies:enabled,
+.rsft-btn-chocies:active,
+.rsft-btn-choices:focus {
+  background: none;
+  border: none;
+  color: black;
+  outline: none;
+}
+
+.rsft-btn-choices:hover:enabled,
+.rsft-btn-choices:active:hover {
+  /*background:   rgb(248,248,248);*/
+  box-shadow: 3px 3px 5px rgb(220,220,220);
+  cursor: pointer;
+}
+
+.rsft-btn-choices::before,
+.rsft-btn-choices::after,
+.rsft-span-choices::before,
+.rsft-span-choices::after {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    position: absolute;
+}
+
+.rsft-btn-choices::before,
+.rsft-btn-choices::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid grey;
+    border-left: 1px solid grey;
+    transition: 0.1s all;
+}
+.rsft-btn-choices::after {
+    top: -1px;
+    right: -1px;
+    border-top: 1px solid grey;
+    border-right: 1px solid grey;
+    transition: 0.1s all;
+}
+.rsft-span-choices::before {
+    bottom: -1px;
+    left: -1px;
+    border-bottom: 1px solid grey;
+    border-left: 1px solid grey;
+    transition: 0.1s all;
+}
+.rsft-span-choices::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid grey;
+    border-right: 1px solid grey;
+    transition: 0.1s all;
+}
+
+.rsft-btn-choices:hover:enabled::before, .rsft-btn-choices:hover:enabled::after {
+    width: 100%; /*151px;*/
+    height: 100%; /*115px;*/
+}
+
+.rsft-btn-choices:hover:enabled .rsft-span-choices::before, .rsft-btn-choices:hover:enabled .rsft-span-choices::after {
+    width: 151px;
+    height: 115px;
+}
+
+.rsft-btn-choices:disabled,
+.rsft-btn-choices:disabled:before {
+  pointer-events: none;
+}
+
+.rsft-btn-chosen {
+  box-shadow: 5px 5px 10px rgb(180,180,180);
+  border: 1px solid black !important;
+  border-radius: 0;
+  font-size: 5em;
+}
+
+.rsft-btn-chosen:disabled::before,
+.rsft-btn-chosen:disabled::after {
+    display: block;
+    content: none;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+}
+
+.rsft-btn-hideinfo {
+ /* background: rgba(225,225,225,0.5);*/
+  background: white;
+  color: mediumblue;
+  border: 1px black;
+  padding: 4px 10px 4px 10px;
+  box-shadow: 3px 3px 5px rgb(220,220,220);
+  font-style: italic;
+}
+
+.rsft-btn-hideinfo:enabled:hover,
+.rsft-btn-hideinfo:enabled:focus,
+.rsft-btn-hideinfo:enabled:active {
+  color: grey;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  box-shadow: 5px 5px 10px rgb(180,180,180);
+}
+
+.rsft-btn-hideinfo:disabled::after {
+  content: ' (?)';
+}
+
+.rsft-btn-hideinfo:disabled,
+.rsft-btn-hideinfo:disabled:hover,
+.rsft-btn-hideinfo:disabled:focus,
+.rsft-btn-hideinfo:disabled:active {
+  color: grey;
+  outline: none;
+}
+
+.layer1 {
+  z-index: 1;
+}
+
+.layer2 {
+  z-index: 2;
+}
+
+
+/* ---------------------------------------------------------------------------
+ Uncovering trials for hidden phase */
+#uncover-trials {
+  margin-top: 0%;
+  margin-left: 5%;
+}
+
+#uncover-budget {
+  margin-top: -5%;
+  margin-left: 50%;
+}
+
+#uncover-earnings {
+  margin-top: -5%;
+  margin-left: 25%;
+}
+
+#uncover-x {
+  position: absolute;
+  margin-top: 5%;
+}
+
+#uncover-p {
+  position: absolute;
+  margin-top: 10%;
+}
+
+.clicks {
+  margin-top: 0;
+  margin-left: 0;
+  font-size: 1rem;
+  border-bottom: 1px solid orange;
+  border-top: 1px solid orange;
+  padding: 1vh 2vh 1vh 2vh;
+  color: rgb(80,80,80);
+  width: 100%;
+  text-align: center;
+  background-color: rgb(240,240,240);
+}
+
+.shadow {
+  box-shadow: 1px 1px 1px rgb(220,220,220);
+}
+
+.round {
+  border-radius: 50%;
+}
+
+.round-edge {
+  border-radius: 8px;
+}
+
+
+/* --------------------------------------------------------------------------
+   Information about x times goal reached
+-------------------------------------------------------------------------- */
+.goal-reached-info {
+  display: inline;
+  float: right;
+  padding-top: .5rem;
+  margin-right: -4.5rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 0.5px solid rgb(230,230,230);       
+  text-align: center;
+}
+
+.goal-reached-info p {
+  font-size: .6rem;
+  line-height: 1.4em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Colors
+-------------------------------------------------------------------------- */
+.lightorange {
+  background-color: rgba(280,280,280,.1);
+}
+
+.lightgrey {
+  background-color: rgba(200,200,200,.1);
+}
+
+.orange {
+  color: orange;
+}
+
+.white {
+  color: rgb(255,255,255)
+  }
+
+.blue {
+  color: rgb(123,197,174) !important;
+}
+
+.green {
+  color: rgb(2, 140, 100) !important;
+}
+
+.orange-border {
+  border: 1px solid orange !important;
+}
+
+.orange-border {
+  border: 1px solid orange !important;
+}
+
+.black-border {
+  border: 0.5px solid black !important;
+}
+
+
+/* ---------------------------------------------------------------------------
+New goal page
+-------------------------------------------------------------------------- */
+.new-goal-info {
+  font-weight: bold;
+  line-height: 1.2em !important;
+  padding: 0em .5rem .1rem .5rem;
+  font-size: 2em !important;
+}
+
+
+
+/* ---------------------------------------------------------------------------
+Attention Check Formular
+--------------------------------------------------------------------------- */
+.rsft-form p {
+  float: left;
+  font-size: .9rem;
+  font-weight: normal;
+  margin-right: 0px;
+  margin-left: 20px;
+}
+
+.rsft-form input:([type="radio"]):([type="checkbox"]),
+.rsft-form label:([type="radio"]):([type="checkbox"]) {
+  display: block;
+}
+
+.rsft-form label {
+  font-weight: bold;
+}
+
+.rsft-form label {
+  margin-bottom: 0;
+}
+
+.rsft-form input {
+  margin-top: 2px;
+  margin-left: 5px;
+  padding: 2px;
+  border-radius: 0px;
+  border: 1px solid grey;
+  font-style: italic;
+  background:rgb(250,250,250);
+;
+}
+
+.rsft-form input:focus {
+  outline: none;
+  background: white;
+}
+
+
+
+/* ---------------------------------------------------------------------------
+Box for the example
+--------------------------------------------------------------------------- */
+blockquote, .example {
+  background: rgb(245,245,245);
+  margin: 0 10% 1rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid rgba(33,37,41,1);
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example1 {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 0%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example2 {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example3 {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example4 {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+.example1::before {
+  content: "Beispiel";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+}
+
+.example2::before {
+  content: "Beispiel";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+ }
+
+ .example3::before {
+  content: "Vor der Entscheidung";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+ }
+
+  .example4::before {
+  content: "Nach der Entscheidung";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+ }
+
+.example::before {
+  content: "Beispiel";
+  font-style: normal;
+  font-size: .8rem;
+  color: rgba(33,37,41,1);
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------------------------
+Box for the example English
+--------------------------------------------------------------------------- */
+blockquote, .exampleE {
+  background: rgb(245,245,245);
+  margin: 0 10% 1rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid rgba(33,37,41,1);
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example1E {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 0%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example2E {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example3E {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+blockquote, .example4E {
+  background: rgb(250,250,250);
+  margin: 1.5rem 10% 1.5rem 10%;
+  color: grey;
+  font-style: italic;
+  border-left: 4px solid #7BC5AE;
+  padding: 1.2rem;
+  z-index: 0;
+  position: relative;
+}
+
+.example1E::before {
+  content: "Example";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+}
+
+.example2E::before {
+  content: "Example";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+ }
+
+ .example3E::before {
+  content: "Before the decision";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+ }
+
+  .example4E::before {
+  content: "After the decision";
+  font-style: normal;
+  font-size: .8rem;
+  color: #7BC5AE;
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+ }
+
+.exampleE::before {
+  content: "Example";
+  font-style: normal;
+  font-size: .8rem;
+  color: rgba(33,37,41,1);
+  left: .3rem;
+  top: -.2rem;
+  position: absolute;
+  z-index: 1;
+}
+
+/*Tables*/
+table td {
+  vertical-align: middle !important;
+  padding-top: 0.3em !important;
+  padding-bottom: 0.3em !important;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+
+
+
+
+
+/* ---------------------------------------------------------------------------
+Choice Screen: Trial Counter
+--------------------------------------------------------------------------- */
+/* The container/wrapper inside of which the trials are */
+.trial-container {
+  width: 170px;
+  height: 50px;
+  margin: auto;
+  font-size: 15px;
+}
+
+/* The icon before the trials,  see https://fontawesome.com/ */
+.trial-container::before {
+  content: "\f017"; /* use "" to hide the icon*/
+  color: #ccc;
+  font-size: 25px;
+  font-weight: 400; /* use 900 to get filled icon */
+  width: 40px;
+  margin-left: -40px; /* must equal -width ! */
+  margin-top: 12.5px;
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+}
+
+/* The individual trials, here they get a round circle */
+.trial-container div {
+  border: 1px solid #666; /*border color*/
+  color: #666; /*text color*/
+  width: 1.6em;
+  height: 1.6em;
+  line-height: 1.6em;
+  margin-right: 0.4em;
+  margin-top: 10px;
+  border-radius: 50%;
+  text-align: center;
+  float: left;
+}
+
+ /* The current trial highlighted as follows*/
+.trial-container div.highlight {
+  background: #666; /*background-color*/
+  color: white; /*text-color*/
+  transition: background-color 0.5s linear;
+}
+/* ---------------------------------------------------------------------------
+Sample screen: goal bar
+--------------------------------------------------------------------------- */
+.sample-container{
+  font-size: 24px;
+  padding-bottom: 2em;
+  text-align: center;
+  font-family: "Font Awesome 5 Free";
+}
+
+
+
+/* ---------------------------------------------------------------------------
+Choice screen: Progress bar
+--------------------------------------------------------------------------- */
+/* the container in which the whole progress bar sits*/
+.progress-container {
+  font-size: 15px;
+  padding-bottom: 2em;
+  font-family: "Font Awesome 5 Free";
+}
+
+/* The icon before the trials */
+.progress-container::before {
+  content: "\f51e"; /* use "" to hide the icon*/
+  font-family: "Font Awesome 5 Free";
+  font-size: 25px;
+  font-weight: 900;
+  color: #ccc;
+  width: 40px;
+  margin-left: -40px; /* needs to equal width ! */
+  margin-top: 7px;
+  position: absolute;
+}
+
+/* the background around the progress bar (total possible progress) */
+.progress-container .progress-total {
+  height: 30px;
+  width: 100%;
+  border-radius: 15px;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #aaa;
+  margin: 0px;
+  padding: 0px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  overflow: hidden;
+  z-index: -10;
+  position: relative;
+  background-color: #eee;
+  background-size: 5px auto;
+  background-image:
+    linear-gradient(to right, #aaa 0.5px, transparent 0.5px),
+    linear-gradient(to bottom, #dedede, #eee);
+  box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+/* the progress bar */
+.progress-total .progress-bar {
+  border: none;
+  width: 2px; /* initial width */
+  min-width: 3px; /* minimum = initial width */
+  margin-left: 50%; /* start position */
+  margin-right: 50%; /* start position */
+  -webkit-transform: translate(-50%, 0);
+  height: 100%;
+  border-radius: 0px 3px 3px 0px;
+  padding-right: 0px;
+  padding-left: 1px;
+  text-align: right;
+  line-height: 18px;
+  vertical-align: center;
+  float: left;
+  position: relative;
+}
+
+/* the progress bar in negative direction */
+.progress-total .progress-bar-negative {
+  float: right;
+  text-align: left;
+  border-radius: 3px 0px 0px 3px;
+  -webkit-transform: translate(50%, 0);
+}
+
+/* color when success */
+.success {
+  background-color: rgb(2, 140, 100); /* background */
+  color: white;            /* text */
+  -webkit-transform: translate(50%, 0);
+}
+
+/* color when failure */
+.failure {
+  background-color: rgb(123, 197, 174); /* background */
+  color: black;           /* text */
+  -webkit-transform: translate(50%, 0);;
+  background-image: none;
+}
+
+/* the state inside the bar */
+.progress-total .progress-bar .state {
+  padding: 2px;
+  color: inherit;
+}
+
+/* the vertical line showing the budget */
+.progress-container .line {
+   height: 35px;
+   line-height: 90px;
+   overflow: visible;
+   font-size: inherit;
+   background-size: 2.5px auto;
+   background-image: linear-gradient(90deg, transparent, black, transparent);
+   background-position: 50%;
+   background-repeat: repeat-y;
+   position: absolute;
+   transform: translate(-50%, 0);
+   -webkit-transform: translate(-50%, 0);
+   -ms-transform: translate(-50%, 0);
+}
+
+/* needed to position the line */
+#line1 {
+}
+
+#line2 {
+  background: none;
+}
