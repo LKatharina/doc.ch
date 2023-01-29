@@ -1,0 +1,85 @@
+{% extends "exp_files/SurveyPage.html" %}
+{% load i18n %}
+{% load otree static %}
+
+{% block title %}
+    Threshold Difficulty
+{% endblock %}
+
+{% block content %}
+
+  <div class = "flex-row">
+        <p>
+            <h3>
+                Option A
+            </h3>
+        </p>
+  </div>
+    <div class = "flex-row">
+        <div>
+            <div>
+                <img class = 'center' src='{% static "sprites_experience/sprite_6_50_1_featurecolor01.png" %}' width = '60%'>
+            </div>
+        </div>
+        <div>
+            <div>
+                <img class = 'center' src='{% static "sprites_experience/sprite_4_50_3_featurecolor01.png" %}' width = '60%'>
+            </div>
+        </div>
+    </div>
+
+    {% formfield "t1e" %}
+
+    <div>
+        {% blocktrans trimmed %}
+            <p>
+                <h3>
+                    Option B
+                </h3>
+            </p>
+        {% endblocktrans %}
+    </div>
+
+    <div class = "flex-row">
+        <div>
+            <div>
+                <img class = 'center' src='{% static "sprites_experience/sprite_2_50_9_featurecolor01.png" %}'  width = '60%'>
+            </div>
+        </div>
+        <div>
+            <div>
+                <img class = 'center' src='{% static "sprites_experience/sprite_8_50_3_featurecolor01.png" %}'  width = '60%'>
+            </div>
+        </div>
+    </div>
+
+    {% formfield "t2e" %}
+
+    <div>
+        {% blocktrans trimmed %}
+            <p>
+                <h3>
+                    Option C
+                </h3>
+            </p>
+        {% endblocktrans %}
+    </div>
+    <div class = "flex-row">
+        <div>
+            <div>
+                <img class = 'center' src='{% static "sprites_experience/sprite_3_70_9_featurecolor01.png" %}'  width = '60%'>
+            </div>
+        </div>
+        <div>
+            <div>
+                <img class = 'center' src='{% static "sprites_experience/sprite_5_80_4_featurecolor01.png" %}'  width = '60%'>
+            </div>
+        </div>
+    </div>
+
+    {% formfield "t3e" %}
+
+
+    {% next_button %}
+
+{% endblock %}

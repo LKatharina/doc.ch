@@ -39,8 +39,8 @@ d2diff = lapply(1:nrow(stimuli2), function(i){ # Returns warnings due to impossi
   
   d = stimuli2[i,]
   
-  m = rsftModel(d$xh, d$yh, d$xl, d$yl,
-                d$pxh, d$pyh, d$pxl, d$pyl,
+  m = rsftModel(c(d$xh, d$yh), c(d$xl, d$yl),
+                c(d$pxh, d$pyh), c(d$pxl, d$pyl),
                 d$budget,
                 timeHorizon = 5,
                 0,
@@ -71,8 +71,8 @@ difflevels = lapply(1:nrow(stimuli_j), function(i){
   
   d = stimuli_j[i,]
   
-  m = rsftModel(d$xh, d$yh, d$xl, d$yl,
-                d$pxh, d$pyh, d$pxl, d$pyl,
+  m = rsftModel(c(d$xh, d$yh),c(d$xl, d$yl),
+                c(d$pxh, d$pyh),c(d$pxl, d$pyl),
                 d$budget,
                 timeHorizon = 5,
                 d$start)

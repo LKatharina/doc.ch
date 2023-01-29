@@ -1,0 +1,40 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree %}
+{% load otree static %}
+
+
+{% block title %}
+    {% blocktrans trimmed %}Bonus{% endblocktrans %}
+{% endblock %}
+
+
+{% block content %}
+  <p> {% blocktrans trimmed %}
+  After completion of the study and correctly solving the easy attention check choices, you will receive {{ participation_fee }}. In addition to this you can receive a bonus payment. The exact height of your bonus depends on your choices during choice phases.
+  {% endblocktrans %}</p>
+
+  <p> {% blocktrans with bonus=bonus_amount %}
+  At the end of the study, four decision rounds will be drawn randomly out of all the subsequent rounds. These bonus rounds matter for your bonus. For each of the four bonus rounds, you will receive additional {{bonus}}, if you reach the threshold in this round. This means your bonus can be between £0 to £1.00.
+  {% endblocktrans %}</p>
+
+
+  <p> {% blocktrans%}
+  <b>You only get the bonus for rounds, in which you reach the threshold:</b><ul>
+  <li>This means your score in the end of a block meets or exceeds the threshold.
+  {% endblocktrans %}</ul></p>
+
+  <h3>{% blocktrans trimmed %}
+    Comprehension question for the bonus
+  {% endblocktrans %}</h3>
+
+  {% formfields %}
+
+
+
+   <p>{% blocktrans trimmed %}
+       <b>Click on "Next" to navigate to the next page.</b>
+   {% endblocktrans %}</p>
+
+  {% next_button %}
+
+{% endblock %}

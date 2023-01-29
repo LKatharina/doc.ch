@@ -25,8 +25,8 @@ d = stimuli[1,]
 
 # Calculates final states ------------------------------------------------------
 # rsftStates(xh, yh, xl, yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob, final)
-stateFinal = rsftStates(d$xh, d$yh, d$xl, d$yl,
-                        d$pxh, d$pyh, d$pxl, d$pyl,
+stateFinal = rsftStates(c(d$xh, d$yh), c(d$xl, d$yl),
+                        c(d$pxh, d$pyh),c(d$pxl, d$pyl),
                         d$budget,
                         timeHorizon = 5,
                         d$start,

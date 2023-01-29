@@ -4,14 +4,14 @@
 
 
 # Erstellt Datensatz mit RSFT Vorhersagen basierend auf den Beliefs
-# über die Wahrscheinlichkeiten.
+# ?ber die Wahrscheinlichkeiten.
 # Die Probanden kennen nicht nur die Outcomes, die Wahrscheilichkeiten werden
 # durch Erfahrung gelernt (Wiederholtes Samples aus der Binominalverteilung).
 # Das Lernen wird durch ein Bayesianisches Lernmodell simuliert, mit jedem Zug aus der
-# Binominalverteilung werden die Beliefs über die Wahrscheinlichkeiten angepasst.
+# Binominalverteilung werden die Beliefs ?ber die Wahrscheinlichkeiten angepasst.
 # Es gibt wenig Sampler (sample size = 3) und viel Sampler (Sample size = 10)
 # Aus der gelernten Wahrscheinlichkeitsverteilung (Beta-Verteilung) wird 100 mal
-# gezogen und für jede Ziehung macht RSFT Vorhersagen.
+# gezogen und f?r jede Ziehung macht RSFT Vorhersagen.
 
 
 # Load Packages-------------------------------------------------------------
@@ -110,7 +110,7 @@ createData <- function(pxh,pxl,xh,yh,xl,yl,b,small,large, sampleNR, ndrawsbeta, 
   rsft = lapply(1:nrow(data_bayes), function(i){
     d = data_bayes[i,]
     # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,5,0)
+    m <- rsftModel(c(d$xh,d$yh),c(d$xl,d$yl),c(d$bxh,d$byh),c(d$bxl,d$byl),d$b,5,0)
     choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
     print(i)
     return(cbind(

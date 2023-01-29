@@ -16,7 +16,12 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 sim <- read.table("../stimuli/shifting_stimuli.csv", header=T, sep=",", as.is=T, na.strings=c("NA"))
 
 sim <- as.data.table(sim)
-
+sim[, costs := abs(dl -dh)]
+sim[order(-costs)]
+sim[, costs := abs(policyHV -policyLV)]
+sim[, sumcosts := cumsum(costs), by = c("trial","nr")]
+sim[,sumcosts]
+sim[nr == "555"]
 # Criteria for stimuli selection ------------------------------------------------
 # difficulty
 # % bad rows
@@ -33,7 +38,7 @@ utility <- function(x,y){
 
 
 # Utility of paired comparisons
-# Berechnet die Utility für alle möglichen Paarvergleiche zwischen Parameterkombinationen
+# Berechnet die Utility f?r alle m?glichen Paarvergleiche zwischen Parameterkombinationen
 utility_of_paired_comparisons <- function(x,y) {
   xcol <- 1:length(x)
   ycol <- 1:length(y)
@@ -62,7 +67,7 @@ utility_of_design <- function(x, w, m1, m2){
   return(w * u1 + (1 - w) * u2)
 }
 
-# Utiltiy of design --> Berechnet einen Wert für jeden Stimuli (bestehend aus 2 Gambles)
+# Utiltiy of design --> Berechnet einen Wert f?r jeden Stimuli (bestehend aus 2 Gambles)
 # u1 = Differenzen (von den Paarvergleichen) aufsummieren und den mean berechnen (jedoch nur, wenn die Differenz nicht = 0)
 # u2 = Prozentsatz an vorhersagen, wo die Vorhersagen nicht in die gleiche Richtung gehen
 utility_of_design <- function(x, m1, m2,f){

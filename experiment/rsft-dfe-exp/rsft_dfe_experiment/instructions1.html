@@ -1,0 +1,29 @@
+{{ include C.PAGE_TEMPLATE }}
+
+{{ block title }}
+  General Instructions
+{{ endblock }}
+
+{{ block content }}
+<p>
+  This study involves problems like <i>reach or exceed 10 points by gathering points from Option A or Option B in {{ C.NUM_TRIALS }} choices</i>. Option A yields points with a specific probability; and Option B yields points with a specific probability. You choose {{ C.NUM_TRIALS }} times between options A and B. Each choice results in points, the points increase your point total, and your point total should reach or exceed the threshold after your {{ C.NUM_TRIALS }}. choice. Then, you start over, with a different threshold and different options.
+</p> 
+<h3>Your task</h3>
+<p>
+  Your task is to {{ if participant.format_condition == "dfe_np" }} first <b>learn about the probabilities with which the options yield points</b>, since the probabilities will be hidden; and then to {{ endif }} {{ if participant.format_condition == "dfe"}} first <b>learn about the points and the probabilities with which the options yield points</b>, since the probabilities and points will be hidden; and then to {{ endif }} consistently make the <b>best choice to reach or exceed the threshold after the {{ C.NUM_TRIALS }}. choice</b>.
+</p>
+<p>
+  Note, there will be some scenarios in which it is obvious which option the best choice to reach the threshold is. If you fail to select this best choice in more than half of these scenarios, we must assume that you were inattentive and cannot pay you.
+</p>
+
+<h3>Comprehension Check</h3>
+Check your understanding of the task by answering these questions correctly:
+{{ formfields }}
+
+<p>
+  <b>Please ensure you have {{ C.DURATION }} minutes undisturbed time, switch your phone off, and pay attention throughout.</b>
+</p>
+
+{{ next_button }}
+
+{{ endblock }}

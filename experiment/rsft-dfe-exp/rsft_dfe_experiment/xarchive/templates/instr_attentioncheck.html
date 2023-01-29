@@ -1,0 +1,26 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree %}
+{% load otree static %}
+
+
+{% block title %}
+  {% blocktrans trimmed %} Instructions
+  {% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+  {% blocktrans trimmed %}
+    <h3>Duration</h3>
+    <p>Please ensure, that you have {{ duration }} minutes undisturbed time. Please pay attention throughout.</p>
+  {% endblocktrans %}
+
+  {% blocktrans trimmed %}
+    <h3>Attention checks</h3>
+    <p>Some decisions in this study will have a clear best answer. If you respond incorrectly in more than half of those clear situations, we have to assume you failed to pay attention and can only pay  50% of your earnings.</p>
+  {% endblocktrans %}
+
+{% formfields %}
+
+{% next_button %}
+
+{% endblock %}

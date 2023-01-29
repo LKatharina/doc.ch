@@ -29,7 +29,7 @@ computeExpectedReward = function(ss,xh,yh,pxh,xl,yl,pxl,b,trial,state){
   rsft_opt = lapply(1:nrow(data), function(i){
     d = data[i,]
     # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,ntrials,0,gtrials = d$t, gstates = d$s)
+    m <- rsftModel(c(d$xh,d$yh),c(d$xl,d$yl),c(d$pxh,d$pyh),c(d$pxl,d$pyl),d$b,ntrials,0,gtrials = d$t, gstates = d$s)
     choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
     print(i)
     return(as.data.table(cbind(
@@ -46,7 +46,7 @@ computeExpectedReward = function(ss,xh,yh,pxh,xl,yl,pxl,b,trial,state){
   rsft_sub = lapply(1:nrow(data), function(i){
     d = data[i,]
     # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-    m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$bxh,d$byh,d$bxl,d$byl,d$b,ntrials,0,gtrials = d$t, gstates = d$s)
+    m <- rsftModel(c(d$xh,d$yh),c(d$xl,d$yl),c(d$bxh,d$byh),c(d$bxl,d$byl),d$b,ntrials,0,gtrials = d$t, gstates = d$s)
     choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
     print(i)
       return(as.data.table(cbind(

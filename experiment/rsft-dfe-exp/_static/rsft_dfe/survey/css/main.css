@@ -1,0 +1,411 @@
+/*//////////////////////////////////////////////////////////////////
+This is the style for the survey elements
+[ RESTYLE TAG ]*/
+/*---------------------------------------------*/
+
+a:focus {
+	outline: none !important;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+/*---------------------------------------------
+[ General Settings ]*/
+input {
+	outline: none;
+	border: none;
+  border-bottom: 1px solid black;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+textarea {
+  outline: none;
+  border: none;
+  height: 100px;
+}
+
+input:focus::-webkit-input-placeholder { color:var(--lightest-color); }
+input:focus:-moz-placeholder { color:var(--lightest-color); }
+input:focus::-moz-placeholder { color:var(--lightest-color); }
+input:focus:-ms-input-placeholder { color:var(--lightest-color); }
+
+textarea:focus::-webkit-input-placeholder { color:var(--lightest-color); }
+textarea:focus:-moz-placeholder { color:var(--lightest-color); }
+textarea:focus::-moz-placeholder { color:var(--lightest-color); }
+textarea:focus:-ms-input-placeholder { color:var(--lightest-color); }
+
+input::-webkit-input-placeholder { color: var(--text-light-color);}
+input:-moz-placeholder { color: var(--text-light-color);}
+input::-moz-placeholder { color: var(--text-light-color);}
+input:-ms-input-placeholder { color: var(--text-light-color);}
+
+textarea::-webkit-input-placeholder { color: var(--text-light-color);}
+textarea:-moz-placeholder { color: var(--text-light-color);}
+textarea::-moz-placeholder { color: var(--text-light-color);}
+textarea:-ms-input-placeholder { color: var(--text-light-color);}
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Utility ]*/
+.bg0 { background-color: inherit;} /* general background */
+.bg1 { background-color: inherit;} /* highlight of questions */
+
+
+/*//////////////////////////////////////////////////////////////////
+[ Contact ]*/
+/* .container-contact100 */
+form > ._otree-content {
+  min-height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 10px;
+}
+
+/*------------------------------------------------------------------
+[  ]*/
+.form-group {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+
+
+/*------------------------------------------------------------------
+[  ]*/
+.form-group,
+.input-group,
+input.form-control,
+select.form-control,
+textarea.form-control {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  border-radius: 0px;
+  padding: 4px 15px 4px 11px;
+  margin-bottom: 10px;
+  border: none;
+}
+
+input.form-control, textarea.form-control {
+  border-bottom: 1px solid black;
+  border-radius: 0px;
+  font-style: italic;
+}
+
+select.form-control {
+  border: 1px solid var(--light-color);
+}
+
+
+.form-control:focus {
+  border-color: var(--main-color);
+  box-shadow: none;
+}
+
+.form-control:active {
+  box-shadow: none;
+  border-bottom: 1px solid var(--main-color);
+}
+
+.col-form-label {
+  color: var(--text-color);
+  font-size: 1em;
+  font-style: bold;
+  line-height: 1.3;
+  margin-bottom: 0.2em;
+  font-weight: 600;
+}
+
+.controls {
+  color: var(-text-light-color);
+  display: block;
+  width: 100%;
+  background: transparent;
+  font-weight: 400;
+  font-style: normal;
+  font-size: inherit;
+  line-height: 1.2;
+  padding-right: 15px;
+}
+
+/* Vertical radio button indent */
+.controls > ul {
+  padding-left: 1em;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+
+/*---------------------------------------------*/
+input.controls {
+  height: 1.4em;
+}
+
+textarea.controls {
+  min-height: 120px;
+  padding-top: 9px;
+  padding-bottom: 13px;
+}
+
+
+.controls:focus + .focus-input100::before {
+  width: 100%;
+}
+
+.has-val.input100 + .focus-input100::before {
+  width: 100%;
+}
+
+
+/*==================================================================
+[ Restyle the Dropdown ]
+The dropdown is styled by a library called Select2: https://select2.org */
+.select2-container {
+  display: block;
+  max-width: 100% !important;
+  width: auto !important;
+}
+
+.select2-container .select2-selection--single {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  height: 2.3em;
+  outline: none;
+  position: relative;
+  border-radius: 10px;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+  font-size: inherit;
+  color: var(--text-color-light);
+  line-height: 1.1;
+  padding: 2px 5px 2px 10px;
+  background-color: transparent;
+}
+
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+ /* hide default select arrow */
+.select2-selection__arrow b {
+  display: none;
+}
+
+/* select arrow symbol on the right */
+.select2-selection__arrow::before {
+  content: '\f312';
+  font-family: Material-Design-Iconic-Font;
+  font-size: 1.5em;
+  color: var(--main-color);
+}
+
+/* For IE (thanks to @SaiManoj) */
+select::-ms-expand {
+  display: none;
+}
+
+
+/*------------------------------------------------------------------
+[ Dropdown options when expanded ]*/
+.select2-container--open .select2-dropdown {
+  z-index: 1251;
+  width: calc(100% + 2px);
+  border: 0px solid transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+  left: 0px;
+  box-shadow: 0 3px 4px 0px var(--lightest-color);
+  -moz-box-shadow: 0 3px 4px 0px var(--lightest-color);
+  -webkit-box-shadow: 0 3px 4px 0px var(--lightest-color);
+  -o-box-shadow: 0 3px 4px 0px var(--lightest-color);
+  -ms-box-shadow: 0 3px 4px 0px var(--lightest-color);
+}
+
+@media (max-width: 576px) {
+  .select2-container--open .select2-dropdown {
+    left: -3px;
+  }
+}
+
+.select2-dropdown--above {top: -40px;}
+.select2-dropdown--below {top: 2px;}
+
+.select2-container .select2-results__option[aria-selected] {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 24px;
+}
+
+@media (max-width: 576px) {
+  .select2-container .select2-results__option[aria-selected] {
+    padding-left: 3px;
+  }
+}
+
+.select2-container .select2-results__option[aria-selected="true"] {
+  background: var(--lightest-color);
+  color: white;
+}
+
+.select2-container .select2-results__option--highlighted[aria-selected] {
+  background: var(--light-color);
+  color: white;
+}
+
+.select2-results__options {
+  font-weight: 400;
+  font-size: inherit;
+  color: var(--text-light-color);
+  line-height: 1.1;
+}
+
+.select2-search--dropdown .select2-search__field {
+  border: 1px solid var(--main-color);
+  outline: none;
+  font-size: inherit;
+  color: var(--lightest-color);
+  line-height: 1.1;
+  border-radius: 3px;
+}
+
+.controls .dropDownSelect2 .select2-container--open {
+  width: 100% !important;
+}
+
+.wrap-input100 .dropDownSelect2 .select2-dropdown {
+  width: calc(100% + 2px) !important;
+}
+
+
+
+
+
+/*==================================================================
+[ Restyle Radio Button ]*/
+.wrap-contact100-form-radio {
+  width: 100%;
+  padding: 15px 25px 0 25px;
+}
+
+.contact100-form-radio {
+  padding-bottom: 5px;
+}
+
+/* hide default radio button */
+.input-radio100 {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* hide default radio button */
+.form-check-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Text/Label next to radio button */
+.label-radio100 {
+  display: block;
+  position: relative;
+  padding-left: 1.65em;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: 0.95em;
+  line-height: 1.65em;
+  margin-bottom: 0px;
+}
+
+ /* Radio button style for non-checked buttons */
+.label-radio100::before {
+  background: var(--lightest-color);
+  width: 1.3em;
+  height: 1.3em;
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  border: none;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+/* When the mouse hovers over the button, add */
+.label-radio100:hover::before {
+  border: 6px solid var(--light-color);
+}
+
+/* When the radio button is checked, add checkmark */
+.input-radio100:checked + .label-radio100::after,
+.checked::after {
+  display: block !important;
+}
+
+/* Style for the checkmark (hidden per default): */
+.label-radio100::after,
+.checked::after {
+  display: none; /* default: hide this checkmark */
+  background: white;
+  content: "";
+  position: absolute;
+  width: 1.3em;
+  height: 1.3em;
+  border-radius: 50%;
+  left: 0;
+  top: 50%;
+  border: 6px solid var(--main-color);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -moz-background-clip: padding;     
+  -webkit-background-clip: padding;  
+  background-clip: padding-box; 
+}

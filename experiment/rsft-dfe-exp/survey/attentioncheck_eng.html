@@ -1,0 +1,16 @@
+{{ include C.PAGE_TEMPLATE }}
+
+{% block title %}
+    Questions about the decision rounds
+{% endblock %}
+
+{% block content %}
+<h3>Please remember the decision rounds when you made your choices.</h3>
+
+    {% for field in form %}
+        {% formfield field %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}

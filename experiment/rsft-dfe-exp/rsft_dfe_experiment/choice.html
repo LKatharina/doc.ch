@@ -1,0 +1,127 @@
+{{ include C.PAGE_TEMPLATE }}
+
+{{ block content }}
+  <div>
+    {{ if player.phase == "familiarization" }}
+      <h3>Example for choice Phase </h3>
+      <p>
+        This is an example of a choice phase.{{ if participant.condition < 4}} The hidden {{ if participant.format_condition == "dfe"}}points and{{endif}} probabilities are the same as in the learning phase.{{endif}}
+        Your task is to reach or exceed the point threshold by accumulating from the options.
+        The progress bar shows your points and the threshold you want to reach or exceed. You start with 0 points and the threshold is {{ intbudget }}. You have {{ num_trials }} decisions.
+      </p>
+    {{ else }}
+      Block {{ subsession.round_number }} of {{ C.NUM_ROUNDS }}
+    {{ endif }}
+  </div>
+
+  <div class = "row row1">
+      <div class = "trial-container"></div>
+  </div>
+
+  <div class = "row">
+      <div class="progress-container">
+        <span class="line" id="line1"></span>
+        <span class="line" id="line2"></span>
+        <div class="progress-total">
+          <div class="progress-bar">
+            <span class="state"></span>
+          </div>
+        </div>
+      </div> 
+      </div>
+  </div>
+
+  <div class = "row">
+    <button type="button" value={{ stimulus_position.0 }} class="option rsft-btn-choices">
+      <span class = "rsft-span-choices">
+        <div class = "{{ img1 }} {{ format_condition }} sprite" id = "option1">
+        </div>
+      </span>
+    </button>
+      
+    <button type="button" value={{ stimulus_position.1 }} class="option rsft-btn-choices">
+      <span class = "rsft-span-choices">
+        <div class = "{{ img2 }} {{ format_condition }} sprite" id = "option2">
+        </div>
+      </span>
+    </button>
+  </div>
+  </div>
+
+  <span class = 'hidden' formnovalidate="formnovalidate">
+  {{ next_button }}
+  </span>
+
+ <div class="hidden">
+  {{ for field in form }}
+    {{ formfield field }}
+  {{ endfor }}
+</div>
+
+<script src="{{ static 'js/functions.js' }}"></script>
+
+<script>
+  /* Variables for this block defined in pages.py*/
+    var stimulus_position = {{ stimulus_position }},
+      num_trials = {{ C.NUM_TRIALS }},
+      state = {{ state|json }},
+      outcomes = {{ outcomes }},
+      budget = {{ budget|json }},
+      xmin = - {{ max_earning|json }},
+      xmax = {{ max_earning|json }};
+    var direction = outcomes[0][0] < 0 ? -1 : 1;
+
+    /* Variables set here */
+    var trial = 1,
+        rt_end = 0,
+        rt_start = 0,
+        old_s = 0,
+        /* sample_condition = 1,*/
+        start = state; /* state at the beginning */
+
+
+    
+    /* ------------------------------------------------------------------------
+    Next, we define a function to be executed every time a user clicks on the button  which is called .rsft-btn-choice 
+    */
+    $('.rsft-btn-choices').click(function() {
+      rt_end = window.performance.now();
+      $('#id_rt_ms' + (trial)).val( Math.round(rt_end - rt_start) );
+
+      var choice_safe = $(this).val();
+      var choice_position = stimulus_position[choice_safe];
+      $('#id_choice_safe'+trial).val(choice_safe);
+      outcome = outcomes[choice_position][trial - 1];
+      state += outcome
+      $('#id_state' + (trial + 1)).val(state);
+      hideActions();
+      var x = $(this);
+      showOutcome(x);
+      set_state(outcome, state);
+    
+      setTimeout(function() {
+        if (trial < num_trials) {
+          hideOutcome(x);
+          showActions();
+        }
+        if (trial == num_trials) {
+          $('#id_success').val( +(state >= budget) );
+          $('#id_successes').val( {{ successes }} + (state >= budget) );
+          clickNext()
+        }
+        trial += 1;
+        highlight_trial(trial);    
+        rt_start = window.performance.now();
+      }, 1000);
+      
+    });
+
+    $('#id_state' +trial).val(state);
+
+    draw_trials(num_trials);
+    highlight_trial(trial);
+    draw_progress(s = start, b = budget, direction = direction);
+
+</script>
+
+{{ endblock }}

@@ -1,0 +1,14 @@
+{{ include C.PAGE_TEMPLATE }}
+
+{% block title %}Data quality
+{% endblock %}
+
+{% block content %}
+
+    {% for field in form %}
+        {% formfield field %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}

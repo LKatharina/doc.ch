@@ -7,6 +7,10 @@ library(lme4)
 library(ggplot2)
 library(interactions)
 
+# Ideen ===========================================
+# Linear Mixed Model With Partially Crossed Random Effects
+# Googlen unter nested model zur auswertung
+#==================================================
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # Regression: Sample Size, Type, x Interaktion --> Powern auf Interaktion, Binomiales Outcome (Optimal Choice)
 # 1 stelle Vektor = 1 im Random Effekt, 2 Stelle = 2 im Random Effekt

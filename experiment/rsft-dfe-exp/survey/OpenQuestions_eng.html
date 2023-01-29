@@ -1,0 +1,13 @@
+{{ include C.PAGE_TEMPLATE }}
+{% block title %}
+    Comments
+{% endblock %}
+
+{% block content %}
+    {% for field in form %}
+        {% formfield field %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}

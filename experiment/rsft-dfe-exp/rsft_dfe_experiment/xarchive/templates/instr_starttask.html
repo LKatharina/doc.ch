@@ -1,0 +1,22 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree static %}
+
+
+{% block title %}
+  Beginning of the Task
+{% endblock %}
+
+
+{% block content %}
+
+<p>You will now complete {{num_blocks}} tasks consisting of {{ if dfe_condition }}probability learning followed by {{ endif }} deciding between two options to maximize the chance to reach a threshhold.</p>
+
+
+<p><b>Please stay concentrated and do not take longer breaks.</b></p>
+
+<p>Click on "Next" to start the first block.</p>
+
+  {% next_button %}
+
+{% endblock %}
+

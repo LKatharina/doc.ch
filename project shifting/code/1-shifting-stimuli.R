@@ -143,12 +143,9 @@ tau = 0.2
 
 rsft = lapply(1:nrow(budget_diff), function(i){
   d = budget_diff[i,]
-  # rsftModel(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start)
-  m <- rsftModel(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,5,0)
+  m <- rsftModel(c(d$xh,d$yh),c(d$xl,d$yl),c(d$pxh,d$pyh),c(d$pxl,d$pyl),d$b,5,0)
   choiceprob = as.data.table(cr_softmax(x = m@extended[,.(policyHV,policyLV)],0.2))
-  choiceprob = cbind(m@extended[,.(trial,state)],choiceprob)
-  # rsftStates(xh,yh,xl,yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start,choiceprob,final) # final = probability to end in a certain state
-  prstates = rsftStates(d$xh,d$yh,d$xl,d$yl,d$pxh,d$pyh,d$pxl,d$pyl,d$b,5,0,choiceprob,F)
+  prstates = rsftStates(c(d$xh,d$yh),c(d$xl,d$yl),c(d$pxh,d$pyh),c(d$pxl,d$pyl),d$b,5,0,choiceprob,m@extended,F)
   choiceprob = as.data.table(cr_softmax(x = m@compact[,.(policyHV,policyLV)],0.2))
   print(i)
   return(cbind(
@@ -161,7 +158,6 @@ rsft = lapply(1:nrow(budget_diff), function(i){
 rsft_sim = rbindlist(rsft)
 rsft_sim[, nr := cumsum(trial == 1)]
 sim <- merge(rsft_sim,budget_diff, by="nr")
-
 
 # # 1. RSFT model -----------------------------------------
 # rsft_model <- hm1988(

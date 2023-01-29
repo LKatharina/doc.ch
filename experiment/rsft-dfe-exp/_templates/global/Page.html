@@ -1,0 +1,650 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block global_styles  %}
+    <link rel="stylesheet" type="text/css" href="{% static 'global/theme.css' %}" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Sacramento&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Coming+Soon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+
+
+    <style>
+      body, p, span, li, ul, a, b, i, mark, strong, .example, fieldset, legend {
+        font-family: 'Arial', serif;
+        font-size: .9rem;
+        line-height: 1.5em;
+      }
+
+      h2, h3, h4, .option, .btn, .goal-reached-info p, .chart-trial, .chart-earnings {
+        font-family: 'Raleway', 'Roboto', 'Helvetica Neue', sans-serif !important;
+      }
+
+      /* General Settings */
+       h1 {
+        font-size: 1.5rem;
+        font-family: "Coming Soon", 'cursive', sans-serif, !important;
+        color: #000000;
+        letter-spacing: .05em;
+        display:inline;
+        padding: .1em 0em .1em 0em;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        color: #000000;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: .05rem;
+        bottom: -2rem;
+        margin-top: 1.5eM;
+      }
+
+      div#checkdisplay { display: none; }
+
+      @media only screen and (max-device-width:800px) {
+          div#checkdisplay { display: block; }
+      }
+
+      .otree-body {
+        width: 750px;
+        max-width: 95%;
+      }
+
+      .dialogue {
+        font-size: inherit;
+        z-index: 9999;
+        width: 98%;
+        height: 98%;
+        max-width: 100%;
+        max-height: 100%;
+        position: absolute;
+        top: 1%;
+        background: rgba(256,256,256,1);
+      }
+
+      .dialogue p {
+        color: grey;
+        letter-spacing: .15em; /* Adjust as needed */
+      }
+
+      .fs2, .fs2 p {
+        font-size: 150%;
+      }
+
+      .fs3, .fs3 p {
+        font-size: 300%;
+      }
+
+      .fs4, .fs4 p {
+        font-size: 400%;
+      }
+
+      .fs5, .fs5 p {
+        font-size: 500%;
+      }
+
+      .typewriter p {
+        overflow: hidden; /* Ensures the content is not revealed until the animation */
+        border-right: 0 solid orange; /* The typwriter cursor */
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        letter-spacing: .15em; /* Adjust as needed */
+        animation: 
+          typing 800ms steps(10, end),
+          blink-caret .75s step-end infinite;
+      }
+
+      /* The typing effect */
+      @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+      }
+
+      /* The typewriter cursor effect */
+      @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: #61a9b0; }
+      }
+
+      .otree-title {
+        /*font-size: 1eM; */
+      }
+
+      /* buttons */
+      .btn {
+        color:inherit;
+        outline: none;
+      }
+
+      .btn:focus,
+      .btn:hover,
+      .btn:active,
+      .btn:enabled {
+        border: none;
+        outline: none !important;
+      }
+
+      .otree-btn-next {
+          color: inherit;
+          background-color: rgb(230,230,230);
+          border-radius: .2rem;
+          border: 1px solid rgb(100,100,100) !important;
+          line-height: 1.2;
+          padding: .3rem .9rem;
+          margin-top: 5vh;
+          outline: none;
+        }
+
+      .otree-btn-next:hover,
+      .otree-btn-next:focus,
+      .otree-btn-next:active {
+        background-color: rgb(200,200,200) !important;
+        border: 1px solid rgb(150,150,150) !important;
+        outline: none !important;
+        color: rgb(240,240,240);
+      }
+
+      .hidden {
+        display: none;
+        visibility: hidden;
+      }
+
+      .img {
+        width: 600px;
+        max-width: 95%;
+        margin-bottom: 2rem;
+      }
+
+     /* Page layout for the choice page(s) */
+     .row1 {
+        height: 10vh;
+      }
+
+      .row {
+        min-height: 10vh;
+        height: 220px;
+        max-height: 250px;
+      }
+
+      .parent {
+        position: relative;
+      }
+
+      .row p {
+        font-size: 1.4em;
+      }
+
+      i {
+        color: #CFCFCF;
+        z-index: 4  ;
+        float: right;
+        display: inline-block;
+      }
+
+      .chart-icon {
+        width: 50px;
+        height: 50px;
+        margin: auto;
+      }
+
+      .chart-trial {
+        width: 170px;
+        height: 50px;
+        margin: auto;
+      }
+
+      .chart-earnings {
+        width: 720px;
+        height: 70px;
+        margin: auto;
+      }
+
+      .rsft-choices {
+        margin: 0;
+        padding: 0;
+        margin: auto;
+      }
+
+
+
+      /*Alignment options*/
+      .right p, .right h2 {
+        text-align: right;
+      }
+
+      .center p, .center h2 {
+        text-align: center;
+      }
+
+      .center-me-h {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .center {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .center-me-hv {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .center-me-v {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }       
+
+      .option {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        margin: auto;
+        padding: 0px;
+      }
+
+      #option1,
+      #option2 {
+        height: 100%;
+      }
+
+      .flex-row {
+        width: 100%;
+        position: relative;
+        display: -webkit-flex;
+        display: inline-flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        -webkit-justify-content: space-around;
+        justify-content: space-around;
+        align-content: space-around;
+        align-items: center;
+        outline: none;
+        border: none;
+      }
+
+      .flex-row-flex-start {
+        position: relative;
+        display: -webkit-flex;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: center;
+        -webkit-justify-content: center;
+        align-content: center;
+/*        flex-wrap: nowrap;
+        
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        outline: none;
+        border: none;*/
+      }
+
+      .flex-col {
+        width: 100%;
+        position: relative;
+        display: -webkit-flex;
+        display: inline-flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        -webkit-justify-content: space-around;
+        justify-content: space-around;
+        align-content: space-around;
+        align-items: center;
+        outline: none;
+        border: none;
+      }
+
+      .rsft-btn-choices {
+        border: 1px solid transparent;   
+        border-radius: 0.2rem;
+        font-size:1.4eM;
+        background: none;
+        outline:none;
+        border: none;
+      }
+
+      .rsft-btn-chocies:enabled,
+      .rsft-btn-chocies:active,
+      .rsft-btn-choices:focus {
+        background: none;
+        border: none;
+        color: black;
+        outline: none;
+      }
+
+      .rsft-btn-choices:hover:enabled,
+      .rsft-btn-choices:active:hover {
+        /*background:   rgb(248,248,248);*/
+        box-shadow: 3px 3px 5px rgb(220,220,220);
+        cursor: pointer;
+      }
+
+      .rsft-btn-choices::before,
+      .rsft-btn-choices::after,
+      .rsft-span-choices::before,
+      .rsft-span-choices::after {
+          display: block;
+          content: "";
+          width: 20px;
+          height: 20px;
+          position: absolute;
+      }
+
+      .rsft-btn-choices::before,
+      .rsft-btn-choices::before {
+          top: -1px;
+          left: -1px;
+          border-top: 1px solid grey;
+          border-left: 1px solid grey;
+          transition: 0.1s all;
+      }
+      .rsft-btn-choices::after {
+          top: -1px;
+          right: -1px;
+          border-top: 1px solid grey;
+          border-right: 1px solid grey;
+          transition: 0.1s all;
+      }
+      .rsft-span-choices::before {
+          bottom: -1px;
+          left: -1px;
+          border-bottom: 1px solid grey;
+          border-left: 1px solid grey;
+          transition: 0.1s all;
+      }
+      .rsft-span-choices::after {
+          bottom: -1px;
+          right: -1px;
+          border-bottom: 1px solid grey;
+          border-right: 1px solid grey;
+          transition: 0.1s all;
+      }
+
+      .rsft-btn-choices:hover:enabled::before, .rsft-btn-choices:hover:enabled::after {
+          width: 100%; /*151px;*/
+          height: 100%; /*115px;*/
+      }
+
+      .rsft-btn-choices:hover:enabled .rsft-span-choices::before, .rsft-btn-choices:hover:enabled .rsft-span-choices::after {
+          width: 151px;
+          height: 115px;
+      }
+
+      .rsft-btn-choices:disabled,
+      .rsft-btn-choices:disabled:before {
+        pointer-events: none;
+      }
+
+      .rsft-btn-chosen {
+        box-shadow: 5px 5px 10px rgb(180,180,180);
+        border: 1px solid black !important;
+        border-radius: 0;
+        font-size: 5em;
+      }
+
+      .rsft-btn-chosen:disabled::before,
+      .rsft-btn-chosen:disabled::after {
+          display: block;
+          content: none;
+          width: 0px;
+          height: 0px;
+          position: absolute;
+      }
+
+      .rsft-btn-hideinfo {
+       /* background: rgba(225,225,225,0.5);*/
+        background: white;
+        color: mediumblue;
+        border: 1px black;
+        padding: 4px 10px 4px 10px;
+        box-shadow: 3px 3px 5px rgb(220,220,220);
+        font-style: italic;
+      }
+
+     /* .rsft-btn-hideinfo::before {
+        content: "Zeige";
+      }*/
+
+      .rsft-btn-hideinfo:enabled:hover,
+      .rsft-btn-hideinfo:enabled:focus,
+      .rsft-btn-hideinfo:enabled:active {
+        color: grey;
+        cursor: pointer;
+        outline: none;
+        border: none;
+        box-shadow: 5px 5px 10px rgb(180,180,180);
+      }
+
+      .rsft-btn-hideinfo:disabled::after {
+        content: ' (?)';
+      }
+
+      .rsft-btn-hideinfo:disabled,
+      .rsft-btn-hideinfo:disabled:hover,
+      .rsft-btn-hideinfo:disabled:focus,
+      .rsft-btn-hideinfo:disabled:active {
+        color: grey;
+        outline: none;
+      }
+
+      .layer1 {
+        z-index: 1;
+      }
+
+      .layer2 {
+          z-index: 2;
+      }
+
+      #uncover-trials {
+        margin-top: 0%;
+        margin-left: 5%;
+      }
+
+      #uncover-budget {
+        margin-top: -5%;
+        margin-left: 50%;
+      }
+
+      #uncover-earnings {
+        margin-top: -5%;
+        margin-left: 25%;
+      }
+
+      #uncover-x {
+        position: absolute;
+        margin-top: 5%;
+      }
+
+      #uncover-p {
+        position: absolute;
+        margin-top: 10%;
+      }
+
+      .clicks {
+        margin-top: 0;
+        margin-left: 0;
+        font-size: 1rem;
+        border-bottom: 1px solid orange;
+        border-top: 1px solid orange;
+        padding: 1vh 2vh 1vh 2vh;
+        color: rgb(80,80,80);
+        width: 100%;
+        text-align: center;
+        background-color: rgb(240,240,240);
+      }
+
+      .shadow {
+        box-shadow: 1px 1px 1px rgb(220,220,220);
+      }
+
+      .round {
+        border-radius: 50%;
+      }
+
+      .round-edge {
+        border-radius: 8px;
+      }
+
+      .goal-reached-info {
+        display: inline;
+        float: right;
+        padding-top: .5rem;
+        margin-right: -4.5rem;
+        width: 4.5rem;
+        height: 4.5rem;
+        border: 0.5px solid rgb(230,230,230);       
+        text-align: center;
+      }
+
+      .goal-reached-info p {
+        font-size: .6rem;
+        line-height: 1.4em;
+        font-weight: 300;
+        text-transform: uppercase;
+      }
+
+      .lightorange {
+        background-color: rgba(280,280,280,.1);
+      }
+
+      .lightgrey {
+        background-color: rgba(200,200,200,.1);
+      }
+
+      .white {
+        background-color: #fff;
+      }
+
+      .orange {
+        color: orange;
+      }
+
+      .blue {
+        color: rgba(20,191,218,1);
+      }
+
+      .black-border {
+        border: 1px solid rgba(33,37,41,1)!important;
+      }
+
+      .orange-border {
+        border: 1px solid orange !important;
+      }
+
+       .blue-border {
+        border: 1px solid rgba(33,37,41,1)!important;
+      }
+
+      .new-goal-info {
+        font-weight: bold;
+        line-height: 1.2em !important;
+        padding: 0em .5rem .1rem .5rem;
+        font-size: 2.4em !important;
+      }
+
+      /* Form fields for the attention check page*/
+      .rsft-form p {
+        float: left;
+        font-size: .9rem;
+        font-weight: normal;
+        margin-right: 0px;
+        margin-left: 40px;
+      }
+
+      .rsft-form input:not([type="radio"]):not([type="checkbox"]),
+      .rsft-form label:not([type="radio"]):not([type="checkbox"]) {
+        display:block;
+      }
+
+      .rsft-form label {
+        font-weight: bold;
+      }
+
+      .rsft-form label {
+        margin-bottom: 0;
+      }
+
+      .rsft-form input {
+        margin-top: 0;
+        color: grey;
+        font-style: italic;
+      }
+
+      /*Examples*/
+      blockquote, .example {
+        background: rgb(245,245,245);
+        margin: 0 10% 1rem 10%;
+        color: grey;
+        font-style: italic;
+        border-left: 4px solid blue;
+        padding: 1.2rem;
+        z-index: 0;
+        position: relative;
+      }
+
+       blockquote, .example1 {
+        background: rgb(250,250,250);
+        margin: 0 10% 1rem 10%;
+        color: grey;
+        font-style: italic;
+        border-left: 4px solid #14bfda;
+        padding: 1.2rem;
+        z-index: 0;
+        position: relative;
+      }
+
+       .example1::before {
+        content: "Beispiel";
+        font-family: "Raleway", 'Helvetica Neue', sans-serif;
+        font-style: normal;
+        font-size: .8rem;
+        color: #14bfda;
+        left: .3rem;
+        top: -.2rem;
+        position: absolute;
+        z-index: 1;
+      }
+
+      .example::before {
+        content: "For example";
+        font-family: "Raleway", 'Helvetica Neue', sans-serif;
+        font-style: normal;
+        font-size: .8rem;
+        color: rgba(33,37,41,1);
+        left: .3rem;
+        top: -.2rem;
+        position: absolute;
+        z-index: 1;
+      }
+
+      /*Tables*/
+      table td {
+        vertical-align: middle !important;
+        padding-top: 0.3em !important;
+        padding-bottom: 0.3em !important;
+      }
+      
+      table tr:nth-child(even) {
+        background-color: #f2f2f2
+      }
+
+    </style>
+{% endblock %}
+
+{% block global_scripts  %}
+  <script src="{% static 'global/jquery.js' %}"></script>
+  <script src="{% static 'global/jquery.translate.js' %}"/></script>
+  <script src="{% static 'Highcharts-6.1.0/code/highcharts.js' %}"></script>
+{% endblock %}
+

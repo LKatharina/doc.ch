@@ -31,8 +31,8 @@ ChangeReward = function(data,tau,k,Rfunction){
   rsft_reward = lapply(1:nrow(stimuli), function(i){
     d = stimuli[i,]
     # rsftModel(xh, yh, xl, yl, pxh, pyh, pxl, pyl, goal, timeHorizon, start, Rfunction, k)
-    m <- rsftModel(d$xh, d$yh, d$xl, d$yl,
-                   d$pxh, d$pyh, d$pxl, d$pyl,
+    m <- rsftModel(c(d$xh, d$yh), c(d$xl, d$yl),
+                   c(d$pxh, d$pyh), c(d$pxl, d$pyl),
                    d$budget,
                    timeHorizon = 5,
                    d$start,
@@ -61,8 +61,8 @@ rsft = lapply(1:nrow(stimuli), function(i){
   
   d = stimuli[i,]
   
-  m = rsftModel(d$xh, d$yh, d$xl, d$yl,
-                 d$pxh, d$pyh, d$pxl, d$pyl,
+  m = rsftModel(c(d$xh, d$yh), c(d$xl, d$yl),
+                 c(d$pxh, d$pyh), c(d$pxl, d$pyl),
                  d$budget,
                  timeHorizon = 5,
                  d$start)

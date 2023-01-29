@@ -1,0 +1,48 @@
+{% extends "rsft_dfe_experiment/Page.html" %}
+{% load otree static %}
+
+
+{% block title %}
+  {% blocktrans trimmed %} Summary
+  {% endblocktrans %}
+{% endblock %}
+
+
+{% block content %}
+ <h3>{% blocktrans trimmed %}Blocks{% endblocktrans %}</h3>
+    {% blocktrans trimmed %}
+        <b>After</b> a block ends (learning phase and choice phase) a new block with a new threshold and new options starts. Note that the decisions you make in a block do not affect the next block. The blocks are independent of each other.
+    {% endblocktrans %}
+
+ {% if sample_condition == 1 %}
+    <h3>{% blocktrans trimmed %}Learning Phase{% endblocktrans %}</h3>
+    {% blocktrans trimmed %}
+        <p>Your task is to <b> learn about the hidden probabilities of the options in max {{ num_samples }} decisions per block.</b></p>
+    {% endblocktrans %}
+    <h3>{% blocktrans trimmed %}Choice Phase{% endblocktrans %}</h3>
+    {% blocktrans trimmed %}
+        <p>Your task is to collect points in order to <b>reach or exceed the threshold in {{ num_trials }} decisions.
+        Remember that your points accumulate over the 5 decisions.</b></p>
+    {% endblocktrans %}
+ {% else %}
+    <h3>{% blocktrans trimmed %}Learning Phase{% endblocktrans %}</h3>
+    {% blocktrans trimmed %}
+        <p>Your task is to learn about the probabilities of the options.</p>
+    {% endblocktrans %}
+    <h3>{% blocktrans trimmed %}Choice Phase{% endblocktrans %}</h3>
+    {% blocktrans trimmed %}
+        <p>Your task is to collect points in order to <b>reach or exceed the threshold in {{ num_trials }} decisions.
+        Remember that your points accumulate over the 5 decisions.</b></p>
+    {% endblocktrans %}
+ {% endif %}
+
+   {% formfields %}
+    {% blocktrans trimmed %}
+        <p><b>Click on "Next" to navigate to the next page.</b></p>
+    {% endblocktrans %}
+
+
+  {% next_button %}
+
+{% endblock %}
+

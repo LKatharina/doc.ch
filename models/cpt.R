@@ -59,7 +59,13 @@ TK1992_weighting = function( x1, x2, px1, px2, gammag, gammal ){
   return(data.frame(px1_original, px2_original, w1, w2, x1 = x1_original, x2 = x2_original))
 } 
 
-cpt <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl, ref, fix = list(), fweighting, fvalue, choicerule){
+cpt <- function(xh,yh,xl,yl, pxh, pyh, pxl, pyl,
+                ref,
+                fix = list(),
+                fweighting,
+                fvalue,
+                choicerule){
+  
   alpha = fix$alpha
   beta = fix$beta
   lambda = fix$lambda

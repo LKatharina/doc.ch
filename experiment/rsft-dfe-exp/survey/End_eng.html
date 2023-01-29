@@ -1,0 +1,44 @@
+{% extends "exp_files/Page.html" %}
+{% load i18n %}
+{% load otree static %}
+
+{% block title %}End
+{% endblock %}
+
+{% block content %}
+<p>You have completed the study successfully. Thank you very much!
+</p>
+<h3>Your Bonus</h3>
+    <p><b>First part:</b>
+    You received {{ mpl_payoff }}.</p>
+    <p><b>Main experiment:</b>
+    {%if participant.payoff == 1 %}
+    Four rounds were randomly drawn for your bonus. You have met the threshold in 1 of 4 bonus rounds,
+    which means your bonus payoff is {{bonus}}.
+    {% elif participant.payoff == 2 %}
+    Four rounds were randomly drawn for your bonus. You have met the threshold in 2 of 4 bonus rounds,
+    which means your bonus payoff is {{bonus}}.
+    {% elif participant.payoff == 3 %}
+    Four rounds were randomly drawn for your bonus. You have met the threshold in 3 of 4 bonus rounds,
+    which means your bonus payoff is {{bonus}}.
+     {% elif participant.payoff == 4 %}
+    Four rounds were randomly drawn for your bonus. You have met the threshold in 4 of 4 bonus rounds,
+    which means your bonus payoff is {{bonus}}.
+    {% elif participant.payoff == 0 %}
+    Four rounds were randomly drawn for your bonus. You have met the threshold in 0 of 4 bonus rounds,
+    which means your bonus payoff is {{bonus}}.
+     {% endif %}
+    <p><b>Total Bonus:</b> {{ total_payoff }}.</p>
+</p>
+
+ <p> Please click on the <a> Completion Link (tbd)</a> to register your submission automatically as complete. If the link does not work, you may enter the following Completion Code manually:(tbd).
+</p>
+
+ <p> For any further queries, please contact m.durrer@stud.unibas.ch.
+</p>
+
+<div>
+  <span class = "hidden" >{% next_button %}</span>
+</div>
+
+{% endblock %}
