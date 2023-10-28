@@ -28,5 +28,5 @@ sim_top3[, dfe_id := as.character(dfe_id)]
 
 # Plot top 3 designs
 Get_Plot(df = sim_top3[env_id == unique(dfe_comp$env_id)[1],], wrapby = ~trial + state)
-Get_Plot(df = sim_top3[env_id == unique(dfe_comp$env_id)[2],], wrapby = ~trial + state)
-Get_Plot(df = sim_top3[env_id == unique(dfe_comp$env_id)[3],], wrapby = ~trial + state)
+Get_Plot(df = sim_top3[env_id == unique(dfe_comp$env_id)[2],], wrapby = ~trial)
+Get_Plot(df = sim_top3[env_id == unique(dfe_comp$env_id)[3],], wrapby = ~trial)
